@@ -115,8 +115,19 @@ def cls(x):
 def main():
     now = dt.datetime.now(TR)
     today = now.date().isoformat()
-    data = get("/matches", {"dateFrom": today, "dateTo": today})
-    todays = [m for m in data.get("matches", []) if m["competition"]["code"] in LEAGUES]
+    tomorrow = (now.date() + dt.timedelta(days=1)).isoformat()
+    data = get("/matches", {"competitions": ",".join(LEAGUES),
+                            "dateFrom": today, "dateTo": tomorrow})
+    allm = data.get("matches", [])
+    todays = []
+    for m in allm:
+        if m["competition"]["code"] not in LEAGUES:
+            continue
+        k = dt.datetime.fromisoformat(m["utcDate"].replace("Z", "+00:00")).astimezone(TR)
+        if k.date().isoformat() == today:
+            todays.append(m)
+    debug = f"API'den gelen maç: {len(allm)} · bugün takip edilen liglerde: {len(todays)}"
+    print(debug)
 
     codes = sorted({m["competition"]["code"] for m in todays})
     cards = []
@@ -131,10 +142,12 @@ def main():
                 print("Veri alınamadı", code, season, e)
         stats = build_stats(finished)
         if not stats:
+            debug += f" · {code} geçmiş veri yok"
             continue
         for m in [x for x in todays if x["competition"]["code"] == code]:
             lam = lambdas(stats, m["homeTeam"]["id"], m["awayTeam"]["id"])
             if not lam:
+                debug += f" · model kurulamadı: {m['homeTeam']['name']}"
                 continue
             r = analyze(*lam)
             kick = dt.datetime.fromisoformat(m["utcDate"].replace("Z", "+00:00")).astimezone(TR)
@@ -147,10 +160,10 @@ def main():
                 "sim": similar(stats, finished, *lam),
             })
     cards.sort(key=lambda c: c["time"])
-    write_html(cards, now)
+    write_html(cards, now, debug)
 
 
-def write_html(cards, now):
+def write_html(cards, now, debug=""):
     e = html.escape
     body = ""
     for c in cards:
@@ -192,6 +205,7 @@ summary{{margin-top:8px;font-size:13px}} li{{font-size:13px;color:var(--mu)}}
 <h1>Günün Maçları</h1>
 <div class="upd">Güncelleme: {now.strftime('%d.%m.%Y %H:%M')} · Model tahmindir, kâr garantisi vermez.</div>
 {body}
+<div class="upd">{e(debug)}</div>
 </body></html>"""
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(page)
