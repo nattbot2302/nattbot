@@ -169,7 +169,7 @@ def write_html(cards, now, debug=""):
     for c in cards:
         r = c["r"]
         sim = "".join(f"<li>{e(s)}</li>" for s in c["sim"])
-        top = ", ".join(f"{s} ({pct(p)})" for s, p in c["top"])
+        top = ", ".join(f"{s} ({pct(p)})" for s, p in r["top"])
         body += f"""
 <div class="card">
   <div class="meta">{e(c['league'])} · {c['time']}</div>
