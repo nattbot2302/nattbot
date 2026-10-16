@@ -198,5 +198,4 @@ summary{{margin-top:8px;font-size:13px}} li{{font-size:13px;color:var(--mu)}}
 
 
 if __name__ == "__main__":
-
-main()
+    main()
