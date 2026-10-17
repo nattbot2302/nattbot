@@ -2049,9 +2049,37 @@ ul.ck li.n{color:var(--mu)}
 .yorum{font-size:13px;line-height:1.5;background:var(--lo);border-radius:8px;padding:8px 10px;margin:8px 0}
 .res{font-size:12px;font-weight:700;margin-left:6px}
 .bt td.up{color:var(--ac);font-weight:700}.bt td.dn{color:var(--neg);font-weight:700}
+.tf{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;margin:10px 0 2px}
+.tf select{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:6px 4px;font-size:13px}
+.tf button{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:14px;padding:6px 10px;font-size:12.5px}
 """
 
 RP_JS = """
+function rpStarted(e, now){ return e.dataset.d==='1' || now >= parseInt(e.dataset.k); }
+function rpFilter(){
+  var tf = document.querySelector('.tf'); if(!tf) return;
+  var s = parseInt(tf.dataset.s), now = Date.now();
+  var a = s + parseInt(document.getElementById('tf-a').value)*3600e3;
+  var b = s + parseInt(document.getElementById('tf-b').value)*3600e3;
+  document.querySelectorAll('.rps').forEach(function(sec){
+    var n = 0, fin = sec.id==='rps-done';
+    sec.querySelectorAll('details.rp').forEach(function(e){
+      var k = parseInt(e.dataset.k), st = rpStarted(e, now);
+      var show = fin ? st : (!st && k>=a && k<b);
+      e.style.display = show ? '' : 'none'; if(show) n++;
+    });
+    var c = sec.querySelector('.cnt'); if(c) c.textContent = n+' maç';
+    var z = sec.querySelector('.none'); if(z) z.style.display = n ? 'none' : '';
+  });
+}
+function tfAll(){ document.getElementById('tf-a').value='0'; document.getElementById('tf-b').value='24'; rpFilter(); }
+function tfNext(h){
+  var s = parseInt(document.querySelector('.tf').dataset.s);
+  var a = Math.max(0, Math.floor((Date.now()-s)/3600e3)), b = Math.min(24, a+h);
+  document.getElementById('tf-a').value = String(Math.min(a,23)); document.getElementById('tf-b').value = String(Math.max(b,1)); rpFilter();
+}
+document.addEventListener('DOMContentLoaded', rpFilter);
+setInterval(rpFilter, 60000);
 function rpShow(k){
   document.querySelectorAll('.rps').forEach(function(e){e.classList.toggle('on', e.id==='rps-'+k)});
   document.querySelectorAll('.rpchips button').forEach(function(e){e.classList.toggle('on', e.dataset.k===k)});
@@ -2100,7 +2128,7 @@ def rp_comment(c, key):
     return " ".join(out)
 
 
-def rp_item(c, key, lname):
+def rp_item(c, key, lname, full=True):
     ev = c["rapor"]["m"][key]
     tier = ev["tier"]
     o = rp_outcome(c, key)
@@ -2115,7 +2143,16 @@ def rp_item(c, key, lname):
         f"<tr><td>{GM_LABEL[k]}</td><td class='n'>{v['ok']}/{v['tot']}</td>"
         f"<td class='n'><span class='tier t{v['tier']}'>{TIER_NAME[v['tier']]}</span></td></tr>"
         for k, v in sorted(c["rapor"]["m"].items(), key=lambda kv: (-kv[1]["tier"], -kv[1]["score"])))
-    return f"""<details class='rp'><summary>
+    kms = int(c["kick"].timestamp() * 1000)
+    done = 1 if c["score"] or c["state"] != "pre" else 0
+    if not full:
+        return f"""<details class='rp' data-k='{kms}' data-d='{done}'><summary>
+<div class='rt'><span>{c['day']} {c['time']} · {E(lname)}</span><span class='tier t{tier}'>{TIER_NAME[tier]}</span></div>
+<div class='rm'><b>{E(c['home'])} - {E(c['away'])}</b>{res}</div>
+<div class='rb'><b>{GM_LABEL[key]}</b> · {ev['ok']}/{ev['tot']} kriter · model %{ev['p'] * 100:.0f}</div></summary>
+<ul class='ck'>{checks}</ul>
+<div class='yorum'>{E(rp_comment(c, key))}</div></details>"""
+    return f"""<details class='rp' data-k='{kms}' data-d='{done}'><summary>
 <div class='rt'><span>{c['day']} {c['time']} · {E(lname)}</span><span class='tier t{tier}'>{TIER_NAME[tier]}</span></div>
 <div class='rm'><b>{E(c['home'])} - {E(c['away'])}</b>{res}</div>
 <div class='rb'><b>{GM_LABEL[key]}</b> · {ev['ok']}/{ev['tot']} kriter · model %{ev['p'] * 100:.0f}</div></summary>
@@ -2178,31 +2215,45 @@ def rapor_bt_html(leagues):
     return out + "</table></div>"
 
 
-def rapor_tab(leagues):
+def rapor_tab(leagues, now):
     cards = [(c, L["name"]) for L in leagues for c in L["cards"] if c.get("rapor")]
+    d0, _ = day_window(now)
     out = ("<h2>Gol raporu</h2><p class='note'>Her maçta 8 gol bahsi için 8 maddelik kontrol listesi: model, "
            "iki takımın son 10 maçı, ev sahibinin evdeki ve deplasmanın dışarıdaki son 5 maçı, benzer maçlar, "
            "aralarındaki maçlar ve gol ortalamaları. Bir madde, ligin genel oranının belirgin üstündeyse ✓ alır. "
            "<b>Güçlü</b>: maddelerin en az %80'i ✓. <b>Orta</b>: en az %60'ı. Bir maça dokununca detayı açılır.</p>")
-    out += rapor_bt_html(leagues)
+    out += "<details class='rp'><summary><b>Bu kurallar geçmişte ne kadar tuttu?</b> <span class='note'>(dokun)</span></summary>"
+    out += rapor_bt_html(leagues).replace("<h3>Bu kurallar geçmişte ne kadar tuttu?</h3>", "") + "</details>"
+    hours = [(d0 + dt.timedelta(hours=h)).astimezone(TR) for h in range(25)]
+    opt_a = "".join(f"<option value='{h}'>{t:%H:%M}</option>" for h, t in enumerate(hours[:24]))
+    opt_b = "".join(f"<option value='{h}'{' selected' if h == 24 else ''}>{t:%H:%M}{' (ertesi gün)' if h == 24 else ''}</option>"
+                    for h, t in enumerate(hours) if h > 0)
+    out += (f"<div class='tf' data-s='{int(d0.timestamp() * 1000)}'><span>Saat</span>"
+            f"<select id='tf-a' onchange='rpFilter()'>{opt_a}</select><span>–</span>"
+            f"<select id='tf-b' onchange='rpFilter()'>{opt_b}</select>"
+            "<button onclick='tfNext(3)'>Sonraki 3 saat</button><button onclick='tfAll()'>Tümü</button></div>")
     chips = "<button data-k='main' class='on' onclick=\"rpShow('main')\">Günün önerileri</button>" + "".join(
-        f"<button data-k='{k}' onclick=\"rpShow('{k}')\">{l}</button>" for k, l in GOAL_MARKETS)
-    out += f"<h3>Bugün</h3><div class='rpchips'>{chips}</div>"
-    order = lambda c, k: (c["score"] is not None, -c["rapor"]["m"][k]["tier"], -c["rapor"]["m"][k]["score"])  # noqa
+        f"<button data-k='{k}' onclick=\"rpShow('{k}')\">{l}</button>" for k, l in GOAL_MARKETS) + \
+        "<button data-k='done' onclick=\"rpShow('done')\">Başlayan / Biten</button>"
+    out += f"<div class='rpchips'>{chips}</div>"
+    order = lambda c, k: (-c["rapor"]["m"][k]["tier"], -c["rapor"]["m"][k]["score"])  # noqa
     mains = [(c, ln) for c, ln in cards if c["rapor"]["main"]]
     mains.sort(key=lambda x: order(x[0], x[0]["rapor"]["main"]))
     body = "".join(rp_item(c, c["rapor"]["main"], ln) for c, ln in mains)
-    if not body:
-        body = "<p class='empty'>Bugün kontrol listesinden yeterince ✓ alan maç yok. Bu da bir bilgidir: zorlamamak en iyisi.</p>"
-    out += (f"<div class='rps on' id='rps-main'><p class='note'>{len(mains)} maçta öneri var. Öneri için hem "
-            f"kriterlerin çoğu tutmalı hem de model en az %{MAIN_MIN_P * 100:.0f} ihtimal vermeli (1.5 Üst ve "
-            f"İY 0.5 Üst hariç). Diğer bahislerin listesi yukarıdaki düğmelerde.</p>{body}</div>")
+    out += ("<div class='rps on' id='rps-main'><p class='note'>Öneri için hem kriterlerin çoğu tutmalı hem de model "
+            f"en az %{MAIN_MIN_P * 100:.0f} ihtimal vermeli (1.5 Üst ve İY 0.5 Üst hariç). <b class='cnt'></b></p>"
+            f"{body}<p class='empty none'>Seçilen saat aralığında başlamamış önerili maç yok.</p></div>")
     for key, label in GOAL_MARKETS:
-        lst = [(c, ln) for c, ln in cards if key in c["rapor"]["m"]]
+        lst = [(c, ln) for c, ln in cards if key in c["rapor"]["m"] and not c["score"] and c["state"] == "pre"]
         lst.sort(key=lambda x: order(x[0], key))
-        items = "".join(rp_item(c, key, ln) for c, ln in lst[:15])
-        out += (f"<div class='rps' id='rps-{key}'><p class='note'>{label} için en iyi {min(15, len(lst))} aday "
-                f"(seviyeye göre sıralı).</p>{items or '<p class=empty>Aday yok.</p>'}</div>")
+        items = "".join(rp_item(c, key, ln, full=False) for c, ln in lst)
+        out += (f"<div class='rps' id='rps-{key}'><p class='note'>{label}: seviyeye göre sıralı. <b class='cnt'></b></p>"
+                f"{items}<p class='empty none'>Seçilen saat aralığında aday yok.</p></div>")
+    fin = sorted(mains, key=lambda x: x[0]["kick"], reverse=True)
+    fbody = "".join(rp_item(c, c["rapor"]["main"], ln) for c, ln in fin)
+    out += ("<div class='rps' id='rps-done'><p class='note'>Başlamış ve bitmiş maçlardaki öneriler. Sonuçlar botun "
+            f"her çalışmasında güncellenir. <b class='cnt'></b></p>{fbody}"
+            "<p class='empty none'>Henüz başlayan önerili maç yok.</p></div>")
     return out
 
 
@@ -2226,7 +2277,7 @@ def write_html(leagues, now, st=None):
     n_cp = [f"{short} {len(today_cp.get(k, []))}" for k, _, _, short in COUPONS if today_cp.get(k)]
     cp_banner = ("<div class='act' style='cursor:pointer' onclick=\"show('kupon')\"><b>Günün kuponları hazır →</b>"
                  f"<small>{' · '.join(n_cp)}</small></div>")
-    tabs = [f"<section class='tab on' id='rapor'>{rapor_tab(leagues)}</section>",
+    tabs = [f"<section class='tab on' id='rapor'>{rapor_tab(leagues, now)}</section>",
             f"<section class='tab' id='ozet'>{cp_banner}{summary_tab(leagues)}</section>",
             f"<section class='tab' id='kupon'>{coupons_tab(st, today_cp, results, now)}</section>"]
     for i in order:
