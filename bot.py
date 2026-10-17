@@ -582,6 +582,7 @@ GM_LABEL = dict(GOAL_MARKETS)
 MAIN_EXCLUDE = {"o15", "iy05"}          # oranı çok düşük; günün önerisi olarak seçilmez
 TIER_NAME = {2: "GÜÇLÜ", 1: "ORTA", 0: "ZAYIF"}
 RP_MIN_CHECKS = 5
+MAIN_MIN_P = 0.55        # günün önerisi için en düşük model olasılığı
 
 
 def gev(key, gf, ga, gf1, ga1):
@@ -708,7 +709,9 @@ def rapor_eval(ctx, m, r, nb, hn, an):
             tier = 2 if ratio >= 0.8 else (1 if ratio >= 0.6 else 0)
         out[key] = {"p": p, "base": base, "checks": checks, "ok": okc, "tot": tot, "tier": tier,
                     "score": ratio + (p - base)}
-    cand = [(v["tier"], v["score"], k) for k, v in out.items() if k not in MAIN_EXCLUDE and v["tier"] >= 1]
+    # Günün önerisi: hem kriterleri tutan hem de olması muhtemel (model en az %55) bahis
+    cand = [(v["tier"], v["score"], k) for k, v in out.items()
+            if k not in MAIN_EXCLUDE and v["tier"] >= 1 and v["p"] >= MAIN_MIN_P]
     main = max(cand)[2] if cand else None
     return {"m": out, "main": main}
 
@@ -2191,7 +2194,9 @@ def rapor_tab(leagues):
     body = "".join(rp_item(c, c["rapor"]["main"], ln) for c, ln in mains)
     if not body:
         body = "<p class='empty'>Bugün kontrol listesinden yeterince ✓ alan maç yok. Bu da bir bilgidir: zorlamamak en iyisi.</p>"
-    out += f"<div class='rps on' id='rps-main'><p class='note'>{len(mains)} maçta Güçlü/Orta öneri var (1.5 Üst ve İY 0.5 Üst hariç).</p>{body}</div>"
+    out += (f"<div class='rps on' id='rps-main'><p class='note'>{len(mains)} maçta öneri var. Öneri için hem "
+            f"kriterlerin çoğu tutmalı hem de model en az %{MAIN_MIN_P * 100:.0f} ihtimal vermeli (1.5 Üst ve "
+            f"İY 0.5 Üst hariç). Diğer bahislerin listesi yukarıdaki düğmelerde.</p>{body}</div>")
     for key, label in GOAL_MARKETS:
         lst = [(c, ln) for c, ln in cards if key in c["rapor"]["m"]]
         lst.sort(key=lambda x: order(x[0], key))
