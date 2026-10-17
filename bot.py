@@ -39,17 +39,32 @@ BACKTEST_DAYS = 60
 
 
 # ---------------------------------------------------------------- veri çekme
+HEADERS = {
+    "User-Agent": ("Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) "
+                   "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 "
+                   "Mobile/15E148 Safari/604.1"),
+    "Accept": "application/json",
+}
+
+
 def http_json(url, params):
-    last = None
+    last = "bilinmiyor"
+    params = dict(params)
     for _ in range(3):
+        r = None
         try:
-            r = requests.get(url, params=params, timeout=30)
+            r = requests.get(url, params=params, headers=HEADERS, timeout=30)
+            if r.status_code == 400 and "limit" in params:
+                params.pop("limit")      # limit parametresini reddederse onsuz dene
+                continue
             r.raise_for_status()
             return r.json()
+        except requests.HTTPError:
+            last = f"HTTP {r.status_code} {r.text[:80]}"
         except Exception as e:  # noqa
-            last = e
-            time.sleep(2)
-    raise last
+            last = f"{type(e).__name__} {str(e)[:80]}"
+        time.sleep(2)
+    raise RuntimeError(last)
 
 
 def parse_event(ev):
@@ -304,7 +319,7 @@ def process_league(slug, name, calendar, now):
     try:
         finished, allm = fetch_league(slug, now)
     except Exception as e:  # noqa
-        info["err"] = f"Veri alınamadı ({type(e).__name__})"
+        info["err"] = f"Veri alınamadı: {e}"
         return info
     info["nfin"] = len(finished)
     if len(finished) < 30:
