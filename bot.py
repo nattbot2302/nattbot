@@ -25,7 +25,6 @@ LEAGUES = [
     ("ger.1", "Almanya Bundesliga", False),
     ("fra.1", "Fransa Ligue 1", False),
     ("ger.2", "Almanya 2. Lig", False),
-    ("ger.3", "Almanya 3. Lig", False),
     ("usa.1", "ABD MLS", True),
     ("bra.1", "Brezilya 1. Lig", True),
     ("sui.1", "İsviçre 1. Lig", False),
@@ -45,7 +44,8 @@ HT_PRIOR = 8.0          # ilk yarı payında lig ortalamasına çeken "sanal gol
 NEW_ATT, NEW_DEF = 0.85, 1.15   # verisi olmayan (yeni çıkan) takım varsayımı
 LOW_DATA = 5            # bundan az maçı olan takım "az veri" uyarısı alır
 DAY_START = 6           # iddaa günü: 06:00 - ertesi gün 06:00 (TR)
-BACKTEST_DAYS = 60
+BACKTEST_DAYS = 60      # doğruluk tablosunun ölçtüğü son gün sayısı
+CALIB_DAYS = 60         # bunun öncesindeki günler ayar (kalibrasyon) için kullanılır
 RHO_GRID = [x / 100 for x in range(-25, 11)]
 SIM_K = 60              # skor ve sürpriz karşılaştırması için en benzer geçmiş maç sayısı
 VALUE_MIN_EV = 0.05     # değerli oran: beklenen getiri en az %5
@@ -287,6 +287,9 @@ def fetch_league(slug, now):
               flush=True)
         allm = sorted(events.values(), key=lambda m: m["date"])
         finished = [m for m in allm if m["done"] and m["hg"] is not None and m["ag"] is not None]
+        if len(finished) < 30 and size > 1:      # bazı ligler aralık sorgusuna boş döner
+            probe_err += f" [{size}g: {len(finished)} maç]"
+            continue
         return finished, allm
     raise RuntimeError(probe_err or "hiçbir aralık kabul edilmedi")
 
@@ -431,6 +434,36 @@ def half_lams(model, h, a, lam_h, lam_a):
     sa = (hm["as"].get(a, f) + hm["ds"].get(h, f)) / 2
     sh, sa = min(max(sh, 0.25), 0.65), min(max(sa, 0.25), 0.65)
     return lam_h * sh, lam_a * sa
+
+
+K_GRID = [x / 20 for x in range(6, 21)]          # 0.30 .. 1.00
+C_GRID = [x / 100 for x in range(80, 131, 2)]     # 0.80 .. 1.30
+
+
+def mus(model):
+    return model["base"] * model["ha"], model["base"] / model["ha"]
+
+
+def calibrate(lam, mu, kc):
+    """Ham beklenen golü düzeltir: k<1 uç tahminleri lig ortalamasına çeker, c genel gol seviyesini ayarlar."""
+    k, c = kc
+    return tuple(min(max(c * m * (l / m) ** k, 0.15), 5.0) for l, m in zip(lam, mu))
+
+
+def fit_kc(rows):
+    """Geçmiş tahminlerin gerçek gollere en iyi uyduğu (k, c) ayarını bulur."""
+    if len(rows) < 120:
+        return (0.8, 1.0)
+    best, best_ll = (1.0, 1.0), -1e18
+    for k in K_GRID:
+        for c in C_GRID:
+            ll = 0.0
+            for r in rows:
+                lh, la = calibrate(r["lam"], r["mu"], (k, c))
+                ll += r["hg"] * math.log(lh) - lh + r["ag"] * math.log(la) - la
+            if ll > best_ll:
+                best, best_ll = (k, c), ll
+    return best
 
 
 def pois(k, lam):
@@ -643,12 +676,13 @@ def actuals(m):
     return a
 
 
-def backtest(matches, now):
+def backtest_raw(matches, now):
+    """Son günlerin her maçı için o günden önceki veriyle kurulmuş modelin ham tahmini."""
     out = []
     if len(matches) < 60:
         return out
     dates = [m["date"] for m in matches]
-    t0 = now - dt.timedelta(days=BACKTEST_DAYS)
+    t0 = now - dt.timedelta(days=BACKTEST_DAYS + CALIB_DAYS)
     days = sorted({m["date"].date() for m in matches if m["date"] >= t0})
     for d in days:
         ref = dt.datetime(d.year, d.month, d.day, tzinfo=UTC)
@@ -661,16 +695,28 @@ def backtest(matches, now):
                 continue
             lam = lambdas(model, m["hid"], m["aid"])
             hl = half_lams(model, m["hid"], m["aid"], *lam)
-            r = analyze(*lam, rho=model["rho"], half=hl, joint=False)
-            vb = [(v["code"], v["o"], settle(v["code"], m["hg"], m["ag"]))
-                  for v in value_bets(r, m.get("odds"))]
-            out.append({
-                "vb": vb, "has_odds": bool(m.get("odds")),
-                "pred": {k: r.get(k) for _, k in MARKETS},
-                "act": actuals(m),
-                "p": (r["p1"], r["px"], r["p2"]),
-                "res": res3(m["hg"], m["ag"]),
-            })
+            out.append({"date": ref, "lam": lam, "mu": mus(model), "rho": model["rho"],
+                        "sh": (hl[0] / lam[0], hl[1] / lam[1]) if hl else None,
+                        "hg": m["hg"], "ag": m["ag"], "m": m})
+    return out
+
+
+def bt_eval(raw, kc):
+    out = []
+    for x in raw:
+        m = x["m"]
+        lam = calibrate(x["lam"], x["mu"], kc)
+        hl = (lam[0] * x["sh"][0], lam[1] * x["sh"][1]) if x["sh"] else None
+        r = analyze(*lam, rho=x["rho"], half=hl, joint=False)
+        vb = [(v["code"], v["o"], settle(v["code"], m["hg"], m["ag"]))
+              for v in value_bets(r, m.get("odds"))]
+        out.append({
+            "vb": vb, "has_odds": bool(m.get("odds")),
+            "pred": {k: r.get(k) for _, k in MARKETS},
+            "act": actuals(m),
+            "p": (r["p1"], r["px"], r["p2"]),
+            "res": res3(m["hg"], m["ag"]),
+        })
     return out
 
 
@@ -732,7 +778,7 @@ def day_window(now):
 
 def process_league(slug, name, calendar, now):
     info = {"slug": slug, "name": name, "cards": [], "err": "", "nfin": 0,
-            "avg90": None, "bt": [], "model": None, "results": {}, "rev": None}
+            "avg90": None, "bt": [], "model": None, "results": {}, "rev": None, "kc": None}
     try:
         finished, allm = fetch_league(slug, now)
     except Exception as e:  # noqa
@@ -756,6 +802,13 @@ def process_league(slug, name, calendar, now):
     th = team_history(past)
     ss = season_start(now, calendar)
     todays = [m for m in allm if d0 <= m["date"] < d1]
+    raw = backtest_raw(finished, now)
+    cut = now - dt.timedelta(days=BACKTEST_DAYS)
+    kc_eval = fit_kc([x for x in raw if x["date"] < cut])    # doğruluk testi: sadece eski günlerle ayarlanır
+    info["bt"] = bt_eval([x for x in raw if x["date"] >= cut], kc_eval)
+    kc = fit_kc(raw)                                          # bugünkü tahminler: tüm geçmiş testle ayarlanır
+    info["kc"] = kc
+    mu = mus(model)
     past_lams = [(lambdas(model, m["hid"], m["aid"]), m) for m in past]
     hts = [m for m in past if m.get("ht")]
     if len(hts) >= 50:                  # ligde İY/MS tersine dönüş sıklığı
@@ -772,12 +825,13 @@ def process_league(slug, name, calendar, now):
         }
 
     for m in todays:
-        lam = lambdas(model, m["hid"], m["aid"])
+        lam_raw = lambdas(model, m["hid"], m["aid"])
+        lam = calibrate(lam_raw, mu, kc)
         hl = half_lams(model, m["hid"], m["aid"], *lam)
         r = analyze(*lam, rho=model["rho"], half=hl)
         low = [n for t, n in ((m["hid"], m["home"]), (m["aid"], m["away"]))
                if model["games"].get(t, 0) < LOW_DATA]
-        nb = neighbors(past_lams, *lam)
+        nb = neighbors(past_lams, *lam_raw)
         ss_ = sim_stats(nb)
         surprise = []
         if r.get("htft") and ss_["nht"] >= 20:
@@ -799,7 +853,6 @@ def process_league(slug, name, calendar, now):
             "sim": [sim_text(x) for x in nb[:5]],
         })
     info["cards"].sort(key=lambda c: (c["day"], c["time"]))
-    info["bt"] = backtest(finished, now)
     return info
 
 
@@ -1341,7 +1394,8 @@ def accuracy_tab(leagues):
     groups = [L for L in leagues if L["bt"]] + [{"name": "TÜMÜ", "bt": allrows}]
     heads = "".join(f"<th class='n'>{lab}</th>" for lab, _ in MARKETS)
     out = (f"<h2>Model doğruluğu</h2><p class='note'>Son {BACKTEST_DAYS} günün her maçı, yalnızca "
-           "o günden önceki verilerle tahmin edildi ve gerçek sonuçla kıyaslandı.</p>")
+           "o günden önceki verilerle tahmin edildi ve gerçek sonuçla kıyaslandı. Yüzde ayarı da "
+           f"sadece bundan önceki {CALIB_DAYS} günle yapıldı, yani test sınavı görmeden yapılıyor.</p>")
 
     out += ("<h3>İsabet</h3><p class='note'>Model %50 üstü dediğinde 'olur', altı dediğinde "
             "'olmaz' sayıldı. 1.5Ü gibi zaten sık olan bahislerde yüksek isabet tek başına "
@@ -1419,9 +1473,11 @@ def accuracy_tab(leagues):
     out += ("<h3>Model parametreleri</h3><p class='note'>Ev avantajı: ev sahibinin beklenen "
             "golünün deplasmana oranı. İY payı: gollerin ilk yarıda gelen kısmı. DC ρ: düşük "
             "skorların (0-0, 1-1) düzeltme katsayısı; negatif = beraberlikler sık. İY veri: ilk "
-            "yarı skoru bulunabilen maç oranı.</p>")
+            "yarı skoru bulunabilen maç oranı. Ayar k: 1'den küçükse model fazla uç tahmin ediyordu ve "
+            "yüzdeler ortalamaya çekildi. Ayar c: 1'den büyükse model golü az tahmin ediyordu ve artırıldı.</p>")
     out += ("<div class='wrap'><table><tr><th>Lig</th><th class='n'>Ev avantajı</th>"
-            "<th class='n'>İY payı</th><th class='n'>DC ρ</th><th class='n'>İY veri</th></tr>")
+            "<th class='n'>İY payı</th><th class='n'>DC ρ</th><th class='n'>İY veri</th>"
+            "<th class='n'>Ayar k</th><th class='n'>Ayar c</th></tr>")
     for L in leagues:
         m = L.get("model")
         if not m:
@@ -1429,7 +1485,8 @@ def accuracy_tab(leagues):
         hm = m.get("half")
         out += (f"<tr><td>{E(L['name'])}</td><td class='n'>{m['ha'] ** 2:.2f}</td>"
                 f"<td class='n'>{pct(hm['f']) if hm else '-'}</td><td class='n'>{m['rho']:+.2f}</td>"
-                f"<td class='n'>{pct(hm['cov']) if hm else '-'}</td></tr>")
+                f"<td class='n'>{pct(hm['cov']) if hm else '-'}</td>"
+                f"<td class='n'>{L['kc'][0]:.2f}</td><td class='n'>{L['kc'][1]:.2f}</td></tr>")
     out += "</table></div>"
     return out
 
