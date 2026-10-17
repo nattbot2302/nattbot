@@ -6,6 +6,7 @@ import datetime as dt
 from collections import defaultdict
 
 import requests
+from concurrent.futures import ThreadPoolExecutor
 
 TR = dt.timezone(dt.timedelta(hours=3))
 UTC = dt.timezone.utc
@@ -47,6 +48,10 @@ HEADERS = {
 }
 
 
+class Rejected(Exception):
+    pass
+
+
 def http_json(url, params):
     last = "bilinmiyor"
     params = dict(params)
@@ -57,8 +62,12 @@ def http_json(url, params):
             if r.status_code == 400 and "limit" in params:
                 params.pop("limit")      # limit parametresini reddederse onsuz dene
                 continue
+            if 400 <= r.status_code < 500 and r.status_code != 429:
+                raise Rejected(f"HTTP {r.status_code} {r.text[:80]}")
             r.raise_for_status()
             return r.json()
+        except Rejected:
+            raise
         except requests.HTTPError:
             last = f"HTTP {r.status_code} {r.text[:80]}"
         except Exception as e:  # noqa
@@ -101,28 +110,61 @@ def parse_event(ev):
     }
 
 
-def fetch_league(slug, now):
-    """Son HISTORY_DAYS gün + yarına kadar olan tüm maçlar."""
-    events = {}
-    start = now.date() - dt.timedelta(days=HISTORY_DAYS)
-    end = now.date() + dt.timedelta(days=1)
-    d = start
+def get_chunk(slug, d1, d2):
+    dates = f"{d1:%Y%m%d}" if d1 == d2 else f"{d1:%Y%m%d}-{d2:%Y%m%d}"
+    params = {"dates": dates}
+    if d1 != d2:
+        params["limit"] = 500
+    data = http_json(BASE.format(slug=slug), params)
+    out = []
+    for ev in data.get("events", []):
+        try:
+            m = parse_event(ev)
+        except Exception:  # noqa
+            m = None
+        if m:
+            out.append(m)
+    return out
+
+
+def make_chunks(start, end, size):
+    res, d = [], start
     while d <= end:
-        d2 = min(d + dt.timedelta(days=44), end)
-        data = http_json(BASE.format(slug=slug),
-                         {"dates": f"{d:%Y%m%d}-{d2:%Y%m%d}", "limit": 500})
-        for ev in data.get("events", []):
-            try:
-                m = parse_event(ev)
-            except Exception:  # noqa
-                m = None
-            if m:
-                events[m["id"]] = m
+        d2 = min(d + dt.timedelta(days=size - 1), end)
+        res.append((d, d2))
         d = d2 + dt.timedelta(days=1)
-        time.sleep(0.3)
-    allm = sorted(events.values(), key=lambda m: m["date"])
-    finished = [m for m in allm if m["done"] and m["hg"] is not None and m["ag"] is not None]
-    return finished, allm
+    return res
+
+
+def fetch_league(slug, now):
+    """Son günlerin tüm maçları. ESPN'in kabul ettiği aralık boyutunu kendisi bulur."""
+    end = now.date() + dt.timedelta(days=1)
+    probe_err = ""
+    for size in (45, 21, 7, 1):
+        days = HISTORY_DAYS if size > 1 else 330
+        start = now.date() - dt.timedelta(days=days)
+        chunks = make_chunks(start, end, size)
+        try:  # yakın bir aralıkla dene
+            first = get_chunk(slug, *chunks[-2])
+        except Exception as e:  # noqa
+            probe_err = str(e)
+            continue
+        events = {m["id"]: m for m in first}
+        fails = 0
+        with ThreadPoolExecutor(max_workers=8) as ex:
+            futs = [ex.submit(get_chunk, slug, d1, d2) for d1, d2 in chunks]
+            for f in futs:
+                try:
+                    for m in f.result():
+                        events[m["id"]] = m
+                except Exception:  # noqa
+                    fails += 1
+        print(f"  {slug}: aralık {size} gün, {len(chunks)} istek, {fails} hata, {len(events)} maç",
+              flush=True)
+        allm = sorted(events.values(), key=lambda m: m["date"])
+        finished = [m for m in allm if m["done"] and m["hg"] is not None and m["ag"] is not None]
+        return finished, allm
+    raise RuntimeError(probe_err or "hiçbir aralık kabul edilmedi")
 
 
 # --------------------------------------------------------------------- model
