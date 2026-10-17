@@ -286,7 +286,7 @@ function alarmScan(m, L){
   return {m, L, o, bet, reasons, level, score: bet.p + sig};
 }
 
-function box(label,p){return '<div class="b '+cls(p)+'">'+esc(label)+'<br><b>'+pct(p)+'</b><small>adil '+fair(p)+'</small></div>';}
+function box(label,p){return '<div class="b '+cls(p)+'">'+esc(label)+'<br><b>'+pct(p)+'</b></div>';}
 
 function statRow(label, h, a, suffix){
   if(h==null||a==null) return '';
@@ -305,7 +305,7 @@ function liveCard(m, L){
   const acts = actions(m, L, o);
   out += '<div class="sec">Modelin şu an güçlü gördükleri</div>';
   if(acts.length){
-    for(const x of acts) out += '<div class="act"><b>'+esc(x.t)+'</b> · %'+Math.round(x.p*100)+'<small>adil oran '+fair(x.p)+' · canlı oran bundan yüksekse değerli</small></div>';
+    for(const x of acts) out += '<div class="act"><b>'+esc(x.t)+'</b> · %'+Math.round(x.p*100)+'</div>';
   } else out += '<p class="note">Şu an hiçbir bahiste model %60 üstü bir eğilim görmüyor.</p>';
   for(const n of o.notes) out += '<p class="note">'+esc(n)+'</p>';
   out += '<div class="sec">Maç sonu (şu andan itibaren)</div><div class="grid">'+box('MS 1',o.p1)+box('MS X',o.px)+box('MS 2',o.p2)+'</div>';
