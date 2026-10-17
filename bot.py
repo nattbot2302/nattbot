@@ -741,7 +741,7 @@ def pos_tag(rank, n, pl):
 def team_ctx(tid, ctx, table, rank, n):
     rows = ctx["th"].get(tid, [])
     l10 = rows[-10:]
-    form = "".join("G" if x[1] > x[2] else ("B" if x[1] == x[2] else "M") for x in rows[-5:])
+    form = "".join("G" if x[1] > x[2] else ("B" if x[1] == x[2] else "M") for x in rows[-5:][::-1])  # en yeni önce
     t = table.get(tid, {"p": 0, "pl": 0})
     return {"rank": rank.get(tid), "n": n, "pts": t["p"], "pl": t["pl"], "form": form,
             "tag": pos_tag(rank.get(tid), n, t["pl"]),
@@ -2073,7 +2073,7 @@ def team_line(name, t):
              + (f" (ilk yarı {num(t['gf1'])} / {num(t['ga1'])})" if t["gf1"] is not None else ""))
     last = " · ".join(f"{'G' if gf > ga else ('B' if gf == ga else 'M')} {gf}-{ga} {E(opp)}{'' if home else ' (d)'}"
                       for opp, gf, ga, home in t["last5"])
-    return (f"<div class='tc'><b>{E(name)}</b> · {pos}<br>Form: {form_html(t['form'])} · {goals}"
+    return (f"<div class='tc'><b>{E(name)}</b> · {pos}<br>Form (yeniden eskiye): {form_html(t['form'])} · {goals}"
             f"<br><span class='note'>Son 5: {last}</span></div>")
 
 
