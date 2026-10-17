@@ -1067,6 +1067,8 @@ def main():
     st = load_store()
     update_store(st, leagues, now)
     write_html(leagues, now, st)
+    write_live_model(leagues, now)
+    write_live_html()
     send_mail(st, leagues, now)
     save_store(st)
 
@@ -1560,11 +1562,285 @@ def write_html(leagues, now, st=None):
     page = (f"<!doctype html><html lang='tr'><head><meta charset='utf-8'>"
             f"<meta name='viewport' content='width=device-width, initial-scale=1'>"
             f"<title>Günün Maçları</title><style>{CSS}</style></head><body>"
-            f"<header><h1>Günün Maçları</h1><div class='upd'>Güncelleme: {local:%d.%m.%Y %H:%M} · "
+            f"<header><div style='display:flex;justify-content:space-between;align-items:center'><h1>Günün Maçları</h1>"
+            f"<a href='canli.html' style='background:#d93025;color:#fff;text-decoration:none;font-weight:700;"
+            f"font-size:13px;padding:6px 12px;border-radius:16px'>● Canlı</a></div><div class='upd'>Güncelleme: {local:%d.%m.%Y %H:%M} · "
             f"Maçlar: {d0:%d.%m %H:%M} - {d1:%d.%m %H:%M} · Model tahmindir, kâr garantisi vermez."
             f"</div></header><nav>{''.join(nav)}</nav>{''.join(tabs)}<script>{JS}</script></body></html>")
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(page)
+
+
+# -------------------------------------------------------------------- CANLI SAYFA
+LIVE_MODEL = "data/canli_model.json"
+
+
+def write_live_model(leagues, now):
+    ms = []
+    for L in leagues:
+        for c in L["cards"]:
+            r = c["r"]
+            ms.append({
+                "id": c["id"], "slug": L["slug"], "lg": L["name"], "h": c["home"], "a": c["away"],
+                "k": c["kick"].isoformat(),
+                "lam": [round(x, 4) for x in c["lam"]],
+                "lam1": [round(x, 4) for x in r["lam1"]] if r.get("lam1") else None,
+                "pre": {k: round(r[k], 4) for k in ("p1", "px", "p2", "o15", "o25", "btts")},
+            })
+    os.makedirs(os.path.dirname(LIVE_MODEL), exist_ok=True)
+    with open(LIVE_MODEL, "w", encoding="utf-8") as f:
+        json.dump({"gen": now.isoformat(), "matches": ms}, f, ensure_ascii=False, separators=(",", ":"))
+
+
+LIVE_CSS = """
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.back{color:var(--ac);text-decoration:none;font-size:14px;font-weight:600}
+.btn{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:16px;padding:7px 12px;font-size:13px}
+.wrapc{padding:4px 12px 24px}
+.live{display:inline-block;background:#d93025;color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;animation:bl 1.6s infinite}
+@keyframes bl{50%{opacity:.55}}
+.score{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:8px 0 4px}
+.score .t{font-size:15px;font-weight:600}.score .t.r{text-align:right}
+.score .s{font-size:30px;font-weight:800;letter-spacing:2px}
+.rc{display:inline-block;width:9px;height:12px;background:#d93025;border-radius:2px;margin:0 2px;vertical-align:-1px}
+.bar{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--lo);margin:3px 0 8px}
+.bar i{display:block;height:100%}
+.bh{background:var(--ac)}.ba{background:var(--warn)}
+.st{display:grid;grid-template-columns:36px 1fr 36px;font-size:12.5px;align-items:center;color:var(--mu)}
+.st b{color:var(--tx)}.st span:last-child{text-align:right}
+.act{border-left:3px solid var(--ac);padding:6px 10px;margin:6px 0;background:var(--lo);border-radius:0 8px 8px 0;font-size:13.5px}
+.act small{display:block;color:var(--mu);font-size:11.5px;margin-top:2px}
+.ng{display:flex;height:22px;border-radius:6px;overflow:hidden;font-size:11px;font-weight:700;color:#fff;margin-top:6px}
+.ng div{display:flex;align-items:center;justify-content:center;min-width:0;overflow:hidden;white-space:nowrap}
+.ban{border:1px solid var(--warn);color:var(--warn);border-radius:10px;padding:10px;font-size:13px;margin:8px 0}
+"""
+
+LIVE_JS = r"""
+const MODEL_URL = 'data/canli_model.json';
+let MODEL = null;
+const SOT_GOAL = 0.32;          // isabetli şut başına ortalama gol
+const RED_OWN = 0.70, RED_OPP = 1.25;
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function pct(x){return x==null||isNaN(x)?'-':Math.round(x*100)+'%';}
+function fair(p){return p>0.005?(1/p).toFixed(2):'-';}
+function cls(p){p=Math.round(p*100)/100;return p>=0.6?'hi':(p>=0.45?'mid':'lo');}
+function pois(k,l){let p=Math.exp(-l);for(let i=1;i<=k;i++)p*=l/i;return p;}
+function dist(l,n){n=n||11;const a=[];for(let k=0;k<n;k++)a.push(pois(k,l));const s=a.reduce((x,y)=>x+y,0);return a.map(x=>x/s);}
+function ymd(d){return d.toISOString().slice(0,10).replace(/-/g,'');}
+function hm(d){return d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Istanbul'});}
+
+async function loadModel(){
+  const r = await fetch(MODEL_URL+'?t='+Date.now());
+  if(!r.ok) throw new Error('model dosyası yok');
+  MODEL = await r.json();
+}
+
+async function fetchEvents(slug, dates){
+  const out = {};
+  for(const d of dates){
+    const r = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/'+slug+'/scoreboard?dates='+d);
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const j = await r.json();
+    for(const ev of (j.events||[])) out[ev.id] = ev;
+  }
+  return out;
+}
+
+function parseLive(ev){
+  const c = ev.competitions[0], st = ev.status||{}, ty = st.type||{};
+  let h=null, a=null;
+  for(const x of c.competitors){ if(x.homeAway==='home') h=x; else a=x; }
+  const stat = (x,n)=>{const s=(x.statistics||[]).find(s=>s.name===n); const v=s?parseFloat(s.displayValue):NaN; return isNaN(v)?null:v;};
+  const pick = x=>({pos:stat(x,'possessionPct'), sh:stat(x,'totalShots'), sot:stat(x,'shotsOnTarget'), cor:stat(x,'wonCorners')});
+  const hid = String(h.team.id), aid = String(a.team.id);
+  const red = [0,0];
+  for(const d of (c.details||[])){
+    if(!d.redCard || !d.team) continue;
+    const t = String(d.team.id);
+    if(t===hid) red[0]++; else if(t===aid) red[1]++;
+  }
+  return {state:ty.state, name:ty.name||'', detail:ty.shortDetail||ty.detail||'', done:!!ty.completed,
+          min:(st.clock||0)/60, period:st.period||0, disp:st.displayClock||'',
+          hg:parseInt(h.score||0)||0, ag:parseInt(a.score||0)||0, stats:{h:pick(h), a:pick(a)}, red:red};
+}
+
+// Kalan sürede beklenen gol: maç öncesi model + kırmızı kart + isabetli şut ayarı
+function remaining(m, L){
+  const lam = m.lam, l1 = m.lam1 || [lam[0]*0.45, lam[1]*0.45];
+  const l2 = [Math.max(lam[0]-l1[0],0.05), Math.max(lam[1]-l1[1],0.05)];
+  const ht = L.name==='STATUS_HALFTIME' || L.detail==='HT';
+  let rem, rem1 = null;
+  if(ht){ rem = l2.slice(); }
+  else if(L.period<=1){
+    const f = Math.max(47-L.min, 0.5)/47;
+    rem1 = [l1[0]*f, l1[1]*f];
+    rem = [rem1[0]+l2[0], rem1[1]+l2[1]];
+  } else {
+    const f = Math.max(50-(L.min-45), 0.5)/50;
+    rem = [l2[0]*f, l2[1]*f];
+  }
+  const notes = [];
+  // kırmızı kart
+  for(let i=0;i<2;i++){
+    const k = Math.pow(RED_OWN, L.red[i]) * Math.pow(RED_OPP, L.red[1-i]);
+    rem[i] *= k; if(rem1) rem1[i] *= k;
+  }
+  if(L.red[0]||L.red[1]) notes.push('Kırmızı kart hesaba katıldı: eksik kalan takımın gol beklentisi düşürüldü, rakibinki artırıldı.');
+  // maç istatistiği: isabetli şut temposu
+  const tp = Math.min(L.min, 95);
+  const sot = [L.stats.h.sot, L.stats.a.sot];
+  if(tp>=15 && sot[0]!=null && sot[1]!=null){
+    const w = Math.min(0.4, tp/90*0.45);
+    for(let i=0;i<2;i++){
+      const prior = lam[i]/97, obs = SOT_GOAL*sot[i]/tp;
+      let f = ((1-w)*prior + w*obs)/prior;
+      f = Math.min(1.6, Math.max(0.6, f));
+      rem[i] *= f; if(rem1) rem1[i] *= f;
+      if(f>=1.15) notes.push((i?m.a:m.h)+' beklenenden fazla isabetli şut çekiyor ('+sot[i]+'): kalan gol beklentisi %'+Math.round((f-1)*100)+' artırıldı.');
+      if(f<=0.85) notes.push((i?m.a:m.h)+' beklenenden az isabetli şut çekiyor ('+sot[i]+'): kalan gol beklentisi %'+Math.round((1-f)*100)+' azaltıldı.');
+    }
+  }
+  return {rem, rem1, ht, notes};
+}
+
+function liveProbs(m, L){
+  const R = remaining(m, L);
+  const dh = dist(R.rem[0]), da = dist(R.rem[1]);
+  const cur = L.hg+L.ag;
+  const o = {p1:0,px:0,p2:0,btts:0,more:0,lines:{},scores:{},rem:R.rem,notes:R.notes,ht:R.ht};
+  const lines = [0.5,1.5,2.5,3.5,4.5,5.5].filter(x=>x>cur).slice(0,3);
+  for(const ln of lines) o.lines[ln]=0;
+  for(let i=0;i<dh.length;i++) for(let j=0;j<da.length;j++){
+    const p = dh[i]*da[j], fh=L.hg+i, fa=L.ag+j;
+    if(fh>fa) o.p1+=p; else if(fh===fa) o.px+=p; else o.p2+=p;
+    if(fh>0&&fa>0) o.btts+=p;
+    if(i+j>0) o.more+=p;
+    for(const ln of lines) if(fh+fa>ln) o.lines[ln]+=p;
+    const k=fh+'-'+fa; o.scores[k]=(o.scores[k]||0)+p;
+  }
+  const tot = R.rem[0]+R.rem[1];
+  o.nextH = o.more*R.rem[0]/tot; o.nextA = o.more*R.rem[1]/tot;
+  if(R.rem1){                      // ilk yarı sürüyorsa İY sonucu
+    const h1=dist(R.rem1[0],8), a1=dist(R.rem1[1],8); o.iy={p1:0,px:0,p2:0,more:0};
+    for(let i=0;i<h1.length;i++) for(let j=0;j<a1.length;j++){
+      const p=h1[i]*a1[j], fh=L.hg+i, fa=L.ag+j;
+      if(fh>fa) o.iy.p1+=p; else if(fh===fa) o.iy.px+=p; else o.iy.p2+=p;
+      if(i+j>0) o.iy.more+=p;
+    }
+  }
+  return o;
+}
+
+function actions(m, L, o){
+  const c = [];
+  const cur = L.hg+L.ag;
+  for(const ln in o.lines){
+    c.push({t:ln+' Üst', p:o.lines[ln]});
+    c.push({t:ln+' Alt', p:1-o.lines[ln]});
+  }
+  c.push({t:'MS 1', p:o.p1},{t:'MS X', p:o.px},{t:'MS 2', p:o.p2});
+  c.push({t:'Çifte şans 1X', p:o.p1+o.px},{t:'Çifte şans X2', p:o.px+o.p2});
+  if(!(L.hg>0&&L.ag>0)){ c.push({t:'KG Var', p:o.btts},{t:'KG Yok', p:1-o.btts}); }
+  c.push({t:'Sıradaki golü '+m.h+' atar', p:o.nextH},{t:'Sıradaki golü '+m.a+' atar', p:o.nextA});
+  if(o.iy){ c.push({t:'İY 1', p:o.iy.p1},{t:'İY X', p:o.iy.px},{t:'İY 2', p:o.iy.p2},{t:'İlk yarıda bir gol daha', p:o.iy.more}); }
+  return c.filter(x=>x.p>=0.6 && x.p<=0.93).sort((a,b)=>b.p-a.p).slice(0,4);
+}
+
+function box(label,p){return '<div class="b '+cls(p)+'">'+esc(label)+'<br><b>'+pct(p)+'</b><small>adil '+fair(p)+'</small></div>';}
+
+function statRow(label, h, a, suffix){
+  if(h==null||a==null) return '';
+  const t = (h+a)||1;
+  return '<div class="st"><span><b>'+h+(suffix||'')+'</b></span><span style="text-align:center">'+label+'</span><span><b>'+a+(suffix||'')+'</b></span></div>'+
+         '<div class="bar"><i class="bh" style="width:'+(h/t*100)+'%"></i><i class="ba" style="width:'+(a/t*100)+'%"></i></div>';
+}
+
+function liveCard(m, L){
+  const o = liveProbs(m, L);
+  const reds = n=>Array(n).fill('<span class="rc"></span>').join('');
+  const minute = o.ht ? 'Devre arası' : (L.disp||'');
+  let out = '<div class="card"><div class="meta"><span class="live">CANLI</span> '+esc(minute)+' · '+esc(m.lg)+'</div>';
+  out += '<div class="score"><div class="t">'+esc(m.h)+' '+reds(L.red[0])+'</div><div class="s">'+L.hg+' - '+L.ag+'</div><div class="t r">'+reds(L.red[1])+' '+esc(m.a)+'</div></div>';
+  out += '<div class="row">Kalan sürede beklenen gol: <b>'+o.rem[0].toFixed(2)+' - '+o.rem[1].toFixed(2)+'</b> · maç öncesi model: <b>'+m.lam[0].toFixed(2)+' - '+m.lam[1].toFixed(2)+'</b></div>';
+  const acts = actions(m, L, o);
+  out += '<div class="sec">Modelin şu an güçlü gördükleri</div>';
+  if(acts.length){
+    for(const x of acts) out += '<div class="act"><b>'+esc(x.t)+'</b> · %'+Math.round(x.p*100)+'<small>adil oran '+fair(x.p)+' · canlı oran bundan yüksekse değerli</small></div>';
+  } else out += '<p class="note">Şu an hiçbir bahiste model %60 üstü bir eğilim görmüyor.</p>';
+  for(const n of o.notes) out += '<p class="note">'+esc(n)+'</p>';
+  out += '<div class="sec">Maç sonu (şu andan itibaren)</div><div class="grid">'+box('MS 1',o.p1)+box('MS X',o.px)+box('MS 2',o.p2)+'</div>';
+  out += '<div class="grid">'+Object.keys(o.lines).map(ln=>box(ln+' Üst',o.lines[ln])).join('')+'</div>';
+  out += '<div class="grid">'+box('Bir gol daha',o.more)+box('KG Var',o.btts)+box('Gol yok',1-o.more)+'</div>';
+  if(o.iy) out += '<div class="sec">İlk yarı sonu</div><div class="grid">'+box('İY 1',o.iy.p1)+box('İY X',o.iy.px)+box('İY 2',o.iy.p2)+'</div>';
+  const nh=o.nextH, na=o.nextA, nn=1-o.more;
+  out += '<div class="sec">Sıradaki gol</div><div class="ng"><div style="width:'+nh*100+'%;background:var(--ac)">'+(nh>0.12?esc(m.h)+' '+pct(nh):'')+'</div>'+
+         '<div style="width:'+nn*100+'%;background:#888">'+(nn>0.12?'Gol yok '+pct(nn):'')+'</div>'+
+         '<div style="width:'+na*100+'%;background:var(--warn)">'+(na>0.12?esc(m.a)+' '+pct(na):'')+'</div></div>';
+  const top = Object.entries(o.scores).sort((a,b)=>b[1]-a[1]).slice(0,4);
+  out += '<div class="row">Olası son skorlar: <b>'+top.map(x=>x[0]+' ('+pct(x[1])+')').join(', ')+'</b></div>';
+  const s = L.stats;
+  const stats = statRow('Topa sahip olma', s.h.pos, s.a.pos, '%')+statRow('Şut', s.h.sh, s.a.sh)+statRow('İsabetli şut', s.h.sot, s.a.sot)+statRow('Korner', s.h.cor, s.a.cor);
+  if(stats) out += '<div class="sec">Maç istatistiği</div>'+stats;
+  out += '<details><summary>Maç öncesi tahmin</summary><p class="note">MS 1 '+pct(m.pre.p1)+' · X '+pct(m.pre.px)+' · 2 '+pct(m.pre.p2)+' · 2.5Ü '+pct(m.pre.o25)+' · KG '+pct(m.pre.btts)+'</p></details>';
+  return out+'</div>';
+}
+
+function doneRow(m, L){
+  const tg=L.hg+L.ag, ok25=(m.pre.o25>=0.5)===(tg>=3), okkg=(m.pre.btts>=0.5)===(L.hg>0&&L.ag>0);
+  return '<tr><td>'+esc(m.h)+' - '+esc(m.a)+'</td><td class="n"><b>'+L.hg+'-'+L.ag+'</b></td><td class="n '+(ok25?'pos':'neg')+'">'+(ok25?'✓':'✗')+' '+pct(m.pre.o25)+'</td><td class="n '+(okkg?'pos':'neg')+'">'+(okkg?'✓':'✗')+' '+pct(m.pre.btts)+'</td></tr>';
+}
+
+async function update(){
+  const st = document.getElementById('status');
+  st.textContent = 'Güncelleniyor…';
+  try{
+    if(!MODEL) await loadModel();
+  }catch(e){ st.textContent=''; document.getElementById('live').innerHTML='<div class="ban">Model dosyası bulunamadı. Bot bir kez çalıştıktan sonra bu sayfa dolacak.</div>'; return; }
+  const now = Date.now();
+  const relevant = MODEL.matches.filter(m=>{const k=Date.parse(m.k); return k-now < 3*3600e3 && now-k < 3*3600e3;});
+  const bySlug = {};
+  for(const m of relevant){
+    const k = new Date(Date.parse(m.k));
+    (bySlug[m.slug] = bySlug[m.slug] || new Set()).add(ymd(k)).add(ymd(new Date(k.getTime()-864e5)));
+  }
+  const evs = {}; let err = null;
+  await Promise.all(Object.entries(bySlug).map(async ([slug, ds])=>{
+    try{ Object.assign(evs, await fetchEvents(slug, [...ds])); }catch(e){ err = e; }
+  }));
+  let live='', soon='', done='';
+  const ordered = relevant.slice().sort((a,b)=>Date.parse(a.k)-Date.parse(b.k));
+  for(const m of ordered){
+    const ev = evs[m.id]; const k = new Date(Date.parse(m.k));
+    let L = null; try{ if(ev) L = parseLive(ev); }catch(e){}
+    if(L && L.state==='in') live += liveCard(m, L);
+    else if(L && L.done) done += doneRow(m, L);
+    else if(k.getTime()>now) soon += '<tr><td>'+hm(k)+'</td><td>'+esc(m.h)+' - '+esc(m.a)+'<br><span class="note">'+esc(m.lg)+'</span></td><td class="n">'+pct(m.pre.o25)+'</td><td class="n">'+pct(m.pre.btts)+'</td></tr>';
+  }
+  let html = '';
+  if(err && !Object.keys(evs).length) html += '<div class="ban">Canlı skor alınamadı ('+esc(err.message||err)+'). İnternet bağlantını kontrol et; sorun sürerse bana bu mesajı ilet.</div>';
+  html += live || '<p class="empty">Şu an takip edilen liglerde canlı maç yok.</p>';
+  if(soon) html += '<h3>Yaklaşan (3 saat içinde)</h3><div class="wrap"><table><tr><th>Saat</th><th>Maç</th><th class="n">2.5Ü</th><th class="n">KG</th></tr>'+soon+'</table></div>';
+  if(done) html += '<h3>Son biten maçlar</h3><div class="wrap"><table><tr><th>Maç</th><th class="n">Skor</th><th class="n">2.5Ü tahmini</th><th class="n">KG tahmini</th></tr>'+done+'</table></div>';
+  document.getElementById('live').innerHTML = html;
+  st.textContent = 'Son güncelleme '+new Date().toLocaleTimeString('tr-TR',{timeZone:'Europe/Istanbul'})+' · her dakika yenilenir';
+}
+document.getElementById('refresh').addEventListener('click', update);
+update(); setInterval(update, 60000);
+"""
+
+
+def write_live_html():
+    page = (f"<!doctype html><html lang='tr'><head><meta charset='utf-8'>"
+            f"<meta name='viewport' content='width=device-width, initial-scale=1'>"
+            f"<title>Canlı Maçlar</title><style>{CSS}{LIVE_CSS}</style></head><body>"
+            f"<header><div class='top'><h1>Canlı Maçlar</h1><a class='back' href='index.html'>← Günün maçları</a></div>"
+            f"<div class='upd'><span id='status'></span> <button class='btn' id='refresh'>Yenile</button></div>"
+            f"<p class='note'>Olasılıklar, maç öncesi modelin beklentisinin kalan süreye, skora, kırmızı kartlara ve "
+            f"isabetli şut temposuna göre güncellenmiş halidir. Tahmindir, kâr garantisi vermez.</p></header>"
+            f"<div class='wrapc' id='live'><p class='empty'>Yükleniyor…</p></div><script>{LIVE_JS}</script></body></html>")
+    with open("canli.html", "w", encoding="utf-8") as f:
+        f.write(page)
+
 
 
 if __name__ == "__main__":
