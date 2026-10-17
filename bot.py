@@ -823,6 +823,16 @@ def finish_league(info, now, pool_eval, pool_all):
     kc = fit_kc(raw) if own else pool_all
     info["kc"] = kc
     info["kc_src"] = "lig" if own else "ortak"
+    # Değerli oranı sadece modelin bu ligde lig ortalamasını geçtiği bahis türlerinde göster
+    def skill(st):
+        return (st or {}).get("skill") or 0.0
+    trusted = set()
+    if skill(ms_stats(info["bt"])) > 0:
+        trusted |= {"1", "X", "2"}
+    for ln, key in LINE_KEY.items():
+        if skill(market_stats(info["bt"], key)) > 0:
+            trusted |= {f"o{ln}", f"u{ln}"}
+    info["trusted"] = trusted
     mu = mus(model)
     past_lams = [(lambdas(model, m["hid"], m["aid"]), m) for m in past]
     hts = [m for m in past if m.get("ht")]
@@ -858,7 +868,8 @@ def finish_league(info, now, pool_eval, pool_all):
                                      "score": (p + rate) / 2})
         info["cards"].append({
             "id": m["id"], "league": name, "kick": m["date"],
-            "odds": m.get("odds"), "vb": value_bets(r, m.get("odds")),
+            "odds": m.get("odds"),
+            "vb": [v for v in value_bets(r, m.get("odds")) if v["code"] in trusted],
             "simst": ss_, "surprise": surprise,
             "time": m["date"].astimezone(TR).strftime("%H:%M"),
             "day": m["date"].astimezone(TR).strftime("%d.%m"),
@@ -1278,7 +1289,8 @@ def value_html(leagues, compact=False):
     if not items:
         return out + "<p class='note'>Bugün oranı bilinen maçlarda değerli bulunan bahis yok.</p></div>"
     out += ("<p class='note'>Modelin olasılığı, oranın ima ettiğinden yüksek olan bahisler. Beklenen "
-            "getiri = model olasılığı × oran − 1.</p><div class='wrap'><table><tr><th>Maç</th><th>Bahis</th>"
+            "getiri = model olasılığı × oran − 1. Sadece modelin o ligde o bahis türünde geçmiş "
+            "testte lig ortalamasını geçtiği durumlar gösterilir.</p><div class='wrap'><table><tr><th>Maç</th><th>Bahis</th>"
             "<th class='n'>Model</th><th class='n'>Oran</th><th class='n'>Getiri</th></tr>")
     for v, c in items[:8]:
         out += (f"<tr><td>{c['time']} {E(c['home'])} - {E(c['away'])}</td><td>{E(v['lab'])}</td>"
