@@ -27,7 +27,6 @@ LEAGUES = [
     ("ger.2", "Almanya 2. Lig", False),
     ("usa.1", "ABD MLS", True),
     ("bra.1", "Brezilya 1. Lig", True),
-    ("sui.1", "İsviçre 1. Lig", False),
     ("swe.1", "İsveç 1. Lig", True),
     ("nor.1", "Norveç 1. Lig", True),
     ("den.1", "Danimarka 1. Lig", False),
@@ -38,14 +37,15 @@ LEAGUES = [
 HISTORY_DAYS = 420      # geçmiş veri penceresi
 HALF_LIFE = 100         # gün: zaman ağırlığı yarı ömrü
 LAST_N = 10             # takımın son N maçı
-BOOST = 2.5             # son N maça ek ağırlık çarpanı
-PRIOR = 3.0             # az maçı olan takımı lige çeken "sanal maç" sayısı
+BOOST = 1.5             # son N maça ek ağırlık çarpanı
+PRIOR = 5.0             # az maçı olan takımı lige çeken "sanal maç" sayısı
 HT_PRIOR = 8.0          # ilk yarı payında lig ortalamasına çeken "sanal gol" sayısı
 NEW_ATT, NEW_DEF = 0.85, 1.15   # verisi olmayan (yeni çıkan) takım varsayımı
 LOW_DATA = 5            # bundan az maçı olan takım "az veri" uyarısı alır
 DAY_START = 6           # iddaa günü: 06:00 - ertesi gün 06:00 (TR)
 BACKTEST_DAYS = 60      # doğruluk tablosunun ölçtüğü son gün sayısı
-CALIB_DAYS = 60         # bunun öncesindeki günler ayar (kalibrasyon) için kullanılır
+CALIB_DAYS = 90         # bunun öncesindeki günler ayar (kalibrasyon) için kullanılır
+MIN_CALIB = 150         # ligin kendi ayarı için gereken en az maç; azsa tüm liglerin ortak ayarı
 RHO_GRID = [x / 100 for x in range(-25, 11)]
 SIM_K = 60              # skor ve sürpriz karşılaştırması için en benzer geçmiş maç sayısı
 VALUE_MIN_EV = 0.05     # değerli oran: beklenen getiri en az %5
@@ -802,12 +802,27 @@ def process_league(slug, name, calendar, now):
     th = team_history(past)
     ss = season_start(now, calendar)
     todays = [m for m in allm if d0 <= m["date"] < d1]
-    raw = backtest_raw(finished, now)
+    info["raw"] = backtest_raw(finished, now)
+    info["_ctx"] = (model, past, th, ss, todays)
+    return info
+
+
+def finish_league(info, now, pool_eval, pool_all):
+    """Ayarı (kalibrasyonu) uygular, doğruluk testini ve bugünün kartlarını üretir."""
+    if info["err"] or "_ctx" not in info:
+        return info
+    model, past, th, ss, todays = info.pop("_ctx")
+    raw = info.pop("raw")
+    name = info["name"]
     cut = now - dt.timedelta(days=BACKTEST_DAYS)
-    kc_eval = fit_kc([x for x in raw if x["date"] < cut])    # doğruluk testi: sadece eski günlerle ayarlanır
+    old = [x for x in raw if x["date"] < cut]
+    # doğruluk testi: ayar sadece test günlerinden ÖNCEKİ maçlarla yapılır
+    kc_eval = fit_kc(old) if len(old) >= MIN_CALIB else pool_eval
     info["bt"] = bt_eval([x for x in raw if x["date"] >= cut], kc_eval)
-    kc = fit_kc(raw)                                          # bugünkü tahminler: tüm geçmiş testle ayarlanır
+    own = len(raw) >= MIN_CALIB
+    kc = fit_kc(raw) if own else pool_all
     info["kc"] = kc
+    info["kc_src"] = "lig" if own else "ortak"
     mu = mus(model)
     past_lams = [(lambdas(model, m["hid"], m["aid"]), m) for m in past]
     hts = [m for m in past if m.get("ht")]
@@ -1031,6 +1046,13 @@ def main():
     for slug, name, cal in LEAGUES:
         print("Lig:", slug, flush=True)
         leagues.append(process_league(slug, name, cal, now))
+    allraw = [x for L in leagues for x in L.get("raw", [])]
+    cut = now - dt.timedelta(days=BACKTEST_DAYS)
+    pool_eval = fit_kc([x for x in allraw if x["date"] < cut])
+    pool_all = fit_kc(allraw)
+    print("ortak ayar:", pool_eval, pool_all, flush=True)
+    for L in leagues:
+        finish_league(L, now, pool_eval, pool_all)
     st = load_store()
     update_store(st, leagues, now)
     write_html(leagues, now, st)
@@ -1486,8 +1508,10 @@ def accuracy_tab(leagues):
         out += (f"<tr><td>{E(L['name'])}</td><td class='n'>{m['ha'] ** 2:.2f}</td>"
                 f"<td class='n'>{pct(hm['f']) if hm else '-'}</td><td class='n'>{m['rho']:+.2f}</td>"
                 f"<td class='n'>{pct(hm['cov']) if hm else '-'}</td>"
-                f"<td class='n'>{L['kc'][0]:.2f}</td><td class='n'>{L['kc'][1]:.2f}</td></tr>")
-    out += "</table></div>"
+                f"<td class='n'>{L['kc'][0]:.2f}{'*' if L.get('kc_src') == 'ortak' else ''}</td>"
+                f"<td class='n'>{L['kc'][1]:.2f}</td></tr>")
+    out += ("</table></div><p class='note'>* Bu ligin yeterli geçmiş testi olmadığı için tüm liglerin "
+            "ortak ayarı kullanıldı.</p>")
     return out
 
 
