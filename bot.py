@@ -1563,7 +1563,7 @@ def write_html(leagues, now, st=None):
             f"<meta name='viewport' content='width=device-width, initial-scale=1'>"
             f"<title>Günün Maçları</title><style>{CSS}</style></head><body>"
             f"<header><div style='display:flex;justify-content:space-between;align-items:center'><h1>Günün Maçları</h1>"
-            f"<a href='canli.html' style='background:#d93025;color:#fff;text-decoration:none;font-weight:700;"
+            f"<a href='canli.html?v={int(now.timestamp())}' style='background:#d93025;color:#fff;text-decoration:none;font-weight:700;"
             f"font-size:13px;padding:6px 12px;border-radius:16px'>● Canlı</a></div><div class='upd'>Güncelleme: {local:%d.%m.%Y %H:%M} · "
             f"Maçlar: {d0:%d.%m %H:%M} - {d1:%d.%m %H:%M} · Model tahmindir, kâr garantisi vermez."
             f"</div></header><nav>{''.join(nav)}</nav>{''.join(tabs)}<script>{JS}</script></body></html>")
