@@ -1007,6 +1007,203 @@ def periods(st, now):
             ("Tümü", grade(done))]
 
 
+# ------------------------------------------------------------ günün kuponları
+COUPON_MIN = 0.55       # güvenli kupon: en az bu olasılıklı tahminler
+IY15_MIN = 0.30         # İY 1.5 Üst kuponu için alt sınır
+IYKG_MIN = 0.15         # İY KG Var kuponu için alt sınır
+COUPON_MAX = 8          # İY kuponlarında en fazla maç
+COUPONS = [
+    ("guvenli", "1. Güvenli kupon",
+     "Bültendeki her maç için modelin en yüksek olasılık verdiği tahmin, %" + f"{COUPON_MIN * 100:.0f}"
+     + " ve üzeri olanlar. Maçlar en güvenliden aza sıralı."),
+    ("surpriz", "2. Sürpriz kuponu: İY/MS 2/1 - 1/2",
+     "Sürpriz radarındaki maçlar: modelin tersine dönüş ihtimali verdiği ve benzer geçmiş maçlarda "
+     "en az 2 kez yaşanmış olanlar."),
+    ("iy15", "3. İY 1.5 Üst kuponu",
+     f"İlk yarıda en az 2 gol olma ihtimali en yüksek maçlar (en fazla {COUPON_MAX})."),
+    ("iykg", "4. İY KG Var kuponu",
+     f"İlk yarıda iki takımın da gol atma ihtimali en yüksek maçlar (en fazla {COUPON_MAX})."),
+]
+
+
+def leg_options(r):
+    o = [("MS 1", "1", r["p1"]), ("MS X", "X", r["px"]), ("MS 2", "2", r["p2"]),
+         ("Çifte şans 1X", "1X", r["p1"] + r["px"]), ("Çifte şans X2", "X2", r["px"] + r["p2"]),
+         ("Çifte şans 12", "12", r["p1"] + r["p2"]),
+         ("1.5 Üst", "o1.5", r["o15"]), ("2.5 Üst", "o2.5", r["o25"]), ("2.5 Alt", "u2.5", 1 - r["o25"]),
+         ("3.5 Alt", "u3.5", 1 - r["o35"]), ("KG Var", "kg", r["btts"]), ("KG Yok", "kgy", 1 - r["btts"])]
+    if r.get("iy05") is not None:
+        o.append(("İY 0.5 Üst", "iy05", r["iy05"]))
+    return o
+
+
+def settle_leg(code, res):
+    """Kupon bacağı tuttu mu? Sonuç yoksa ya da İY skoru bilinmiyorsa None."""
+    if not res:
+        return None
+    hg, ag, h1, a1 = res
+    if code in ("1", "X", "2"):
+        return res3(hg, ag) == {"1": 0, "X": 1, "2": 2}[code]
+    if code == "1X":
+        return hg >= ag
+    if code == "X2":
+        return hg <= ag
+    if code == "12":
+        return hg != ag
+    if code == "kg":
+        return hg > 0 and ag > 0
+    if code == "kgy":
+        return not (hg > 0 and ag > 0)
+    if code[0] in "ou" and code[1:2].isdigit():
+        return settle(code, hg, ag)
+    if h1 is None:
+        return None
+    if code == "iy05":
+        return h1 + a1 >= 1
+    if code == "iy15":
+        return h1 + a1 >= 2
+    if code == "iykg":
+        return h1 > 0 and a1 > 0
+    if code == "21":
+        return h1 < a1 and hg > ag
+    if code == "12r":
+        return h1 > a1 and hg < ag
+    return None
+
+
+def build_coupons(leagues, now):
+    cards = [(L, c) for L in leagues for c in L["cards"] if c["state"] == "pre" and c["kick"] > now]
+
+    def leg(L, c, label, code, p):
+        return {"id": c["id"], "k": c["kick"].isoformat(), "lg": L["name"], "h": c["home"], "a": c["away"],
+                "l": label, "c": code, "p": round(p, 4)}
+
+    safe = []
+    for L, c in cards:
+        opts = [x for x in leg_options(c["r"]) if x[2] >= COUPON_MIN]
+        if opts:
+            safe.append(leg(L, c, *max(opts, key=lambda x: x[2])))
+    sur = []
+    for L, c in cards:
+        if c["surprise"]:
+            x = max(c["surprise"], key=lambda s: s["score"])
+            sur.append(leg(L, c, "İY/MS " + x["t"], "21" if x["t"] == "2/1" else "12r", x["p"]))
+    iy15 = [leg(L, c, "İY 1.5 Üst", "iy15", c["r"]["iy15"]) for L, c in cards
+            if c["r"].get("iy15") is not None and c["r"]["iy15"] >= IY15_MIN]
+    iykg = [leg(L, c, "İY KG Var", "iykg", c["r"]["iykg"]) for L, c in cards
+            if c["r"].get("iykg") is not None and c["r"]["iykg"] >= IYKG_MIN]
+    by_p = lambda x: -x["p"]  # noqa
+    return {"guvenli": sorted(safe, key=by_p), "surpriz": sorted(sur, key=by_p),
+            "iy15": sorted(iy15, key=by_p)[:COUPON_MAX], "iykg": sorted(iykg, key=by_p)[:COUPON_MAX],
+            "t": now.isoformat()}
+
+
+def update_coupons(st, leagues, now):
+    """Günün kuponu, günün ilk çalıştırmasında bir kez kurulur; sonraki çalıştırmalar sadece sonuçları işler."""
+    d0, _ = day_window(now)
+    day = f"{d0:%Y-%m-%d}"
+    kup = st.setdefault("kupon", {})
+    if day not in kup:
+        kup[day] = build_coupons(leagues, now)
+    cut = f"{(d0 - dt.timedelta(days=KEEP_DAYS)):%Y-%m-%d}"
+    st["kupon"] = {k: v for k, v in kup.items() if k >= cut}
+    return st["kupon"][day]
+
+
+def leg_result(st, results, leg):
+    res = results.get(leg["id"]) or (st["preds"].get(leg["id"]) or {}).get("res")
+    return settle_leg(leg["c"], res), res
+
+
+def coupon_grade(st, results, legs):
+    won = lost = 0
+    for lg in legs:
+        ok, _ = leg_result(st, results, lg)
+        if ok is True:
+            won += 1
+        elif ok is False:
+            lost += 1
+    return won, lost, len(legs)
+
+
+def coupon_html(st, results, key, title, desc, legs, now):
+    out = f"<div class='card'><h2>{E(title)}</h2><p class='note'>{E(desc)}</p>"
+    if not legs:
+        return out + "<p class='empty'>Bugün bu kupona uyan maç yok.</p></div>"
+    out += ("<div class='wrap'><table><tr><th>Saat</th><th>Maç</th><th>Tahmin</th>"
+            "<th class='n'>%</th><th class='n'>Adil</th><th class='n'>Durum</th></tr>")
+    order = (lambda x: -x["p"]) if key == "guvenli" else (lambda x: x["k"])
+    for lg in sorted(legs, key=order):
+        k = dt.datetime.fromisoformat(lg["k"])
+        ok, res = leg_result(st, results, lg)
+        if ok is True:
+            dur = f"<span class='pos'>✓ {res[0]}-{res[1]}</span>"
+        elif ok is False:
+            dur = f"<span class='neg'>✗ {res[0]}-{res[1]}</span>"
+        elif k <= now:
+            dur = "oynanıyor"
+        else:
+            dur = "bekliyor"
+        out += (f"<tr><td>{k.astimezone(TR):%H:%M}</td><td>{E(lg['h'])} - {E(lg['a'])}<br>"
+                f"<span class='note'>{E(lg['lg'])}</span></td><td><b>{E(lg['l'])}</b></td>"
+                f"<td class='n'>{pct(lg['p'])}</td><td class='n'>{fair(lg['p'])}</td><td class='n'>{dur}</td></tr>")
+    out += "</table></div>"
+    tot = 1.0
+    for lg in legs:
+        tot *= lg["p"]
+    won, lost, n = coupon_grade(st, results, legs)
+    out += (f"<div class='row'>{n} maç · <b>hepsinin tutma ihtimali {tot * 100:.2g}%</b> · kupon adil oranı "
+            f"<b>{1 / tot:,.2f}</b></div>" if tot > 0 else "")
+    if won or lost:
+        out += f"<div class='row'>Şu ana kadar: <b class='pos'>{won} tuttu</b> · <b class='neg'>{lost} yattı</b></div>"
+    if key == "guvenli" and len(legs) > 3:
+        top = sorted(legs, key=lambda x: -x["p"])
+        for size in (3, 5):
+            if len(top) >= size + (1 if size == 5 else 0):
+                sub = top[:size]
+                p = 1.0
+                for lg in sub:
+                    p *= lg["p"]
+                names = ", ".join(f"{lg['h']}-{lg['a']} ({lg['l']})" for lg in sub)
+                out += (f"<div class='act'><b>En güvenli {size}'li:</b> {E(names)}<small>tutma ihtimali "
+                        f"%{p * 100:.0f} · adil oran {1 / p:.2f}</small></div>")
+    if tot < 0.05:
+        out += ("<p class='warn'>Bu kuponun tamamının tutma ihtimali çok düşük. Her maç tek başına makul "
+                "olsa da hepsinin birden tutması zordur; maçları tek tek ya da küçük gruplar halinde "
+                "değerlendirmek daha gerçekçi.</p>")
+    return out + "</div>"
+
+
+def coupons_tab(st, coupons, results, now):
+    out = ("<h2>Günün kuponları</h2><p class='note'>Kuponlar günün ilk çalıştırmasında (08:00) bir kez kurulur "
+           "ve gün boyu değişmez; maçlar bittikçe Durum sütunu dolar. 'Adil' sütunu modelin olasılığına "
+           "göre adil orandır: iddaa'daki oran bundan yüksekse model açısından değerlidir.</p>")
+    for key, title, desc in COUPONS:
+        out += coupon_html(st, results, key, title, desc, coupons.get(key, []), now)
+    return out
+
+
+def coupon_karne(st, results):
+    days = sorted(st.get("kupon", {}), reverse=True)[:14]
+    if not days:
+        return ""
+    head = "".join(f"<th class='n'>{E(t.split(':')[0].split('. ', 1)[-1])}</th>" for _, t, _ in COUPONS)
+    out = ("<h3>Kupon karnesi</h3><p class='note'>Her hücre: tutan maç / toplam maç. ✓ kuponun tamamı tuttu, "
+           "✗ en az bir maç yattı.</p><div class='wrap'><table><tr><th>Gün</th>" + head + "</tr>")
+    for d in days:
+        out += f"<tr><td>{d[8:]}.{d[5:7]}</td>"
+        for key, _, _ in COUPONS:
+            legs = st["kupon"][d].get(key, [])
+            if not legs:
+                out += "<td class='n'>-</td>"
+                continue
+            won, lost, n = coupon_grade(st, results, legs)
+            mark = " <span class='neg'>✗</span>" if lost else (" <span class='pos'>✓</span>" if won == n else "")
+            out += f"<td class='n'>{won}/{n}{mark}</td>"
+        out += "</tr>"
+    return out + "</table></div>"
+
+
 def site_url():
     repo = os.environ.get("GITHUB_REPOSITORY", "")
     if "/" in repo:
@@ -1066,6 +1263,7 @@ def main():
         finish_league(L, now, pool_eval, pool_all)
     st = load_store()
     update_store(st, leagues, now)
+    update_coupons(st, leagues, now)
     write_html(leagues, now, st)
     write_live_model(leagues, now)
     write_live_html()
@@ -1529,12 +1727,28 @@ def accuracy_tab(leagues):
     return out
 
 
+def all_results(leagues):
+    res = {}
+    for L in leagues:
+        res.update(L.get("results", {}))
+    return res
+
+
 def write_html(leagues, now, st=None):
     local = now.astimezone(TR)
     order = sorted(range(len(leagues)),
                    key=lambda i: (bool(leagues[i]["err"]), -len(leagues[i]["cards"]), i))
-    nav = ["<button data-t='ozet' class='on'>Özet</button>"]
-    tabs = [f"<section class='tab on' id='ozet'>{summary_tab(leagues)}</section>"]
+    nav = ["<button data-t='ozet' class='on'>Özet</button>", "<button data-t='kupon'>Kuponlar</button>"]
+    st = st or {"preds": {}, "meta": {}}
+    results = all_results(leagues)
+    d0_, _ = day_window(now)
+    today_cp = st.get("kupon", {}).get(f"{d0_:%Y-%m-%d}") or build_coupons(leagues, now)
+    n_cp = {k: len(today_cp.get(k, [])) for k, _, _ in COUPONS}
+    cp_banner = ("<div class='act' style='cursor:pointer' onclick=\"show('kupon')\"><b>Günün kuponları hazır →</b>"
+                 f"<small>Güvenli {n_cp['guvenli']} maç · Sürpriz {n_cp['surpriz']} · İY 1.5Ü {n_cp['iy15']} · "
+                 f"İY KG {n_cp['iykg']}</small></div>")
+    tabs = [f"<section class='tab on' id='ozet'>{cp_banner}{summary_tab(leagues)}</section>",
+            f"<section class='tab' id='kupon'>{coupons_tab(st, today_cp, results, now)}</section>"]
     for i in order:
         L = leagues[i]
         tid = f"l{i}"
@@ -1554,7 +1768,7 @@ def write_html(leagues, now, st=None):
         tabs.append(f"<section class='tab' id='{tid}'><h2>{E(L['name'])}</h2>"
                     f"<p class='row'>{meta}</p>{body}</section>")
     nav.append("<button data-t='karne'>Karne</button>")
-    tabs.append(f"<section class='tab' id='karne'>{karne_tab(st or {'preds': {}, 'meta': {}}, now)}</section>")
+    tabs.append(f"<section class='tab' id='karne'>{karne_tab(st, now)}{coupon_karne(st, results)}</section>")
     nav.append("<button data-t='dogruluk'>Doğruluk</button>")
     tabs.append(f"<section class='tab' id='dogruluk'>{accuracy_tab(leagues)}</section>")
 
