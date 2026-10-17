@@ -1618,6 +1618,28 @@ LIVE_CSS = """
 LIVE_JS = r"""
 const MODEL_URL = 'data/canli_model.json';
 let MODEL = null;
+let DIRECT = true;               // tarayıcı ESPN'e doğrudan bağlanabiliyor mu
+let SOURCE = '';
+function repoSlug(){
+  if(REPO) return REPO;
+  const owner = location.hostname.split('.')[0], name = location.pathname.split('/').filter(Boolean)[0];
+  return owner+'/'+name;
+}
+async function fetchRelay(){
+  const api = 'https://api.github.com/repos/'+repoSlug()+'/contents/canli.json?ref=canli';
+  let j = null;
+  try{
+    const r = await fetch(api, {headers:{'Accept':'application/vnd.github.raw+json'}, cache:'no-store'});
+    if(r.ok) j = await r.json();
+    else if(r.status===404) throw new Error('aktarım henüz başlamadı');
+  }catch(e){ if(String(e.message).includes('başlamadı')) throw e; }
+  if(!j){
+    const r = await fetch('https://raw.githubusercontent.com/'+repoSlug()+'/canli/canli.json?t='+Date.now());
+    if(!r.ok) throw new Error('aktarım verisi yok');
+    j = await r.json();
+  }
+  return j;
+}
 const SOT_GOAL = 0.32;          // isabetli şut başına ortalama gol
 const RED_OWN = 0.70, RED_OPP = 1.25;
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -1803,26 +1825,41 @@ async function update(){
     const k = new Date(Date.parse(m.k));
     (bySlug[m.slug] = bySlug[m.slug] || new Set()).add(ymd(k)).add(ymd(new Date(k.getTime()-864e5)));
   }
-  const evs = {}; let err = null;
-  await Promise.all(Object.entries(bySlug).map(async ([slug, ds])=>{
-    try{ Object.assign(evs, await fetchEvents(slug, [...ds])); }catch(e){ err = e; }
-  }));
-  let live='', soon='', done='';
+  let evs = {}; let err = null, relayAge = null;
+  if(DIRECT && Object.keys(bySlug).length){
+    await Promise.all(Object.entries(bySlug).map(async ([slug, ds])=>{
+      try{ Object.assign(evs, await fetchEvents(slug, [...ds])); }catch(e){ err = e; }
+    }));
+    if(err && !Object.keys(evs).length){ DIRECT = false; err = null; }
+    else SOURCE = 'ESPN (doğrudan)';
+  }
+  if(!DIRECT && relevant.length){
+    try{
+      const j = await fetchRelay();
+      evs = j.events || {};
+      relayAge = (now - Date.parse(j.t))/60000;
+      SOURCE = 'bot aktarımı · '+(relayAge<1?'az önce':Math.round(relayAge)+' dk önce');
+    }catch(e){ err = e; }
+  }
+  let live='', soon='', done='', wait='';
   const ordered = relevant.slice().sort((a,b)=>Date.parse(a.k)-Date.parse(b.k));
   for(const m of ordered){
     const ev = evs[m.id]; const k = new Date(Date.parse(m.k));
     let L = null; try{ if(ev) L = parseLive(ev); }catch(e){}
     if(L && L.state==='in') live += liveCard(m, L);
     else if(L && L.done) done += doneRow(m, L);
+    else if(k.getTime()<=now) wait += '<tr><td>'+hm(k)+'</td><td>'+esc(m.h)+' - '+esc(m.a)+'<br><span class="note">'+esc(m.lg)+'</span></td></tr>';
     else if(k.getTime()>now) soon += '<tr><td>'+hm(k)+'</td><td>'+esc(m.h)+' - '+esc(m.a)+'<br><span class="note">'+esc(m.lg)+'</span></td><td class="n">'+pct(m.pre.o25)+'</td><td class="n">'+pct(m.pre.btts)+'</td></tr>';
   }
   let html = '';
-  if(err && !Object.keys(evs).length) html += '<div class="ban">Canlı skor alınamadı ('+esc(err.message||err)+'). İnternet bağlantını kontrol et; sorun sürerse bana bu mesajı ilet.</div>';
+  if(err) html += '<div class="ban">Canlı skor alınamadı ('+esc(err.message||err)+'). Bot maç saatlerinde 20 dakikada bir kontrol edip aktarımı başlatır; birkaç dakika sonra tekrar dene.</div>';
+  else if(relayAge!=null && relayAge>5) html += '<div class="ban">Aktarım '+Math.round(relayAge)+' dakikadır güncellenmedi. Bot birkaç dakika içinde yeniden başlayacak.</div>';
   html += live || '<p class="empty">Şu an takip edilen liglerde canlı maç yok.</p>';
+  if(wait) html += '<h3>Başlamış, skor bekleniyor</h3><div class="wrap"><table><tr><th>Saat</th><th>Maç</th></tr>'+wait+'</table></div>';
   if(soon) html += '<h3>Yaklaşan (3 saat içinde)</h3><div class="wrap"><table><tr><th>Saat</th><th>Maç</th><th class="n">2.5Ü</th><th class="n">KG</th></tr>'+soon+'</table></div>';
   if(done) html += '<h3>Son biten maçlar</h3><div class="wrap"><table><tr><th>Maç</th><th class="n">Skor</th><th class="n">2.5Ü tahmini</th><th class="n">KG tahmini</th></tr>'+done+'</table></div>';
   document.getElementById('live').innerHTML = html;
-  st.textContent = 'Son güncelleme '+new Date().toLocaleTimeString('tr-TR',{timeZone:'Europe/Istanbul'})+' · her dakika yenilenir';
+  st.textContent = 'Son güncelleme '+new Date().toLocaleTimeString('tr-TR',{timeZone:'Europe/Istanbul'})+(SOURCE?' · kaynak: '+SOURCE:'')+' · her dakika yenilenir';
 }
 document.getElementById('refresh').addEventListener('click', update);
 update(); setInterval(update, 60000);
@@ -1830,6 +1867,7 @@ update(); setInterval(update, 60000);
 
 
 def write_live_html():
+    repo = json.dumps(os.environ.get("GITHUB_REPOSITORY", ""))
     page = (f"<!doctype html><html lang='tr'><head><meta charset='utf-8'>"
             f"<meta name='viewport' content='width=device-width, initial-scale=1'>"
             f"<title>Canlı Maçlar</title><style>{CSS}{LIVE_CSS}</style></head><body>"
@@ -1837,11 +1875,151 @@ def write_live_html():
             f"<div class='upd'><span id='status'></span> <button class='btn' id='refresh'>Yenile</button></div>"
             f"<p class='note'>Olasılıklar, maç öncesi modelin beklentisinin kalan süreye, skora, kırmızı kartlara ve "
             f"isabetli şut temposuna göre güncellenmiş halidir. Tahmindir, kâr garantisi vermez.</p></header>"
-            f"<div class='wrapc' id='live'><p class='empty'>Yükleniyor…</p></div><script>{LIVE_JS}</script></body></html>")
+            f"<div class='wrapc' id='live'><p class='empty'>Yükleniyor…</p></div><script>const REPO = {repo};{LIVE_JS}</script></body></html>")
     with open("canli.html", "w", encoding="utf-8") as f:
         f.write(page)
 
 
 
+# -------------------------------------------------------------------- CANLI AKTARIM
+# Telefon tarayıcısı ESPN'e doğrudan bağlanamadığı için, maç saatlerinde GitHub'da bu döngü
+# her dakika skorları çeker ve "canli" dalındaki canli.json dosyasına yazar.
+RELAY_BRANCH = "canli"
+RELAY_DIR = "/tmp/canli-relay"
+LIVE_BEFORE = 40      # maç başlamadan kaç dakika önce aktarım başlasın
+LIVE_AFTER = 150      # başlama saatinden kaç dakika sonrasına kadar izlensin
+LIVE_MAX_H = 5.6      # tek çalıştırmanın en uzun süresi (GitHub sınırı 6 saat)
+STAT_NAMES = {"possessionPct", "totalShots", "shotsOnTarget", "wonCorners"}
+
+
+def trim_event(ev):
+    c = ev["competitions"][0]
+    return {
+        "id": ev["id"], "status": ev.get("status", {}),
+        "competitions": [{
+            "competitors": [{
+                "homeAway": x.get("homeAway"), "score": x.get("score"),
+                "team": {"id": (x.get("team") or {}).get("id")},
+                "statistics": [s for s in x.get("statistics", []) if s.get("name") in STAT_NAMES],
+            } for x in c.get("competitors", [])],
+            "details": [{"redCard": True, "team": {"id": (d.get("team") or {}).get("id")}}
+                        for d in c.get("details", []) if d.get("redCard")],
+        }],
+    }
+
+
+def relevant_matches(model, now):
+    out = []
+    for m in model.get("matches", []):
+        k = dt.datetime.fromisoformat(m["k"])
+        mins = (now - k).total_seconds() / 60
+        if -LIVE_BEFORE <= mins <= LIVE_AFTER:
+            out.append(m)
+    return out
+
+
+def relay_snapshot(rel):
+    want = {m["id"] for m in rel}
+    dates = defaultdict(set)
+    for m in rel:
+        k = dt.datetime.fromisoformat(m["k"])
+        dates[m["slug"]] |= {f"{k:%Y%m%d}", f"{k - dt.timedelta(days=1):%Y%m%d}"}
+    events = {}
+    for slug, ds in dates.items():
+        for d in sorted(ds):
+            try:
+                data = http_json(BASE.format(slug=slug), {"dates": d})
+            except Exception as e:  # noqa
+                print("  alınamadı:", slug, d, e, flush=True)
+                continue
+            for ev in data.get("events", []):
+                if ev.get("id") in want:
+                    try:
+                        events[ev["id"]] = trim_event(ev)
+                    except Exception:  # noqa
+                        pass
+    return events
+
+
+def sh(*args, cwd=None, check=True):
+    import subprocess
+    r = subprocess.run(list(args), cwd=cwd, capture_output=True, text=True)
+    if check and r.returncode != 0:
+        raise RuntimeError(f"{' '.join(args[:3])}: {r.stderr.strip()[:200]}")
+    return r.stdout
+
+
+def relay_setup():
+    import shutil
+    ws = os.getcwd()
+    url = sh("git", "config", "--get", "remote.origin.url", cwd=ws).strip()
+    hdr = sh("git", "config", "--get", "http.https://github.com/.extraheader", cwd=ws, check=False).strip()
+    shutil.rmtree(RELAY_DIR, ignore_errors=True)
+    os.makedirs(RELAY_DIR)
+    sh("git", "init", "-q", "-b", RELAY_BRANCH, cwd=RELAY_DIR)
+    sh("git", "remote", "add", "origin", url, cwd=RELAY_DIR)
+    if hdr:
+        sh("git", "config", "http.https://github.com/.extraheader", hdr, cwd=RELAY_DIR)
+    sh("git", "config", "user.name", "bot", cwd=RELAY_DIR)
+    sh("git", "config", "user.email", "bot@users.noreply.github.com", cwd=RELAY_DIR)
+    return ws
+
+
+def relay_push(payload, first):
+    with open(os.path.join(RELAY_DIR, "canli.json"), "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))
+    sh("git", "add", "canli.json", cwd=RELAY_DIR)
+    if first:
+        sh("git", "commit", "-q", "-m", "canlı skorlar", cwd=RELAY_DIR)
+    else:
+        sh("git", "commit", "-q", "--amend", "-m", "canlı skorlar", cwd=RELAY_DIR)
+    sh("git", "push", "-q", "-f", "origin", RELAY_BRANCH, cwd=RELAY_DIR)   # tek commit tutulur, geçmiş şişmez
+
+
+def load_live_model(ws):
+    sh("git", "fetch", "-q", "origin", "main", cwd=ws, check=False)
+    try:
+        return json.loads(sh("git", "show", f"origin/main:{LIVE_MODEL}", cwd=ws))
+    except Exception:  # noqa
+        with open(os.path.join(ws, LIVE_MODEL), encoding="utf-8") as f:
+            return json.load(f)
+
+
+def live_loop():
+    start = time.time()
+    ws = os.getcwd()
+    model = load_live_model(ws)
+    rel = relevant_matches(model, dt.datetime.now(UTC))
+    if not rel:
+        print("Şu an canlı ya da yaklaşan maç yok, çıkılıyor.")
+        return
+    relay_setup()
+    first, n = True, 0
+    while time.time() - start < LIVE_MAX_H * 3600:
+        t0 = time.time()
+        if n and n % 10 == 0:
+            model = load_live_model(ws)          # 14:00 çalıştırması modeli tazelemiş olabilir
+        now = dt.datetime.now(UTC)
+        rel = relevant_matches(model, now)
+        if not rel:
+            print("İzlenecek maç kalmadı.")
+            break
+        events = relay_snapshot(rel)
+        live = sum(1 for e in events.values() if e["status"].get("type", {}).get("state") == "in")
+        try:
+            relay_push({"t": now.isoformat(), "events": events}, first)
+            first = False
+        except Exception as e:  # noqa
+            print("  yazılamadı:", e, flush=True)
+        n += 1
+        print(f"{now:%H:%M:%S} izlenen {len(rel)} maç, canlı {live}", flush=True)
+        time.sleep(max(5, 60 - (time.time() - t0)))
+
+
+
 if __name__ == "__main__":
-    main()
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "canli":
+        live_loop()
+    else:
+        main()
