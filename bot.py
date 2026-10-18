@@ -39,12 +39,8 @@ LEAGUES = [
     ("uefa.champions", "Şampiyonlar Ligi", False),
     ("uefa.europa", "Avrupa Ligi", False),
     ("uefa.europa.conf", "Konferans Ligi", False),
-    ("pol.1", "Polonya Ekstraklasa", False),
     ("rus.1", "Rusya Premier Lig", False),
-    ("aze.1", "Azerbaycan Premier Lig", False),
     ("gre.1", "Yunanistan Süper Lig", False),
-    ("cro.1", "Hırvatistan HNL", False),
-    ("ukr.1", "Ukrayna Premier Lig", False),
     ("ksa.1", "Suudi Arabistan Pro Lig", False),
 ]
 
