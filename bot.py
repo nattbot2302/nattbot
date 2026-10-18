@@ -578,7 +578,8 @@ GOAL_MARKETS = [
     ("o15", "1.5 Üst"), ("o25", "2.5 Üst"), ("o35", "3.5 Üst"),
     ("btts", "KG Var"), ("u25", "2.5 Alt"),
 ]
-GM_LABEL = dict(GOAL_MARKETS)
+RP_MARKETS = GOAL_MARKETS + [("ms1", "MS 1"), ("ms2", "MS 2")]
+GM_LABEL = dict(RP_MARKETS)
 MAIN_EXCLUDE = {"o15", "iy05"}          # oranı çok düşük; günün önerisi olarak seçilmez
 TIER_NAME = {2: "GÜÇLÜ", 1: "ORTA", 0: "ZAYIF"}
 RP_MIN_CHECKS = 5
@@ -597,6 +598,10 @@ def gev(key, gf, ga, gf1, ga1):
         return gf + ga <= 2
     if key == "btts":
         return gf > 0 and ga > 0
+    if key == "ms1":
+        return gf > ga
+    if key == "ms2":
+        return gf < ga
     if gf1 is None or ga1 is None:
         return None
     if key == "iy05":
@@ -614,10 +619,24 @@ def m_ev(key, m):
 
 
 def model_p(key, r):
-    return 1 - r["o25"] if key == "u25" else r.get(key)
+    if key == "u25":
+        return 1 - r["o25"]
+    if key == "ms1":
+        return r["p1"]
+    if key == "ms2":
+        return r["p2"]
+    return r.get(key)
 
 
-def rows_rate(key, rows):
+def ppg(rows):
+    return sum(3 if x[1] > x[2] else (1 if x[1] == x[2] else 0) for x in rows) / len(rows) if rows else None
+
+
+def rows_rate(key, rows, side="h"):
+    if key in ("ms1", "ms2"):
+        want_win = (key == "ms1") == (side == "h")
+        v = [(x[1] > x[2]) if want_win else (x[1] < x[2]) for x in rows]
+        return sum(v), len(v)
     v = [gev(key, x[1], x[2], x[3], x[4]) for x in rows]
     v = [x for x in v if x is not None]
     return sum(v), len(v)
@@ -631,7 +650,7 @@ def rows_mean(rows, i):
 def rapor_ctx(past, ref):
     recent = [m for m in past if m["date"] >= ref - dt.timedelta(days=365)] or past
     base = {}
-    for key, _ in GOAL_MARKETS:
+    for key, _ in RP_MARKETS:
         v = [m_ev(key, m) for m in recent]
         v = [x for x in v if x is not None]
         base[key] = sum(v) / len(v) if len(v) >= 30 else None
@@ -653,7 +672,7 @@ def rapor_eval(ctx, m, r, nb, hn, an):
     av = [x for x in ar if not x[5]][-5:]
     h2h = ctx["pairs"].get(frozenset((m["hid"], m["aid"])), [])[-4:]
     out = {}
-    for key, label in GOAL_MARKETS:
+    for key, label in RP_MARKETS:
         base, p = ctx["base"].get(key), model_p(key, r)
         if base is None or p is None:
             continue
@@ -662,22 +681,39 @@ def rapor_eval(ctx, m, r, nb, hn, an):
         def add(ok, text):
             checks.append((bool(ok), text))
         add(p >= base + 0.08, f"Model: %{p * 100:.0f} (lig ortalaması %{base * 100:.0f})")
-        for rows, who, minn in ((h10, f"{hn} son maçları", 6), (a10, f"{an} son maçları", 6),
-                                (hv, f"{hn} evdeki son maçları", 4), (av, f"{an} dışarıdaki son maçları", 4)):
-            k, n = rows_rate(key, rows)
+        ms = key in ("ms1", "ms2")
+        for rows, who, minn, side in ((h10, f"{hn} son maçları", 6, "h"), (a10, f"{an} son maçları", 6, "a"),
+                                      (hv, f"{hn} evdeki son maçları", 4, "h"),
+                                      (av, f"{an} dışarıdaki son maçları", 4, "a")):
+            k, n = rows_rate(key, rows, side)
             if n >= minn:
-                add(k / n >= base + 0.10, f"{who}: {k}/{n} (%{k / n * 100:.0f})")
+                if ms:
+                    win = (key == "ms1") == (side == "h")
+                    word = "kazandı" if win else "kaybetti"
+                    add(k / n >= base + 0.10, f"{who}: {n} maçta {k} {word} (%{k / n * 100:.0f})")
+                else:
+                    add(k / n >= base + 0.10, f"{who}: {k}/{n} (%{k / n * 100:.0f})")
         nk = [m_ev(key, x) for x in nb]
         nk = [x for x in nk if x is not None]
         if len(nk) >= 30:
             k = sum(nk)
             add(k / len(nk) >= base + 0.06, f"Benzer {len(nk)} maç: {k}/{len(nk)} (%{k / len(nk) * 100:.0f})")
-        hk = [m_ev(key, x) for x in h2h]
+        if ms:   # aralarındaki maçlar: bugünkü ev sahibine göre
+            hk = []
+            for x in h2h:
+                hg_, ag_ = (x["hg"], x["ag"]) if x["hid"] == m["hid"] else (x["ag"], x["hg"])
+                hk.append(hg_ > ag_ if key == "ms1" else hg_ < ag_)
+        else:
+            hk = [m_ev(key, x) for x in h2h]
         hk = [x for x in hk if x is not None]
         if len(hk) >= 2:
             k = sum(hk)
             add(k / len(hk) >= max(base, 0.5), f"Aralarındaki son {len(hk)} maç: {k}/{len(hk)}")
-        if key in ("o15", "o25", "o35", "u25") and ctx["avg"]:
+        if ms and len(h10) >= 6 and len(a10) >= 6:
+            ph, pa = ppg(h10), ppg(a10)
+            diff = ph - pa if key == "ms1" else pa - ph
+            add(diff >= 0.5, f"Son 10 maç puan ortalaması: {hn} {ph:.1f}, {an} {pa:.1f}")
+        elif key in ("o15", "o25", "o35", "u25") and ctx["avg"]:
             parts = [rows_mean(h10, 1), rows_mean(a10, 2), rows_mean(a10, 1), rows_mean(h10, 2)]
             if None not in parts:
                 exp = (parts[0] + parts[1]) / 2 + (parts[2] + parts[3]) / 2
@@ -1119,6 +1155,7 @@ def update_store(st, leagues, now):
                 "sur": [{"t": x["t"], "p": round(x["p"], 4)} for x in c["surprise"]],
                 "rp": ({"c": c["rapor"]["main"], "t": c["rapor"]["m"][c["rapor"]["main"]]["tier"]}
                        if c.get("rapor") and c["rapor"]["main"] else None),
+                "rpm": ({k: v["tier"] for k, v in c["rapor"]["m"].items()} if c.get("rapor") else {}),
                 "res": preds.get(c["id"], {}).get("res"),
             }
     # 2) sonuçlanan maçları işle
@@ -1142,6 +1179,10 @@ def outcome(key, res):
     hg, ag, h1, a1 = res
     if key == "u25":
         return hg + ag <= 2
+    if key == "ms1":
+        return hg > ag
+    if key == "ms2":
+        return hg < ag
     if key in ("o15", "o25", "o35"):
         return hg + ag > {"o15": 1.5, "o25": 2.5, "o35": 3.5}[key]
     if key == "btts":
@@ -1568,7 +1609,8 @@ CSS = """
 body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif}
 header{padding:12px 12px 0}h1{font-size:20px;margin:0}
 .upd{color:var(--mu);font-size:12px;margin:6px 0}
-nav{position:sticky;top:0;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:8px 12px;z-index:5;white-space:nowrap}
+nav{position:sticky;top:0;background:var(--bg);padding:8px 12px;z-index:5}
+nav select{width:100%;font-size:16px;font-weight:600;padding:10px 12px;border-radius:10px;background:var(--card);color:var(--tx);border:1px solid var(--bd)}
 nav button{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:16px;padding:7px 12px;font-size:13px;flex:none}
 nav button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
 nav small{opacity:.7}
@@ -1623,12 +1665,13 @@ html{scroll-behavior:smooth;scroll-padding-top:56px}
 JS = """
 function show(id){
   document.querySelectorAll('.tab').forEach(function(e){e.classList.toggle('on',e.id===id)});
-  document.querySelectorAll('nav button').forEach(function(e){e.classList.toggle('on',e.dataset.t===id)});
+  var s = document.getElementById('navsel'); if(s && s.value!==id) s.value = id;
   window.scrollTo(0,0);
 }
-document.querySelectorAll('nav button').forEach(function(b){
-  b.addEventListener('click',function(){show(b.dataset.t)});
-});
+function t1Filter(){
+  var v = document.getElementById('t1lg').value;
+  document.querySelectorAll('details.t1m').forEach(function(e){ e.style.display = (!v || e.dataset.lg===v) ? '' : 'none'; });
+}
 """
 
 E = html.escape
@@ -2027,7 +2070,7 @@ def accuracy_tab(leagues):
 
 # ------------------------------------------------------------ gol raporu sekmesi
 RP_CSS = """
-.rpchips{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;white-space:nowrap}
+.rpchips{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 10px}
 .rpchips button{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:14px;padding:6px 11px;font-size:12.5px;flex:none}
 .rpchips button.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
 .rps{display:none}.rps.on{display:block}
@@ -2159,7 +2202,7 @@ def rp_item(c, key, lname, full=True):
 <ul class='ck'>{checks}</ul>
 <div class='yorum'>{E(rp_comment(c, key))}</div>
 {team_line(c['home'], c['tctx']['h'])}{team_line(c['away'], c['tctx']['a'])}
-<div class='sec'>Bu maçtaki tüm gol bahisleri</div>
+<div class='sec'>Bu maçtaki tüm bahisler</div>
 <div class='wrap'><table><tr><th>Bahis</th><th class='n'>Kriter</th><th class='n'>Seviye</th></tr>{others}</table></div>
 </details>"""
 
@@ -2167,7 +2210,7 @@ def rp_item(c, key, lname, full=True):
 def rapor_bt(leagues):
     rows = [x for L in leagues for x in L.get("rp_bt", [])]
     per = {}
-    for key, _ in GOAL_MARKETS:
+    for key, _ in RP_MARKETS:
         allv = [rp[key][1] for rp, _ in rows if key in rp and rp[key][1] is not None]
         t1 = [rp[key][1] for rp, _ in rows if key in rp and rp[key][0] == 1 and rp[key][1] is not None]
         t2 = [rp[key][1] for rp, _ in rows if key in rp and rp[key][0] == 2 and rp[key][1] is not None]
@@ -2208,7 +2251,7 @@ def rapor_bt_html(leagues):
         out += "<div class='yorum'>" + "<br>".join(lines) + "</div>"
     out += ("<div class='wrap'><table class='bt'><tr><th>Bahis</th><th class='n'>Tüm maçlar</th>"
             "<th class='n'>Orta</th><th class='n'>Güçlü</th></tr>")
-    for key, label in GOAL_MARKETS:
+    for key, label in RP_MARKETS:
         allv, t1, t2 = per[key]
         b = sum(allv) / len(allv) if allv else None
         out += f"<tr><td>{label}</td>{cell(allv)}{cell(t1, b)}{cell(t2, b)}</tr>"
@@ -2218,9 +2261,9 @@ def rapor_bt_html(leagues):
 def rapor_tab(leagues, now):
     cards = [(c, L["name"]) for L in leagues for c in L["cards"] if c.get("rapor")]
     d0, _ = day_window(now)
-    out = ("<h2>Gol raporu</h2><p class='note'>Her maçta 8 gol bahsi için 8 maddelik kontrol listesi: model, "
-           "iki takımın son 10 maçı, ev sahibinin evdeki ve deplasmanın dışarıdaki son 5 maçı, benzer maçlar, "
-           "aralarındaki maçlar ve gol ortalamaları. Bir madde, ligin genel oranının belirgin üstündeyse ✓ alır. "
+    out = ("<h2>Gol raporu</h2><p class='note'>Her maçta 8 gol bahsi ve MS 1 / MS 2 için 8 maddelik kontrol "
+           "listesi: model, iki takımın son 10 maçı, ev sahibinin evdeki ve deplasmanın dışarıdaki son 5 maçı, benzer "
+           "maçlar, aralarındaki maçlar ve gol ortalamaları (MS için puan ortalaması). Bir madde, ligin genel oranının belirgin üstündeyse ✓ alır. "
            "<b>Güçlü</b>: maddelerin en az %80'i ✓. <b>Orta</b>: en az %60'ı. Bir maça dokununca detayı açılır.</p>")
     out += "<details class='rp'><summary><b>Bu kurallar geçmişte ne kadar tuttu?</b> <span class='note'>(dokun)</span></summary>"
     out += rapor_bt_html(leagues).replace("<h3>Bu kurallar geçmişte ne kadar tuttu?</h3>", "") + "</details>"
@@ -2233,7 +2276,7 @@ def rapor_tab(leagues, now):
             f"<select id='tf-b' onchange='rpFilter()'>{opt_b}</select>"
             "<button onclick='tfNext(3)'>Sonraki 3 saat</button><button onclick='tfAll()'>Tümü</button></div>")
     chips = "<button data-k='main' class='on' onclick=\"rpShow('main')\">Günün önerileri</button>" + "".join(
-        f"<button data-k='{k}' onclick=\"rpShow('{k}')\">{l}</button>" for k, l in GOAL_MARKETS) + \
+        f"<button data-k='{k}' onclick=\"rpShow('{k}')\">{l}</button>" for k, l in RP_MARKETS) + \
         "<button data-k='done' onclick=\"rpShow('done')\">Başlayan / Biten</button>"
     out += f"<div class='rpchips'>{chips}</div>"
     order = lambda c, k: (-c["rapor"]["m"][k]["tier"], -c["rapor"]["m"][k]["score"])  # noqa
@@ -2243,7 +2286,7 @@ def rapor_tab(leagues, now):
     out += ("<div class='rps on' id='rps-main'><p class='note'>Öneri için hem kriterlerin çoğu tutmalı hem de model "
             f"en az %{MAIN_MIN_P * 100:.0f} ihtimal vermeli (1.5 Üst ve İY 0.5 Üst hariç). <b class='cnt'></b></p>"
             f"{body}<p class='empty none'>Seçilen saat aralığında başlamamış önerili maç yok.</p></div>")
-    for key, label in GOAL_MARKETS:
+    for key, label in RP_MARKETS:
         lst = [(c, ln) for c, ln in cards if key in c["rapor"]["m"] and not c["score"] and c["state"] == "pre"]
         lst.sort(key=lambda x: order(x[0], key))
         items = "".join(rp_item(c, key, ln, full=False) for c, ln in lst)
@@ -2254,6 +2297,127 @@ def rapor_tab(leagues, now):
     out += ("<div class='rps' id='rps-done'><p class='note'>Başlamış ve bitmiş maçlardaki öneriler. Sonuçlar botun "
             f"her çalışmasında güncellenir. <b class='cnt'></b></p>{fbody}"
             "<p class='empty none'>Henüz başlayan önerili maç yok.</p></div>")
+    return out
+
+
+# ------------------------------------------------------------ T-1: dün ne dedik, ne oldu
+T1_ROWS = [  # (etiket, olasılık anahtarı, üst/var adı, alt/yok adı, rapor anahtarı (üst), rapor anahtarı (alt))
+    ("1.5 Ü/A", "o15", "1.5 Üst", "1.5 Alt", "o15", None),
+    ("2.5 Ü/A", "o25", "2.5 Üst", "2.5 Alt", "o25", "u25"),
+    ("3.5 Ü/A", "o35", "3.5 Üst", "3.5 Alt", "o35", None),
+    ("KG", "btts", "KG Var", "KG Yok", "btts", None),
+    ("İY 0.5 Ü/A", "iy05", "İY 0.5 Üst", "İY 0.5 Alt", "iy05", None),
+    ("İY 1.5 Ü/A", "iy15", "İY 1.5 Üst", "İY 1.5 Alt", "iy15", None),
+    ("İY KG", "iykg", "İY KG Var", "İY KG Yok", "iykg", None),
+]
+SURE = 0.65   # "emin olduğu" tahmin eşiği
+
+
+def t1_lines(e):
+    """Bir maç için her bahiste modelin eğilimi ve sonucu: (grup, tahmin metni, olasılık, doğru mu, rapor seviyesi)."""
+    hg, ag, h1, a1 = e["res"]
+    p, rpm = e["p"], e.get("rpm") or {}
+    out = []
+    ps = [p.get("p1", 0), p.get("px", 0), p.get("p2", 0)]
+    k = max(range(3), key=lambda i: ps[i])
+    tier = rpm.get({0: "ms1", 2: "ms2"}.get(k, ""), None)
+    out.append(("MS", ["MS 1", "MS X", "MS 2"][k], ps[k], res3(hg, ag) == k, tier))
+    for lab, key, up, down, rk_up, rk_down in T1_ROWS:
+        q = p.get(key)
+        if q is None:
+            continue
+        lean_up = q >= 0.5
+        happened = outcome(key, e["res"]) if key not in ("iy05", "iy15", "iykg") or h1 is not None else None
+        if happened is None:
+            ok = None
+        else:
+            ok = happened == lean_up
+        tier = rpm.get(rk_up if lean_up else (rk_down or ""), None)
+        out.append((lab, up if lean_up else down, q if lean_up else 1 - q, ok, tier))
+    ok = (e.get("ts") == f"{hg}-{ag}") if e.get("ts") else None
+    out.append(("Skor", f"En olası skor {e['ts']}", None, ok, None))
+    return out
+
+
+def t1_tab(st, now):
+    d0, _ = day_window(now)
+    yd = d0 - dt.timedelta(days=1)
+    yday = f"{yd:%Y-%m-%d}"
+    ent = sorted([e for e in st["preds"].values() if e["d"] == yday and e.get("res")], key=lambda e: e["k"])
+    out = (f"<h2>T-1 · Dün ({yd:%d.%m.%Y})</h2><p class='note'>Her maç için botun maç başlamadan önceki son tahmini "
+           "ve gerçek sonuç. Her bahiste modelin ağır bastığı taraf (%50 üstü) gösterilir. Rozet varsa Gol "
+           "Raporu o bahis için Güçlü/Orta demişti.</p>")
+    if not ent:
+        return out + "<p class='empty'>Dün için kayıtlı ve sonuçlanmış tahmin yok.</p>"
+    rows = [(e, t1_lines(e)) for e in ent]
+    # özet tablo
+    agg = {}
+    for _, lines in rows:
+        for grp, _, prob, ok, tier in lines:
+            a = agg.setdefault(grp, [0, 0, 0, 0, 0, 0])
+            if ok is None:
+                continue
+            a[0] += ok
+            a[1] += 1
+            if prob is not None and prob >= SURE:
+                a[2] += ok
+                a[3] += 1
+            if tier in (1, 2):
+                a[4] += ok
+                a[5] += 1
+
+    def rc(h, t):
+        return f"<td class='n'><b>%{h / t * 100:.0f}</b> <span class='note'>{h}/{t}</span></td>" if t else "<td class='n'>-</td>"
+    out += ("<p class='note'><b>Tümü</b>: modelin her maçtaki eğilimi. <b>Emin</b>: modelin en az "
+            f"%{SURE * 100:.0f} dediği tahminler. <b>Rozetli</b>: Gol Raporu'nun Güçlü/Orta dediği tahminler.</p>")
+    out += (f"<div class='wrap'><table><tr><th>Bahis</th><th class='n'>Tümü</th>"
+            f"<th class='n'>Emin (%{SURE * 100:.0f}+)</th><th class='n'>Rozetli</th></tr>")
+    for grp in ["MS"] + [r[0] for r in T1_ROWS] + ["Skor"]:
+        if grp in agg:
+            a = agg[grp]
+            out += f"<tr><td>{grp}</td>{rc(a[0], a[1])}{rc(a[2], a[3])}{rc(a[4], a[5])}</tr>"
+    out += "</table></div>"
+    # rapor önerileri
+    rec = [(e, e["rp"]) for e in ent if e.get("rp")]
+    if rec:
+        hit = sum(1 for e, rp in rec if outcome(rp["c"], e["res"]))
+        out += f"<h3>Gol Raporu önerileri: {hit}/{len(rec)} tuttu</h3><div class='wrap'><table><tr><th>Maç</th><th>Öneri</th><th class='n'>Skor</th><th class='n'>Sonuç</th></tr>"
+        for e, rp in rec:
+            o = outcome(rp["c"], e["res"])
+            mark = "-" if o is None else ("<span class='pos'>✓</span>" if o else "<span class='neg'>✗</span>")
+            out += (f"<tr><td>{E(e['h'])} - {E(e['a'])}</td><td><b>{GM_LABEL.get(rp['c'], rp['c'])}</b> "
+                    f"<span class='tier t{rp['t']}'>{TIER_NAME[rp['t']]}</span></td>"
+                    f"<td class='n'>{e['res'][0]}-{e['res'][1]}</td><td class='n'>{mark}</td></tr>")
+        out += "</table></div>"
+    # lig filtresi + maç listesi
+    leagues_ = sorted({e["lg"] for e in ent})
+    opts = "<option value=''>Tüm ligler</option>" + "".join(f"<option>{E(x)}</option>" for x in leagues_)
+    out += (f"<h3>Maçlar ({len(ent)})</h3><div class='tf'><select id='t1lg' onchange='t1Filter()'>{opts}</select></div>")
+    for e, lines in rows:
+        hg, ag, h1, a1 = e["res"]
+        k = dt.datetime.fromisoformat(e["k"]).astimezone(TR)
+        good = sum(1 for x in lines if x[3] is True)
+        tot = sum(1 for x in lines if x[3] is not None)
+        ht = f" <span class='note'>(İY {h1}-{a1})</span>" if h1 is not None else ""
+        rpl = ""
+        if e.get("rp"):
+            o = outcome(e["rp"]["c"], e["res"])
+            rpl = (f"<div class='rb'>Rapor: <b>{GM_LABEL.get(e['rp']['c'], e['rp']['c'])}</b> "
+                   f"<span class='tier t{e['rp']['t']}'>{TIER_NAME[e['rp']['t']]}</span> "
+                   f"{'<span class=pos>✓</span>' if o else '<span class=neg>✗</span>'}</div>")
+        body = "".join(
+            f"<tr><td>{grp}</td><td>{E(txt)}{f' <span class=\"tier t{tier}\">{TIER_NAME[tier]}</span>' if tier in (1, 2) else ''}</td>"
+            f"<td class='n'>{'' if prob is None else f'%{prob * 100:.0f}'}</td>"
+            f"<td class='n'>{'-' if ok is None else ('<span class=pos>✓</span>' if ok else '<span class=neg>✗</span>')}</td></tr>"
+            for grp, txt, prob, ok, tier in lines)
+        out += (f"<details class='rp t1m' data-lg='{E(e['lg'])}'><summary>"
+                f"<div class='rt'><span>{k:%H:%M} · {E(e['lg'])}</span><span>{good}/{tot} doğru</span></div>"
+                f"<div class='rm'>{E(e['h'])} <b>{hg}-{ag}</b> {E(e['a'])}{ht}</div>{rpl}</summary>"
+                f"<div class='wrap'><table><tr><th>Bahis</th><th>Model ne dedi</th><th class='n'>%</th><th class='n'>Sonuç</th></tr>"
+                f"{body}</table></div></details>")
+    miss = sum(1 for e in st["preds"].values() if e["d"] == yday and not e.get("res"))
+    if miss:
+        out += f"<p class='note'>{miss} maçın sonucu henüz işlenmedi; botun bir sonraki çalışmasında eklenecek.</p>"
     return out
 
 
@@ -2268,8 +2432,8 @@ def write_html(leagues, now, st=None):
     local = now.astimezone(TR)
     order = sorted(range(len(leagues)),
                    key=lambda i: (bool(leagues[i]["err"]), -len(leagues[i]["cards"]), i))
-    nav = ["<button data-t='rapor' class='on'>Gol Raporu</button>", "<button data-t='ozet'>Özet</button>",
-           "<button data-t='kupon'>Kuponlar</button>"]
+    nav = ["<option value='rapor' selected>Gol Raporu</option>", "<option value='t1'>T-1 · Dün ne oldu</option>",
+           "<option value='ozet'>Özet</option>", "<option value='kupon'>Kuponlar</option>", "<optgroup label='Ligler'>"]
     st = st or {"preds": {}, "meta": {}}
     results = all_results(leagues)
     d0_, _ = day_window(now)
@@ -2279,11 +2443,12 @@ def write_html(leagues, now, st=None):
                  f"<small>{' · '.join(n_cp)}</small></div>")
     tabs = [f"<section class='tab on' id='rapor'>{rapor_tab(leagues, now)}</section>",
             f"<section class='tab' id='ozet'>{cp_banner}{summary_tab(leagues)}</section>",
-            f"<section class='tab' id='kupon'>{coupons_tab(st, today_cp, results, now)}</section>"]
+            f"<section class='tab' id='kupon'>{coupons_tab(st, today_cp, results, now)}</section>",
+            f"<section class='tab' id='t1'>{t1_tab(st, now)}</section>"]
     for i in order:
         L = leagues[i]
         tid = f"l{i}"
-        nav.append(f"<button data-t='{tid}'>{E(L['name'])} <small>{len(L['cards'])}</small></button>")
+        nav.append(f"<option value='{tid}'>{E(L['name'])} ({len(L['cards'])} maç)</option>")
         if L["err"]:
             body = f"<p class='err'>{E(L['err'])}</p>"
         elif not L["cards"]:
@@ -2298,9 +2463,9 @@ def write_html(leagues, now, st=None):
             meta += f" · İY verisi maçların {pct(hm['cov'])}'ında var"
         tabs.append(f"<section class='tab' id='{tid}'><h2>{E(L['name'])}</h2>"
                     f"<p class='row'>{meta}</p>{body}</section>")
-    nav.append("<button data-t='karne'>Karne</button>")
+    nav.append("</optgroup><option value='karne'>Karne</option>")
     tabs.append(f"<section class='tab' id='karne'>{karne_tab(st, now)}{coupon_karne(st, results)}</section>")
-    nav.append("<button data-t='dogruluk'>Doğruluk</button>")
+    nav.append("<option value='dogruluk'>Doğruluk</option>")
     tabs.append(f"<section class='tab' id='dogruluk'>{accuracy_tab(leagues)}</section>")
 
     d0, d1 = day_window(now)
@@ -2311,7 +2476,7 @@ def write_html(leagues, now, st=None):
             f"<a href='canli.html?v={int(now.timestamp())}' style='background:#d93025;color:#fff;text-decoration:none;font-weight:700;"
             f"font-size:13px;padding:6px 12px;border-radius:16px'>● Canlı</a></div><div class='upd'>Güncelleme: {local:%d.%m.%Y %H:%M} · "
             f"Maçlar: {d0:%d.%m %H:%M} - {d1:%d.%m %H:%M} · Model tahmindir, kâr garantisi vermez."
-            f"</div></header><div id='alarm' style='padding:0 12px'></div><nav>{''.join(nav)}</nav>{''.join(tabs)}"
+            f"</div></header><div id='alarm' style='padding:0 12px'></div><nav><select id='navsel' onchange='show(this.value)'>{''.join(nav)}</select></nav>{''.join(tabs)}"
             f"<script>{JS}{RP_JS}</script><script>const REPO = {json.dumps(os.environ.get('GITHUB_REPOSITORY', ''))};"
             f"{live_core_js()}{ALARM_JS}</script></body></html>")
     with open("index.html", "w", encoding="utf-8") as f:
