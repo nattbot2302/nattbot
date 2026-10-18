@@ -36,6 +36,16 @@ LEAGUES = [
     ("eng.2", "İngiltere Championship", False),
     ("aut.1", "Avusturya Bundesliga", False),
     ("bel.1", "Belçika Pro Lig", False),
+    ("uefa.champions", "Şampiyonlar Ligi", False),
+    ("uefa.europa", "Avrupa Ligi", False),
+    ("uefa.europa.conf", "Konferans Ligi", False),
+    ("pol.1", "Polonya Ekstraklasa", False),
+    ("rus.1", "Rusya Premier Lig", False),
+    ("aze.1", "Azerbaycan Premier Lig", False),
+    ("gre.1", "Yunanistan Süper Lig", False),
+    ("cro.1", "Hırvatistan HNL", False),
+    ("ukr.1", "Ukrayna Premier Lig", False),
+    ("ksa.1", "Suudi Arabistan Pro Lig", False),
 ]
 
 HISTORY_DAYS = 420      # geçmiş veri penceresi
@@ -493,7 +503,7 @@ def analyze(lam_h, lam_a, rho=0.0, half=None, joint=True):
     r = {
         "p1": S(lambda i, j: i > j), "px": S(lambda i, j: i == j), "p2": S(lambda i, j: i < j),
         "o15": S(lambda i, j: i + j >= 2), "o25": S(lambda i, j: i + j >= 3),
-        "o35": S(lambda i, j: i + j >= 4),
+        "o35": S(lambda i, j: i + j >= 4), "o45": S(lambda i, j: i + j >= 5),
         "btts": S(lambda i, j: i >= 1 and j >= 1),
         "h05": S(lambda i, j: i >= 1), "a05": S(lambda i, j: j >= 1),
         "h15": S(lambda i, j: i >= 2), "a15": S(lambda i, j: j >= 2),
@@ -575,7 +585,7 @@ def sim_stats(nb):
 # ------------------------------------------------------------ gol raporu (kontrol listesi)
 GOAL_MARKETS = [
     ("iy05", "İY 0.5 Üst"), ("iy15", "İY 1.5 Üst"), ("iykg", "İY KG Var"),
-    ("o15", "1.5 Üst"), ("o25", "2.5 Üst"), ("o35", "3.5 Üst"),
+    ("o15", "1.5 Üst"), ("o25", "2.5 Üst"), ("o35", "3.5 Üst"), ("o45", "4.5 Üst"),
     ("btts", "KG Var"), ("u25", "2.5 Alt"),
 ]
 RP_MARKETS = GOAL_MARKETS + [("ms1", "MS 1"), ("ms2", "MS 2")]
@@ -584,6 +594,14 @@ MAIN_EXCLUDE = {"o15", "iy05"}          # oranı çok düşük; günün önerisi
 TIER_NAME = {2: "GÜÇLÜ", 1: "ORTA", 0: "ZAYIF"}
 RP_MIN_CHECKS = 5
 MAIN_MIN_P = 0.55        # günün önerisi için en düşük model olasılığı
+ALT_MIN_P = 0.40         # ikinci öneri için en düşük model olasılığı
+CLASH = {"o25": {"u25"}, "o35": {"u25"}, "o45": {"u25"}, "u25": {"o25", "o35", "o45"},
+         "ms1": {"ms2"}, "ms2": {"ms1"}}
+TRUST = None             # bahis türü + seviye bazında geçmiş başarı (main() içinde doldurulur)
+TRUST_EVAL = None
+GLOBAL_TH = None         # tüm liglerden birleşik takım geçmişi (Avrupa kupaları için)
+TRUST_MIN_N = 25
+TRUST_LIFT = 0.03        # geçmişte ortalamadan en az 3 puan iyi olmalı
 
 
 def gev(key, gf, ga, gf1, ga1):
@@ -594,6 +612,8 @@ def gev(key, gf, ga, gf1, ga1):
         return gf + ga >= 3
     if key == "o35":
         return gf + ga >= 4
+    if key == "o45":
+        return gf + ga >= 5
     if key == "u25":
         return gf + ga <= 2
     if key == "btts":
@@ -713,7 +733,7 @@ def rapor_eval(ctx, m, r, nb, hn, an):
             ph, pa = ppg(h10), ppg(a10)
             diff = ph - pa if key == "ms1" else pa - ph
             add(diff >= 0.5, f"Son 10 maç puan ortalaması: {hn} {ph:.1f}, {an} {pa:.1f}")
-        elif key in ("o15", "o25", "o35", "u25") and ctx["avg"]:
+        elif key in ("o15", "o25", "o35", "o45", "u25") and ctx["avg"]:
             parts = [rows_mean(h10, 1), rows_mean(a10, 2), rows_mean(a10, 1), rows_mean(h10, 2)]
             if None not in parts:
                 exp = (parts[0] + parts[1]) / 2 + (parts[2] + parts[3]) / 2
@@ -729,7 +749,14 @@ def rapor_eval(ctx, m, r, nb, hn, an):
             k2 = sum(1 for x in a10 if x[1] > 0)
             add(k1 / len(h10) >= 0.7 and k2 / len(a10) >= 0.7,
                 f"Gol attığı maç: {hn} {k1}/{len(h10)}, {an} {k2}/{len(a10)}")
-        elif key == "iykg":
+        if key in ("iy05", "iy15", "iykg") and ctx["avg1"] and ctx["avg"]:
+            rows1 = [x for x in h10 + a10 if x[3] is not None]
+            g_all = sum(x[1] + x[2] for x in rows1)
+            if len(rows1) >= 12 and g_all >= 10:
+                sh = sum(x[3] + x[4] for x in rows1) / g_all
+                lsh = ctx["avg1"] / ctx["avg"]
+                add(sh >= lsh + 0.04, f"İki takımın son maçlarında gollerin %{sh * 100:.0f}'i ilk yarıda (lig %{lsh * 100:.0f})")
+        if key == "iykg":
             h1 = [x for x in h10 if x[3] is not None]
             a1 = [x for x in a10 if x[3] is not None]
             if len(h1) >= 6 and len(a1) >= 6:
@@ -745,11 +772,47 @@ def rapor_eval(ctx, m, r, nb, hn, an):
             tier = 2 if ratio >= 0.8 else (1 if ratio >= 0.6 else 0)
         out[key] = {"p": p, "base": base, "checks": checks, "ok": okc, "tot": tot, "tier": tier,
                     "score": ratio + (p - base)}
-    # Günün önerisi: hem kriterleri tutan hem de olması muhtemel (model en az %55) bahis
-    cand = [(v["tier"], v["score"], k) for k, v in out.items()
-            if k not in MAIN_EXCLUDE and v["tier"] >= 1 and v["p"] >= MAIN_MIN_P]
-    main = max(cand)[2] if cand else None
-    return {"m": out, "main": main}
+    # Günün önerisi: kriterleri tutan, olması muhtemel (model en az %55) ve geçmişte işe yaramış bahis türü
+    def ok_trust(k, tier):
+        if TRUST is None:
+            return True
+        t = TRUST.get((k, tier))
+        return bool(t and t["ok"])
+    cand = sorted([(v["tier"], v["score"], k) for k, v in out.items()
+                   if k not in MAIN_EXCLUDE and v["tier"] >= 1 and ok_trust(k, v["tier"])], reverse=True)
+    main = next((k for _, _, k in cand if out[k]["p"] >= MAIN_MIN_P), None)
+    alt = None
+    if main:
+        clash = CLASH.get(main, set()) | {main}
+        alt = next((k for _, _, k in cand if k not in clash and out[k]["p"] >= ALT_MIN_P), None)
+    return {"m": out, "main": main, "alt": alt}
+
+
+def trust_from(rows):
+    """rows: [(rp, ...)] -> {(bahis, seviye): {hit, n, base, ok}}; seviye 1/2 için geçmiş isabet."""
+    tot = defaultdict(lambda: [0, 0])
+    st = defaultdict(lambda: [0, 0])
+    for rp in rows:
+        for k, v in rp.items():
+            if v[1] is None:
+                continue
+            tot[k][0] += v[1]
+            tot[k][1] += 1
+            if v[0] in (1, 2):
+                st[(k, v[0])][0] += v[1]
+                st[(k, v[0])][1] += 1
+    out = {}
+    for (k, t), (h, n) in st.items():
+        base = tot[k][0] / tot[k][1] if tot[k][1] else 0
+        out[(k, t)] = {"hit": h / n if n else 0, "n": n, "base": base,
+                       "ok": n >= TRUST_MIN_N and h / n >= base + TRUST_LIFT}
+    return out
+
+
+def pick_main(rp, trust):
+    cand = sorted([(v[0], v[3], k) for k, v in rp.items()
+                   if k not in MAIN_EXCLUDE and v[0] >= 1 and (trust.get((k, v[0])) or {}).get("ok")], reverse=True)
+    return next((k for _, _, k in cand if rp[k][2] >= MAIN_MIN_P), None)
 
 
 def standings(season):
@@ -922,7 +985,8 @@ def backtest_raw(matches, now):
             out.append({"date": ref, "lam": lam, "mu": mus(model), "rho": model["rho"],
                         "sh": (hl[0] / lam[0], hl[1] / lam[1]) if hl else None,
                         "hg": m["hg"], "ag": m["ag"], "m": m,
-                        "rp": {k: (v["tier"], m_ev(k, m)) for k, v in ev["m"].items()}, "rpmain": ev["main"]})
+                        "rp": {k: (v["tier"], m_ev(k, m), v["p"], v["score"]) for k, v in ev["m"].items()},
+                        "rpmain": ev["main"]})
     return out
 
 
@@ -1013,6 +1077,13 @@ def process_league(slug, name, calendar, now):
     info["results"] = {m["id"]: [m["hg"], m["ag"]] + (list(m["ht"]) if m.get("ht") else [None, None])
                        for m in finished}
     d0, d1 = day_window(now)
+    stale = [m for m in allm if not m["done"] and m["date"] < now - dt.timedelta(hours=6)
+             and m["date"] > now - dt.timedelta(days=21)]
+    recent_done = [m for m in finished if m["date"] > now - dt.timedelta(days=21)]
+    if len(stale) >= 5 and len(stale) > len(recent_done):
+        info["err"] = (f"ESPN bu ligin sonuçlarını güncellemiyor (son 3 haftada {len(stale)} maç "
+                       f"sonuçsuz, {len(recent_done)} maç sonuçlu)")
+        return info
     past = [m for m in finished if m["date"] < d0]      # bugünün sonuçları modele sızmasın
     info["nfin"] = len(past)
     if len(past) < 30:
@@ -1039,7 +1110,7 @@ def finish_league(info, now, pool_eval, pool_all):
         return info
     model, past, th, ss, todays = info.pop("_ctx")
     raw = info.pop("raw")
-    info["rp_bt"] = [(x["rp"], x["rpmain"]) for x in raw if "rp" in x]
+    info["rp_bt"] = [(x["rp"], x["rpmain"], x["date"]) for x in raw if "rp" in x]
     name = info["name"]
     cut = now - dt.timedelta(days=BACKTEST_DAYS)
     old = [x for x in raw if x["date"] < cut]
@@ -1063,6 +1134,8 @@ def finish_league(info, now, pool_eval, pool_all):
     mu = mus(model)
     past_lams = [(lambdas(model, m["hid"], m["aid"]), m) for m in past]
     rctx = rapor_ctx(past, now)
+    if info["slug"].startswith("uefa.") and GLOBAL_TH:
+        rctx["th"] = GLOBAL_TH           # kupada takımların kendi ligindeki maçları da forma dahil
     table, rank, nteams = standings([m for m in past if m["date"] >= ss])
     info["rbase"] = rctx["base"]
     hts = [m for m in past if m.get("ht")]
@@ -1117,7 +1190,7 @@ def finish_league(info, now, pool_eval, pool_all):
 
 
 # ------------------------------------------------------------ kayıt ve karne
-PRED_KEYS = ["p1", "px", "p2", "o15", "o25", "o35", "btts", "iy05", "iy15", "iykg", "p21", "p12"]
+PRED_KEYS = ["p1", "px", "p2", "o15", "o25", "o35", "o45", "btts", "iy05", "iy15", "iykg", "p21", "p12"]
 
 
 def load_store():
@@ -1156,6 +1229,8 @@ def update_store(st, leagues, now):
                 "rp": ({"c": c["rapor"]["main"], "t": c["rapor"]["m"][c["rapor"]["main"]]["tier"]}
                        if c.get("rapor") and c["rapor"]["main"] else None),
                 "rpm": ({k: v["tier"] for k, v in c["rapor"]["m"].items()} if c.get("rapor") else {}),
+                "rp2": ({"c": c["rapor"]["alt"], "t": c["rapor"]["m"][c["rapor"]["alt"]]["tier"]}
+                        if c.get("rapor") and c["rapor"].get("alt") else None),
                 "res": preds.get(c["id"], {}).get("res"),
             }
     # 2) sonuçlanan maçları işle
@@ -1183,8 +1258,8 @@ def outcome(key, res):
         return hg > ag
     if key == "ms2":
         return hg < ag
-    if key in ("o15", "o25", "o35"):
-        return hg + ag > {"o15": 1.5, "o25": 2.5, "o35": 3.5}[key]
+    if key in ("o15", "o25", "o35", "o45"):
+        return hg + ag > {"o15": 1.5, "o25": 2.5, "o35": 3.5, "o45": 4.5}[key]
     if key == "btts":
         return hg > 0 and ag > 0
     if h1 is None:
@@ -1589,6 +1664,18 @@ def main():
     pool_eval = fit_kc([x for x in allraw if x["date"] < cut])
     pool_all = fit_kc(allraw)
     print("ortak ayar:", pool_eval, pool_all, flush=True)
+    global TRUST, TRUST_EVAL, GLOBAL_TH
+    rp_rows = [(x["rp"], x["date"]) for x in allraw if "rp" in x]
+    TRUST_EVAL = trust_from([rp for rp, d in rp_rows if d < cut])   # sadece eski günlerle öğrenilir
+    TRUST = trust_from([rp for rp, _ in rp_rows])                   # bugünkü öneriler için tüm geçmiş
+    seen, allpast = set(), []
+    for L in leagues:
+        if "_ctx" in L:
+            for m in L["_ctx"][1]:
+                if m["id"] not in seen:
+                    seen.add(m["id"])
+                    allpast.append(m)
+    GLOBAL_TH = team_history(sorted(allpast, key=lambda m: m["date"]))
     for L in leagues:
         finish_league(L, now, pool_eval, pool_all)
     st = load_store()
@@ -2091,6 +2178,9 @@ ul.ck li.n{color:var(--mu)}
 .fm .G{background:#0a7d3b}.fm .B{background:#888}.fm .M{background:#c0392b}
 .yorum{font-size:13px;line-height:1.5;background:var(--lo);border-radius:8px;padding:8px 10px;margin:8px 0}
 .res{font-size:12px;font-weight:700;margin-left:6px}
+.no{display:inline-block;width:17px;height:17px;line-height:17px;text-align:center;border-radius:50%;background:var(--tx);color:var(--bg);font-size:11px;font-weight:800;margin-right:6px}
+.r2{color:var(--mu);font-size:13px}.r2 .no{background:var(--mu)}
+.hist{font-size:12.5px;margin:4px 0 2px;color:var(--mu)}
 .bt td.up{color:var(--ac);font-weight:700}.bt td.dn{color:var(--neg);font-weight:700}
 .tf{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;margin:10px 0 2px}
 .tf select{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:6px 4px;font-size:13px}
@@ -2151,10 +2241,28 @@ def team_line(name, t):
             f"<br><span class='note'>Son 5: {last}</span></div>")
 
 
-def rp_comment(c, key):
+def hist_text(key, tier):
+    t = (TRUST or {}).get((key, tier))
+    if not t or tier not in (1, 2):
+        return ""
+    good = t["hit"] >= t["base"] + TRUST_LIFT and t["n"] >= TRUST_MIN_N
+    col = "pos" if good else "neg"
+    return (f"<div class='hist'>Geçmiş: {TIER_NAME[tier].capitalize()} {GM_LABEL[key]} önerileri "
+            f"<b class='{col}'>%{t['hit'] * 100:.0f}</b> tuttu ({t['n']} maç; tüm maçlarda %{t['base'] * 100:.0f})</div>")
+
+
+def rp_comment(c, key, context=True):
     h, a = c["tctx"]["h"], c["tctx"]["a"]
     ev = c["rapor"]["m"][key]
     out = []
+    lam, lam1 = c["lam"], c["r"].get("lam1")
+    if not context:
+        h = dict(h, rank=None, gf=None)
+    xg = f"Model maçta toplam {lam[0] + lam[1]:.1f} gol bekliyor ({c['home']} {lam[0]:.1f}, {c['away']} {lam[1]:.1f})"
+    if lam1:
+        xg += f"; ilk yarıda {lam1[0] + lam1[1]:.1f}"
+    if context:
+        out.append(xg + ".")
     if h["rank"] and a["rank"]:
         out.append(f"{c['home']} ligde {h['rank']}. sırada ({h['tag']}), {c['away']} {a['rank']}. sırada ({a['tag']}).")
         if h["pl"] >= 4 and a["pl"] >= 4 and abs(h["rank"] - a["rank"]) >= max(6, h["n"] // 3):
@@ -2164,11 +2272,23 @@ def rp_comment(c, key):
         hm, am = h["gf"] + h["ga"], a["gf"] + a["ga"]
         out.append(f"{c['home']} maçlarında son 10'da ortalama {hm:.1f}, {c['away']} maçlarında {am:.1f} gol çıktı "
                    f"(lig ortalaması {c['lavg']:.1f}).")
+    goods = [t for ok, t in ev["checks"] if ok]
     fails = [t for ok, t in ev["checks"] if not ok]
     out.append(f"{GM_LABEL[key]} için {ev['ok']}/{ev['tot']} kriter tutuyor.")
+    if len(goods) > 1:
+        out.append("En güçlü dayanak: " + goods[1] + ".")
     if fails:
-        out.append("Aleyhine olan madde: " + fails[0] + ".")
+        out.append("Aleyhine: " + "; ".join(fails[:2]) + ".")
     return " ".join(out)
+
+
+def bet_block(c, key, title="", context=True):
+    ev = c["rapor"]["m"][key]
+    checks = "".join(f"<li class='{'y' if ok else 'n'}'>{E(t)}</li>" for ok, t in ev["checks"])
+    head = (f"<div class='sec'>{title}{GM_LABEL[key]} · {ev['ok']}/{ev['tot']} kriter · model %{ev['p'] * 100:.0f} "
+            f"<span class='tier t{ev['tier']}'>{TIER_NAME[ev['tier']]}</span></div>") if title else ""
+    return (f"{head}<ul class='ck'>{checks}</ul>{hist_text(key, ev['tier'])}"
+            f"<div class='yorum'>{E(rp_comment(c, key, context))}</div>")
 
 
 def rp_item(c, key, lname, full=True):
@@ -2181,34 +2301,83 @@ def rp_item(c, key, lname, full=True):
         res = f"<span class='res'>{c['score'][0]}-{c['score'][1]} {mark}</span>"
     elif c["state"] == "in":
         res = "<span class='res' style='color:#d93025'>CANLI</span>"
-    checks = "".join(f"<li class='{'y' if ok else 'n'}'>{E(t)}</li>" for ok, t in ev["checks"])
-    others = "".join(
-        f"<tr><td>{GM_LABEL[k]}</td><td class='n'>{v['ok']}/{v['tot']}</td>"
-        f"<td class='n'><span class='tier t{v['tier']}'>{TIER_NAME[v['tier']]}</span></td></tr>"
-        for k, v in sorted(c["rapor"]["m"].items(), key=lambda kv: (-kv[1]["tier"], -kv[1]["score"])))
     kms = int(c["kick"].timestamp() * 1000)
     done = 1 if c["score"] or c["state"] != "pre" else 0
+    head = (f"<details class='rp' data-k='{kms}' data-d='{done}'><summary>"
+            f"<div class='rt'><span>{c['day']} {c['time']} · {E(lname)}</span><span class='tier t{tier}'>{TIER_NAME[tier]}</span></div>"
+            f"<div class='rm'><b>{E(c['home'])} - {E(c['away'])}</b>{res}</div>")
+    alt = c["rapor"].get("alt") if full and key == c["rapor"].get("main") else None
     if not full:
-        return f"""<details class='rp' data-k='{kms}' data-d='{done}'><summary>
-<div class='rt'><span>{c['day']} {c['time']} · {E(lname)}</span><span class='tier t{tier}'>{TIER_NAME[tier]}</span></div>
-<div class='rm'><b>{E(c['home'])} - {E(c['away'])}</b>{res}</div>
-<div class='rb'><b>{GM_LABEL[key]}</b> · {ev['ok']}/{ev['tot']} kriter · model %{ev['p'] * 100:.0f}</div></summary>
-<ul class='ck'>{checks}</ul>
-<div class='yorum'>{E(rp_comment(c, key))}</div></details>"""
-    return f"""<details class='rp' data-k='{kms}' data-d='{done}'><summary>
-<div class='rt'><span>{c['day']} {c['time']} · {E(lname)}</span><span class='tier t{tier}'>{TIER_NAME[tier]}</span></div>
-<div class='rm'><b>{E(c['home'])} - {E(c['away'])}</b>{res}</div>
-<div class='rb'><b>{GM_LABEL[key]}</b> · {ev['ok']}/{ev['tot']} kriter · model %{ev['p'] * 100:.0f}</div></summary>
-<ul class='ck'>{checks}</ul>
-<div class='yorum'>{E(rp_comment(c, key))}</div>
-{team_line(c['home'], c['tctx']['h'])}{team_line(c['away'], c['tctx']['a'])}
-<div class='sec'>Bu maçtaki tüm bahisler</div>
-<div class='wrap'><table><tr><th>Bahis</th><th class='n'>Kriter</th><th class='n'>Seviye</th></tr>{others}</table></div>
-</details>"""
+        return (head + f"<div class='rb'><b>{GM_LABEL[key]}</b> · {ev['ok']}/{ev['tot']} kriter · model %{ev['p'] * 100:.0f}</div>"
+                f"</summary>{bet_block(c, key)}</details>")
+    line1 = f"<div class='rb'><span class='no'>1</span><b>{GM_LABEL[key]}</b> · {ev['ok']}/{ev['tot']} kriter · model %{ev['p'] * 100:.0f}</div>"
+    line2 = ""
+    if alt:
+        ea = c["rapor"]["m"][alt]
+        line2 = (f"<div class='rb r2'><span class='no'>2</span>{GM_LABEL[alt]} · {ea['ok']}/{ea['tot']} kriter · "
+                 f"model %{ea['p'] * 100:.0f} <span class='tier t{ea['tier']}'>{TIER_NAME[ea['tier']]}</span></div>")
+    others = "".join(
+        f"<tr><td>{GM_LABEL[k]}</td><td class='n'>%{v['p'] * 100:.0f}</td><td class='n'>{v['ok']}/{v['tot']}</td>"
+        f"<td class='n'><span class='tier t{v['tier']}'>{TIER_NAME[v['tier']]}</span></td></tr>"
+        for k, v in sorted(c["rapor"]["m"].items(), key=lambda kv: (-kv[1]["tier"], -kv[1]["score"])))
+    body = bet_block(c, key, "1. öneri: ")
+    if alt:
+        body += bet_block(c, alt, "2. öneri: ", context=False)
+    return (head + line1 + line2 + "</summary>" + body +
+            f"{team_line(c['home'], c['tctx']['h'])}{team_line(c['away'], c['tctx']['a'])}"
+            "<div class='sec'>Bu maçtaki tüm bahisler</div><div class='wrap'><table><tr><th>Bahis</th>"
+            f"<th class='n'>Model</th><th class='n'>Kriter</th><th class='n'>Seviye</th></tr>{others}</table></div></details>")
+
+
+LEARN_HTML = (
+    "<details class='rp'><summary><b>Model kendini nasıl güncelliyor?</b> <span class='note'>(dokun)</span></summary>"
+    "<div class='tc'>Bot her çalıştığında (08:00 ve 14:00) en son biten maçlar dahil son ~14 ayın tüm sonuçlarını "
+    "yeniden çeker ve şunları baştan hesaplar:<br>1. <b>Takım güçleri</b>: son maçlar daha ağır basar (100 günde ağırlık "
+    "yarıya iner, takımın son 10 maçı ekstra önemlidir). Dün 5-1 biten bir maç bugünkü tahminlere zaten girmiştir.<br>"
+    "2. <b>Yüzde ayarı</b>: modelin geçmişte fazla/az gol tahmin edip etmediği ölçülüp düzeltilir.<br>"
+    "3. <b>Kontrol listesi eşikleri</b>: ligin güncel gol, KG ve ilk yarı oranları her gün yeniden hesaplanır.<br>"
+    "4. <b>Güven filtresi (öğrenme)</b>: son 150 günde her bahis türünün Güçlü/Orta önerileri gerçekte ne kadar "
+    "tuttuğu ölçülür. Ortalamadan en az 3 puan iyi değilse o bahis türü <b>günün önerisi olarak seçilmez</b>. "
+    "Böylece hangi bahisler tutmaya başlarsa sistem onlara kayar, tutmayanları kendiliğinden bırakır.<br>"
+    "Sınırı: Model kadro, sakatlık, motivasyon gibi sonuçlara yansımamış bilgileri bilemez.</div></details>")
+
+
+def gated_headline(leagues):
+    if not TRUST_EVAL:
+        return ""
+    cut = None
+    rows = [(rp, d) for L in leagues for rp, _, d in L.get("rp_bt", [])]
+    if not rows:
+        return ""
+    dmax = max(d for _, d in rows)
+    cut = dmax - dt.timedelta(days=BACKTEST_DAYS)
+    rec = [rp for rp, d in rows if d >= cut]
+    tot = trust_from(rec)
+    res = {1: [0, 0], 2: [0, 0]}
+    exp = {1: 0.0, 2: 0.0}
+    for rp in rec:
+        k = pick_main(rp, TRUST_EVAL)
+        if k and rp[k][1] is not None:
+            t = rp[k][0]
+            res[t][0] += rp[k][1]
+            res[t][1] += 1
+            base = [v for (kk, _), v in tot.items() if kk == k]
+            exp[t] += base[0]["base"] if base else 0
+    lines = []
+    for t in (2, 1):
+        h, n = res[t]
+        if n:
+            lines.append(f"<b>{TIER_NAME[t].capitalize()}</b>: {n} maçta <b>%{h / n * 100:.0f}</b> tuttu "
+                         f"(aynı bahisler rastgele maçlarda %{exp[t] / n * 100:.0f})")
+    if not lines:
+        return ""
+    return ("<div class='yorum'><b>Gerçekçi test (öğrenme dahil):</b> Güven filtresi sadece son "
+            f"{BACKTEST_DAYS} günden önceki maçlarla öğrendi, sonra son {BACKTEST_DAYS} günde günün önerilerini seçti. "
+            + " · ".join(lines) + "</div>")
 
 
 def rapor_bt(leagues):
-    rows = [x for L in leagues for x in L.get("rp_bt", [])]
+    rows = [(rp, mk) for L in leagues for rp, mk, _ in L.get("rp_bt", [])]
     per = {}
     for key, _ in RP_MARKETS:
         allv = [rp[key][1] for rp, _ in rows if key in rp and rp[key][1] is not None]
@@ -2265,6 +2434,7 @@ def rapor_tab(leagues, now):
            "listesi: model, iki takımın son 10 maçı, ev sahibinin evdeki ve deplasmanın dışarıdaki son 5 maçı, benzer "
            "maçlar, aralarındaki maçlar ve gol ortalamaları (MS için puan ortalaması). Bir madde, ligin genel oranının belirgin üstündeyse ✓ alır. "
            "<b>Güçlü</b>: maddelerin en az %80'i ✓. <b>Orta</b>: en az %60'ı. Bir maça dokununca detayı açılır.</p>")
+    out += gated_headline(leagues) + LEARN_HTML
     out += "<details class='rp'><summary><b>Bu kurallar geçmişte ne kadar tuttu?</b> <span class='note'>(dokun)</span></summary>"
     out += rapor_bt_html(leagues).replace("<h3>Bu kurallar geçmişte ne kadar tuttu?</h3>", "") + "</details>"
     hours = [(d0 + dt.timedelta(hours=h)).astimezone(TR) for h in range(25)]
@@ -2284,7 +2454,8 @@ def rapor_tab(leagues, now):
     mains.sort(key=lambda x: order(x[0], x[0]["rapor"]["main"]))
     body = "".join(rp_item(c, c["rapor"]["main"], ln) for c, ln in mains)
     out += ("<div class='rps on' id='rps-main'><p class='note'>Öneri için hem kriterlerin çoğu tutmalı hem de model "
-            f"en az %{MAIN_MIN_P * 100:.0f} ihtimal vermeli (1.5 Üst ve İY 0.5 Üst hariç). <b class='cnt'></b></p>"
+            f"en az %{MAIN_MIN_P * 100:.0f} ihtimal vermeli; ayrıca o bahis türü geçmişte gerçekten işe yaramış olmalı "
+            "(1.5 Üst ve İY 0.5 Üst hariç). Her maçta varsa 2. öneri de yazılır. <b class='cnt'></b></p>"
             f"{body}<p class='empty none'>Seçilen saat aralığında başlamamış önerili maç yok.</p></div>")
     for key, label in RP_MARKETS:
         lst = [(c, ln) for c, ln in cards if key in c["rapor"]["m"] and not c["score"] and c["state"] == "pre"]
@@ -2305,6 +2476,7 @@ T1_ROWS = [  # (etiket, olasılık anahtarı, üst/var adı, alt/yok adı, rapor
     ("1.5 Ü/A", "o15", "1.5 Üst", "1.5 Alt", "o15", None),
     ("2.5 Ü/A", "o25", "2.5 Üst", "2.5 Alt", "o25", "u25"),
     ("3.5 Ü/A", "o35", "3.5 Üst", "3.5 Alt", "o35", None),
+    ("4.5 Ü/A", "o45", "4.5 Üst", "4.5 Alt", "o45", None),
     ("KG", "btts", "KG Var", "KG Yok", "btts", None),
     ("İY 0.5 Ü/A", "iy05", "İY 0.5 Üst", "İY 0.5 Alt", "iy05", None),
     ("İY 1.5 Ü/A", "iy15", "İY 1.5 Üst", "İY 1.5 Alt", "iy15", None),
