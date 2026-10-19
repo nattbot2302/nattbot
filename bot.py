@@ -1213,6 +1213,7 @@ def process_league(slug, name, calendar, now):
                        for m in finished}
     bf = dt.datetime.fromisoformat(BET_FROM).replace(tzinfo=TR)
     info["allm_bet"] = [m for m in allm if m["date"] >= bf]
+    info["nall"] = len(allm)
     d0, d1 = day_window(now)
     stale = [m for m in allm if not m["done"] and m["date"] < now - dt.timedelta(hours=6)
              and m["date"] > now - dt.timedelta(days=21)]
@@ -2986,7 +2987,9 @@ def write_maclar(leagues, now):
     rows.sort(key=lambda x: x["k"])
     os.makedirs("data", exist_ok=True)
     with open(MAC_FILE, "w", encoding="utf-8") as f:
-        json.dump({"t": now.isoformat(), "from": BET_FROM, "daily": BET_DAILY, "maclar": rows},
+        dbg = {L["name"]: [len(L.get("allm_bet", [])), L.get("nall", 0),
+                           min((m["date"] for m in L.get("allm_bet", [])), default=now).isoformat()[:10]] for L in leagues}
+        json.dump({"t": now.isoformat(), "from": BET_FROM, "daily": BET_DAILY, "maclar": rows, "dbg": dbg},
                   f, ensure_ascii=False, separators=(",", ":"))
     return {r["id"]: r for r in rows}
 
