@@ -342,6 +342,24 @@
      "sonuc": null
     }
    ]
+  },
+  {
+   "id": "k1792422875802",
+   "t": "2026-10-19T15:14:35.802Z",
+   "tutar": 200,
+   "legs": [
+    {
+     "m": "401900897",
+     "ad": "Al Fayha - Al Ahli",
+     "lg": "Suudi Arabistan Pro Lig",
+     "k": "2026-10-19T15:05:00+00:00",
+     "b": "o35",
+     "bl": "3.5 Üst",
+     "o": 2.83,
+     "canli": true,
+     "sonuc": null
+    }
+   ]
   }
  ]
 }
