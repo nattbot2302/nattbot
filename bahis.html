@@ -225,8 +225,8 @@ async function testTok(){
 async function init(){
   $('mk').innerHTML = mkSelect();
   try{ const r = await fetch('data/maclar.json?t='+Date.now()); const j = await r.json(); MACS=j.maclar||[]; DAILY=j.daily; FROM=j.from; }catch(e){ MACS=[]; }
-  if(DAILY){ const lo = Date.now()-36*3600e3; MACS = MACS.filter(m=>Date.parse(m.k)>=lo); }
   MACS.forEach(m=>MBY[m.id]=m);
+  if(DAILY){ const y = dayOf(new Date(Date.now()-864e5).toISOString()); MACS = MACS.filter(m=>dayOf(m.k)>=y); }
   renderDays(); renderList(); renderDraft();
   if(tok()) await testTok();
   else { try{ const r = await fetch('data/bahislerim.json?t='+Date.now()); if(r.ok){ DATA=await r.json(); DATA.kuponlar=DATA.kuponlar||[]; } }catch(e){} renderAll(); testTok(); }
