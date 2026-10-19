@@ -1216,6 +1216,7 @@ def process_league(slug, name, calendar, now):
                        for m in finished}
     bf = dt.datetime.fromisoformat(BET_FROM).replace(tzinfo=TR)
     info["allm_bet"] = [m for m in allm if m["date"] >= bf]
+    info["allm"] = allm
     info["nall"] = len(allm)
     d0, d1 = day_window(now)
     stale = [m for m in allm if not m["done"] and m["date"] < now - dt.timedelta(hours=6)
@@ -2910,7 +2911,7 @@ def learn_html(st, now):
 
 # ------------------------------------------------------------ bahislerim: kupon kaydı ve kazanç analizi
 BET_FROM = "2026-10-15"     # maç listesinin başlangıcı (geçmiş kuponları girme dönemi)
-BET_DAILY = False           # True olunca kayıt sayfası sadece dün/bugün/yarın maçlarını gösterir
+BET_DAILY = True            # True olunca kayıt sayfası sadece dün/bugün/yarın maçlarını gösterir
 BET_FILE = "data/bahislerim.json"
 MAC_FILE = "data/maclar.json"
 BET_LINES = ["05", "15", "25", "35", "45", "55"]
@@ -2986,11 +2987,14 @@ def load_bets():
 
 def write_maclar(leagues, now):
     start = dt.datetime.fromisoformat(BET_FROM).replace(tzinfo=TR)
+    if BET_DAILY:
+        start = max(start, now - dt.timedelta(days=2))
     end = now + dt.timedelta(days=2)
+    bet_ids = {str(l.get("m")) for k in load_bets()["kuponlar"] for l in k["legs"] if l.get("m")}
     rows, seen = [], set()
     for L in leagues:
-        for m in L.get("allm_bet", []):
-            if m["id"] in seen or not (start <= m["date"] <= end):
+        for m in L.get("allm", L.get("allm_bet", [])):
+            if m["id"] in seen or not ((start <= m["date"] <= end) or m["id"] in bet_ids):
                 continue
             seen.add(m["id"])
             ht = m.get("ht") or (None, None)
@@ -3280,8 +3284,8 @@ async function testTok(){
 async function init(){
   $('mk').innerHTML = mkSelect();
   try{ const r = await fetch('data/maclar.json?t='+Date.now()); const j = await r.json(); MACS=j.maclar||[]; DAILY=j.daily; FROM=j.from; }catch(e){ MACS=[]; }
-  if(DAILY){ const lo = Date.now()-36*3600e3; MACS = MACS.filter(m=>Date.parse(m.k)>=lo); }
   MACS.forEach(m=>MBY[m.id]=m);
+  if(DAILY){ const y = dayOf(new Date(Date.now()-864e5).toISOString()); MACS = MACS.filter(m=>dayOf(m.k)>=y); }
   renderDays(); renderList(); renderDraft();
   if(tok()) await testTok();
   else { try{ const r = await fetch('data/bahislerim.json?t='+Date.now()); if(r.ok){ DATA=await r.json(); DATA.kuponlar=DATA.kuponlar||[]; } }catch(e){} renderAll(); testTok(); }
