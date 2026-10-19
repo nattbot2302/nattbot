@@ -415,6 +415,24 @@
      "sonuc": null
     }
    ]
+  },
+  {
+   "id": "k1792434380261",
+   "t": "2026-10-19T18:26:20.261Z",
+   "tutar": 150,
+   "legs": [
+    {
+     "m": "401876719",
+     "ad": "Rodez Aveyron - Montpellier",
+     "lg": "Fransa 2. Lig",
+     "k": "2026-10-19T18:45:00+00:00",
+     "b": "iyo15",
+     "bl": "İY 1.5 Üst",
+     "o": 2.1,
+     "canli": false,
+     "sonuc": null
+    }
+   ]
   }
  ]
 }
