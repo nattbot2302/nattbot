@@ -1,0 +1,41 @@
+name: orantest
+on:
+  push:
+    branches: [oran-test]
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -s https://ipinfo.io/country; echo
+          UA="Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1"
+          for u in \
+            "https://cdnbulten.nesine.com/api/bulten/getprebultenfull" \
+            "https://www.nesine.com/iddaa" \
+            "https://sportsbookv2.iddaa.com/sportsbook/events?st=1&type=0&version=0" \
+            "https://www.iddaa.com/program/futbol" \
+            "https://www.bilyoner.com/iddaa" \
+            "https://www.misli.com/iddaa" ; do
+            echo "=== $u"
+            curl -sL -A "$UA" -H "Referer: https://www.nesine.com/" --compressed -m 30 -o /tmp/r -w "kod=%{http_code} boyut=%{size_download} tür=%{content_type}\n" "$u"
+            head -c 600 /tmp/r | tr -d '\n'; echo
+          done
+          echo "=== nesine yapısı"
+          curl -s -A "$UA" --compressed -m 30 https://cdnbulten.nesine.com/api/bulten/getprebultenfull -o n.json
+          python3 - <<'P'
+          import json
+          try:
+              d=json.load(open("n.json"))
+              def walk(x,p="",dep=0):
+                  if dep>4: return
+                  if isinstance(x,dict):
+                      for k,v in list(x.items())[:25]:
+                          print(p+"."+k, type(v).__name__, (len(v) if isinstance(v,(list,dict)) else repr(v)[:60]))
+                          walk(v,p+"."+k,dep+1)
+                  elif isinstance(x,list) and x:
+                      walk(x[0],p+"[0]",dep+1)
+              walk(d)
+          except Exception as e: print("hata",e)
+          P
+          echo "=== iddaa.com yapısı"
+          curl -s -A "$UA" --compressed -m 30 "https://sportsbookv2.iddaa.com/sportsbook/events?st=1&type=0&version=0" | head -c 1500; echo
