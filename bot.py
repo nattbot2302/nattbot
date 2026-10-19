@@ -2991,7 +2991,7 @@ def write_maclar(leagues, now):
     return {r["id"]: r for r in rows}
 
 
-def leg_result(leg, macs):
+def bet_leg_result(leg, macs):
     if leg.get("sonuc") in ("tuttu", "yatti"):
         return leg["sonuc"] == "tuttu"
     m = macs.get(str(leg.get("m"))) if leg.get("m") else None
@@ -2999,7 +2999,7 @@ def leg_result(leg, macs):
 
 
 def coupon_state(kp, macs):
-    rs = [leg_result(l, macs) for l in kp["legs"]]
+    rs = [bet_leg_result(l, macs) for l in kp["legs"]]
     odds = 1.0
     for l in kp["legs"]:
         odds *= float(l.get("o") or 1)
