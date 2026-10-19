@@ -5,8 +5,12 @@ on:
 jobs:
   t:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
+      - uses: actions/checkout@v4
       - run: |
+          exec > sonuc.txt 2>&1
           curl -s https://ipinfo.io/country; echo
           UA="Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1"
           for u in \
@@ -39,3 +43,7 @@ jobs:
           P
           echo "=== iddaa.com yapısı"
           curl -s -A "$UA" --compressed -m 30 "https://sportsbookv2.iddaa.com/sportsbook/events?st=1&type=0&version=0" | head -c 1500; echo
+      - if: always()
+        run: |
+          git config user.name bot; git config user.email bot@users.noreply.github.com
+          git add sonuc.txt; git commit -m "[skip ci] test sonucu" && git push
