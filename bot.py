@@ -694,6 +694,7 @@ TRUST = None             # bahis türü + seviye bazında geçmiş başarı (mai
 TRUST_EVAL = None
 GLOBAL_TH = None         # tüm liglerden birleşik takım geçmişi (Avrupa kupaları için)
 PREV_SNAPSHOT = None
+MACS_BY_ID = {}
 TRUST_MIN_N = 25
 TRUST_LIFT = 0.03        # geçmişte ortalamadan en az 3 puan iyi olmalı
 
@@ -1210,6 +1211,8 @@ def process_league(slug, name, calendar, now):
         return info
     info["results"] = {m["id"]: [m["hg"], m["ag"]] + (list(m["ht"]) if m.get("ht") else [None, None])
                        for m in finished}
+    bf = dt.datetime.fromisoformat(BET_FROM).replace(tzinfo=TR)
+    info["allm_bet"] = [m for m in allm if m["date"] >= bf]
     d0, d1 = day_window(now)
     stale = [m for m in allm if not m["done"] and m["date"] < now - dt.timedelta(hours=6)
              and m["date"] > now - dt.timedelta(days=21)]
@@ -1822,6 +1825,7 @@ def main():
     GLOBAL_TH = team_history(sorted(allpast, key=lambda m: m["date"]))
     for L in leagues:
         finish_league(L, now, pool_eval, pool_all)
+    MACS_BY_ID.update(write_maclar(leagues, now))
     st = load_store()
     update_store(st, leagues, now)
     update_log(st, make_snapshot(leagues, now), PREV_SNAPSHOT, now)
@@ -1829,6 +1833,7 @@ def main():
     write_html(leagues, now, st)
     write_live_model(leagues, now)
     write_live_html()
+    write_bet_html()
     send_mail(st, leagues, now)
     save_store(st)
 
@@ -2899,6 +2904,410 @@ def learn_html(st, now):
     return out + "</div>"
 
 
+# ------------------------------------------------------------ bahislerim: kupon kaydı ve kazanç analizi
+BET_FROM = "2026-10-15"     # maç listesinin başlangıcı (geçmiş kuponları girme dönemi)
+BET_DAILY = False           # True olunca kayıt sayfası sadece dün/bugün/yarın maçlarını gösterir
+BET_FILE = "data/bahislerim.json"
+MAC_FILE = "data/maclar.json"
+BET_LINES = ["05", "15", "25", "35", "45", "55"]
+BET_MARKETS = (
+    [("Maç sonucu", c, l) for c, l in (("ms1", "MS 1"), ("msx", "MS X"), ("ms2", "MS 2"))]
+    + [("Çifte şans", c, l) for c, l in (("cs1x", "Çifte şans 1-X"), ("cs12", "Çifte şans 1-2"), ("csx2", "Çifte şans X-2"))]
+    + [("Alt / Üst", f"{p}{x}", f"{x[0]}.5 {'Üst' if p == 'o' else 'Alt'}") for x in BET_LINES for p in "ou"]
+    + [("Karşılıklı gol", "kgv", "KG Var"), ("Karşılıklı gol", "kgy", "KG Yok")]
+    + [("İlk yarı", c, l) for c, l in (("iy1", "İY 1"), ("iyx", "İY X"), ("iy2", "İY 2"))]
+    + [("İlk yarı", f"iy{p}{x}", f"İY {x[0]}.5 {'Üst' if p == 'o' else 'Alt'}") for x in ("05", "15", "25") for p in "ou"]
+    + [("İlk yarı", "iykgv", "İY KG Var"), ("İlk yarı", "iykgy", "İY KG Yok")]
+    + [("İY / MS", f"im{a}{b}", f"İY/MS {a.upper()}/{b.upper()}") for a in "1x2" for b in "1x2"]
+    + [("Diğer", "diger", "Diğer (sonucu ben gireceğim)")]
+)
+BET_LABEL = {c: l for _, c, l in BET_MARKETS}
+BET_TO_RAPOR = {"ms1": "ms1", "ms2": "ms2", "o15": "o15", "o25": "o25", "o35": "o35", "o45": "o45", "u25": "u25",
+                "kgv": "btts", "iyo05": "iy05", "iyo15": "iy15", "iykgv": "iykg"}
+
+
+def bet_settle(code, res):
+    """True/False, sonuç yoksa ya da manuel bahisse None. res = [hg, ag, h1, a1]."""
+    if not res or res[0] is None or code == "diger":
+        return None
+    hg, ag, h1, a1 = res
+    r = res3(hg, ag)
+    if code in ("ms1", "msx", "ms2"):
+        return r == {"ms1": 0, "msx": 1, "ms2": 2}[code]
+    if code.startswith("cs"):
+        return r in {"cs1x": (0, 1), "cs12": (0, 2), "csx2": (1, 2)}[code]
+    if code[0] in "ou" and code[1:].isdigit():
+        ln = int(code[1]) + 0.5
+        return hg + ag > ln if code[0] == "o" else hg + ag < ln
+    if code == "kgv":
+        return hg > 0 and ag > 0
+    if code == "kgy":
+        return not (hg > 0 and ag > 0)
+    if h1 is None or a1 is None:
+        return None
+    r1 = res3(h1, a1)
+    if code in ("iy1", "iyx", "iy2"):
+        return r1 == {"iy1": 0, "iyx": 1, "iy2": 2}[code]
+    if code.startswith("iyo") or code.startswith("iyu"):
+        ln = int(code[3]) + 0.5
+        return h1 + a1 > ln if code[2] == "o" else h1 + a1 < ln
+    if code == "iykgv":
+        return h1 > 0 and a1 > 0
+    if code == "iykgy":
+        return not (h1 > 0 and a1 > 0)
+    if code.startswith("im"):
+        m = {"1": 0, "x": 1, "2": 2}
+        return r1 == m[code[2]] and r == m[code[3]]
+    return None
+
+
+def load_bets():
+    try:
+        with open(BET_FILE, encoding="utf-8") as f:
+            d = json.load(f)
+        d.setdefault("kuponlar", [])
+        return d
+    except Exception:  # noqa
+        return {"kuponlar": []}
+
+
+def write_maclar(leagues, now):
+    start = dt.datetime.fromisoformat(BET_FROM).replace(tzinfo=TR)
+    end = now + dt.timedelta(days=2)
+    rows, seen = [], set()
+    for L in leagues:
+        for m in L.get("allm_bet", []):
+            if m["id"] in seen or not (start <= m["date"] <= end):
+                continue
+            seen.add(m["id"])
+            ht = m.get("ht") or (None, None)
+            rows.append({"id": m["id"], "k": m["date"].isoformat(), "lg": L["name"], "h": m["home"], "a": m["away"],
+                         "s": [m["hg"], m["ag"], ht[0], ht[1]] if m["done"] else None})
+    rows.sort(key=lambda x: x["k"])
+    os.makedirs("data", exist_ok=True)
+    with open(MAC_FILE, "w", encoding="utf-8") as f:
+        json.dump({"t": now.isoformat(), "from": BET_FROM, "daily": BET_DAILY, "maclar": rows},
+                  f, ensure_ascii=False, separators=(",", ":"))
+    return {r["id"]: r for r in rows}
+
+
+def leg_result(leg, macs):
+    if leg.get("sonuc") in ("tuttu", "yatti"):
+        return leg["sonuc"] == "tuttu"
+    m = macs.get(str(leg.get("m"))) if leg.get("m") else None
+    return bet_settle(leg.get("b"), m["s"]) if m and m.get("s") else None
+
+
+def coupon_state(kp, macs):
+    rs = [leg_result(l, macs) for l in kp["legs"]]
+    odds = 1.0
+    for l in kp["legs"]:
+        odds *= float(l.get("o") or 1)
+    if any(r is False for r in rs):
+        st_ = "yatti"
+    elif all(r is True for r in rs) and rs:
+        st_ = "tuttu"
+    else:
+        st_ = "bekliyor"
+    return st_, rs, odds
+
+
+def bets_tab(st, macs):
+    data = load_bets()
+    kps = data["kuponlar"]
+    out = ("<h2>Bahislerim</h2><p class='note'>Kayıtlı kuponların ve oynadığın bahislerin analizi. Yeni kupon "
+           "girmek için <a href='bahis.html'>kupon kayıt sayfasını</a> aç. Sonuçlar botun her çalışmasında "
+           "(08:00, 14:00, 23:30) güncellenir.</p>")
+    if not kps:
+        return out + "<p class='empty'>Henüz kayıtlı kupon yok.</p>"
+    stake = ret = 0.0
+    n_done = n_win = 0
+    legs = []
+    for kp in kps:
+        s_, rs, odds = coupon_state(kp, macs)
+        t = float(kp.get("tutar") or 0)
+        if s_ != "bekliyor":
+            n_done += 1
+            stake += t
+            if s_ == "tuttu":
+                n_win += 1
+                ret += t * odds
+        for l, r in zip(kp["legs"], rs):
+            legs.append((l, r))
+    net = ret - stake
+    roi = net / stake * 100 if stake else 0
+    out += (f"<div class='grid'><div class='b lo'>Kupon<br><b>{n_win}/{n_done}</b><small>tutan / sonuçlanan</small></div>"
+            f"<div class='b lo'>Yatırılan<br><b>{stake:,.0f}</b><small>TL</small></div>"
+            f"<div class='b {'hi' if net > 0 else 'lo'}'>Net<br><b>{net:+,.0f}</b><small>ROI %{roi:+.0f}</small></div></div>")
+
+    def group_rows(title, keyf):
+        g = defaultdict(lambda: [0, 0, 0.0])
+        for l, r in legs:
+            if r is None:
+                continue
+            k = keyf(l)
+            g[k][0] += r
+            g[k][1] += 1
+            g[k][2] += 1 / max(float(l.get("o") or 1), 1.01)
+        if not g:
+            return ""
+        h = (f"<div class='sec'>{title}</div><div class='wrap'><table><tr><th></th><th class='n'>Bacak</th>"
+             "<th class='n'>Tuttu</th><th class='n'>Gereken</th></tr>")
+        for k, (w, n, need) in sorted(g.items(), key=lambda kv: -kv[1][1]):
+            hit, nd = w / n, need / n
+            cls_ = "pos" if hit > nd + 0.02 else ("neg" if hit < nd - 0.02 else "")
+            h += (f"<tr><td>{E(k)}</td><td class='n'>{n}</td><td class='n {cls_}'>%{hit * 100:.0f}</td>"
+                  f"<td class='n'>%{nd * 100:.0f}</td></tr>")
+        return h + "</table></div>"
+
+    preds = st.get("preds", {})
+
+    def rapor_of(l):
+        rk = BET_TO_RAPOR.get(l.get("b"))
+        tier = ((preds.get(str(l.get("m"))) or {}).get("rpm") or {}).get(rk) if rk else None
+        return {2: "Rapor: Güçlü", 1: "Rapor: Orta", 0: "Rapor: Zayıf"}.get(tier, "Raporda yok")
+
+    def band(l):
+        o = float(l.get("o") or 0)
+        return "1.50 altı" if o < 1.5 else ("1.50-1.99" if o < 2 else ("2.00-2.99" if o < 3 else "3.00+"))
+    out += ("<p class='note'><b>Gereken</b>: o bahislerin oranlarına göre kâra geçmek için tutması gereken oran. "
+            "Tuttu sütunu bunun üstündeyse (yeşil) o tür bahisler tekli oynansaydı kazandırırdı.</p>")
+    out += group_rows("Bahis türüne göre", lambda l: BET_LABEL.get(l.get("b"), l.get("bl") or "?"))
+    out += group_rows("Canlı / maç öncesi", lambda l: "Canlı" if l.get("canli") else "Maç öncesi")
+    out += group_rows("Gol Raporu ile uyum", rapor_of)
+    out += group_rows("Oran aralığına göre", band)
+    out += "<div class='sec'>Kuponlar</div>"
+    for kp in sorted(kps, key=lambda k: k.get("t", ""), reverse=True)[:40]:
+        s_, rs, odds = coupon_state(kp, macs)
+        t = float(kp.get("tutar") or 0)
+        lab = {"tuttu": "<span class='pos'>Kazandı</span>", "yatti": "<span class='neg'>Kaybetti</span>",
+               "bekliyor": "Bekliyor"}[s_]
+        rows = "".join(
+            f"<tr><td>{E(l.get('ad', ''))}{' <span class=note>(canlı)</span>' if l.get('canli') else ''}</td>"
+            f"<td>{E(BET_LABEL.get(l.get('b'), l.get('bl') or ''))}</td><td class='n'>{float(l.get('o') or 0):.2f}</td>"
+            f"<td class='n'>{'⏳' if r is None else ('<span class=pos>✓</span>' if r else '<span class=neg>✗</span>')}</td></tr>"
+            for l, r in zip(kp["legs"], rs))
+        out += (f"<details class='rp'><summary><div class='rt'><span>{E(kp.get('t', '')[:10])} · {len(kp['legs'])} maç</span>"
+                f"<span>{lab}</span></div><div class='rb'>{t:,.0f} TL × {odds:.2f} = <b>{t * odds:,.0f} TL</b></div></summary>"
+                f"<div class='wrap'><table><tr><th>Maç</th><th>Bahis</th><th class='n'>Oran</th><th class='n'></th></tr>"
+                f"{rows}</table></div></details>")
+    return out
+
+
+BET_CSS = """
+.wrapb{padding:4px 12px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.back{color:var(--ac);text-decoration:none;font-size:14px;font-weight:600}
+.in,.sel{width:100%;font-size:16px;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)}
+.row2{display:flex;gap:8px;margin-top:8px}.row2>*{flex:1}
+.btn{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:10px 12px;font-size:15px;font-weight:600}
+.btn.pri{background:var(--ac);border-color:var(--ac);color:#fff}
+.btn.sm{padding:6px 10px;font-size:13px;border-radius:8px}
+.btn.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.mlist{max-height:46vh;overflow-y:auto;margin-top:8px;border-radius:10px;border:1px solid var(--bd)}
+.mi{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:0;border-bottom:1px solid var(--bd);padding:9px 10px;font-size:14px}
+.mi small{display:block;color:var(--mu);font-size:12px}
+.mi b.sc{float:right}
+.legf{border:2px solid var(--ac);border-radius:12px;padding:10px;margin-top:10px}
+.leg{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid var(--bd);padding:7px 0;font-size:14px}
+.leg small{display:block;color:var(--mu);font-size:12px}
+.tot{font-size:15px;margin:10px 0}
+.msg{font-size:14px;margin-top:8px}
+.kp{background:var(--card);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.kh{display:flex;justify-content:space-between;font-size:13px;color:var(--mu)}
+"""
+
+BET_JS = r"""
+const REPO = __REPO__, MARKETS = __MARKETS__, API = 'https://api.github.com/repos/'+REPO+'/contents/data/bahislerim.json';
+let MACS = [], MBY = {}, DATA = {kuponlar:[]}, DAILY = false, FROM = '';
+let draft = [], pick = null, canli = false;
+const $ = id => document.getElementById(id);
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function tok(){ try{return localStorage.getItem('nb_token')||'';}catch(e){return '';} }
+function dayOf(iso){ return new Date(iso).toLocaleDateString('sv-SE',{timeZone:'Europe/Istanbul'}); }
+function hm(iso){ return new Date(iso).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Istanbul'}); }
+function dm(day){ return day.slice(8)+'.'+day.slice(5,7); }
+function b64e(s){ return btoa(unescape(encodeURIComponent(s))); }
+function b64d(b){ return decodeURIComponent(escape(atob(b.replace(/\s/g,'')))); }
+function res3(h,a){ return h>a?0:(h===a?1:2); }
+function settle(code, s){
+  if(!s || s[0]==null || code==='diger') return null;
+  const [hg,ag,h1,a1] = s, r = res3(hg,ag);
+  if(code==='ms1') return r===0; if(code==='msx') return r===1; if(code==='ms2') return r===2;
+  if(code==='cs1x') return r!==2; if(code==='cs12') return r!==1; if(code==='csx2') return r!==0;
+  if(/^[ou]\d\d$/.test(code)){ const ln=+code[1]+0.5; return code[0]==='o' ? hg+ag>ln : hg+ag<ln; }
+  if(code==='kgv') return hg>0&&ag>0; if(code==='kgy') return !(hg>0&&ag>0);
+  if(h1==null||a1==null) return null;
+  const r1 = res3(h1,a1);
+  if(code==='iy1') return r1===0; if(code==='iyx') return r1===1; if(code==='iy2') return r1===2;
+  if(/^iy[ou]\d\d$/.test(code)){ const ln=+code[3]+0.5; return code[2]==='o' ? h1+a1>ln : h1+a1<ln; }
+  if(code==='iykgv') return h1>0&&a1>0; if(code==='iykgy') return !(h1>0&&a1>0);
+  if(code.startsWith('im')){ const m={'1':0,'x':1,'2':2}; return r1===m[code[2]] && r===m[code[3]]; }
+  return null;
+}
+function legRes(l){ if(l.sonuc==='tuttu') return true; if(l.sonuc==='yatti') return false;
+  const m = l.m ? MBY[l.m] : null; return m && m.s ? settle(l.b, m.s) : null; }
+function kState(k){ const rs = k.legs.map(legRes); let o=1; k.legs.forEach(l=>o*=+l.o||1);
+  return {st: rs.some(r=>r===false)?'yatti':(rs.length&&rs.every(r=>r===true)?'tuttu':'bekliyor'), rs, o}; }
+
+async function ghLoad(){
+  const r = await fetch(API+'?ref=main&t='+Date.now(), {headers:{Authorization:'Bearer '+tok(), Accept:'application/vnd.github+json'}, cache:'no-store'});
+  if(r.status===404) return {data:{kuponlar:[]}, sha:null};
+  if(!r.ok) throw new Error('GitHub '+r.status+(r.status===401?' (anahtar geçersiz)':''));
+  const j = await r.json(); return {data: JSON.parse(b64d(j.content)), sha: j.sha};
+}
+async function ghSave(mut, msg){
+  if(!tok()) throw new Error('Önce aşağıdaki Ayarlar bölümünden GitHub anahtarını gir.');
+  for(let i=0;i<3;i++){
+    const {data, sha} = await ghLoad(); data.kuponlar = data.kuponlar||[]; mut(data);
+    const body = {message: msg, content: b64e(JSON.stringify(data, null, 1)), branch:'main'}; if(sha) body.sha = sha;
+    const r = await fetch(API, {method:'PUT', headers:{Authorization:'Bearer '+tok(), Accept:'application/vnd.github+json', 'Content-Type':'application/json'}, body: JSON.stringify(body)});
+    if(r.ok){ DATA = data; return; }
+    if(r.status!==409 && r.status!==422) throw new Error('Kaydedilemedi: GitHub '+r.status);
+  }
+  throw new Error('Kaydedilemedi, tekrar dene.');
+}
+function msg(t, ok){ const e=$('msg'); e.innerHTML = t; e.style.color = ok ? 'var(--ac)' : 'var(--neg)'; }
+
+function renderSummary(){
+  let n=0,w=0,stake=0,ret=0,pend=0;
+  for(const k of DATA.kuponlar){ const s=kState(k), t=+k.tutar||0;
+    if(s.st==='bekliyor'){ pend++; continue; } n++; stake+=t; if(s.st==='tuttu'){ w++; ret+=t*s.o; } }
+  const net = ret-stake;
+  $('sum').innerHTML = '<div class="grid"><div class="b lo">Kupon<br><b>'+w+'/'+n+'</b><small>tutan · '+pend+' bekliyor</small></div>'+
+    '<div class="b lo">Yatırılan<br><b>'+Math.round(stake).toLocaleString('tr-TR')+'</b><small>TL</small></div>'+
+    '<div class="b '+(net>0?'hi':'lo')+'">Net<br><b>'+(net>=0?'+':'')+Math.round(net).toLocaleString('tr-TR')+'</b><small>'+(stake?('ROI %'+Math.round(net/stake*100)):'')+'</small></div></div>';
+}
+function renderDays(){
+  const days = [...new Set(MACS.map(m=>dayOf(m.k)))].sort();
+  const today = dayOf(new Date().toISOString());
+  $('day').innerHTML = days.map(d=>'<option value="'+d+'"'+(d===today?' selected':'')+'>'+dm(d)+(d===today?' (bugün)':'')+'</option>').join('');
+}
+function renderList(){
+  const q = $('q').value.trim().toLocaleLowerCase('tr-TR'), d = $('day').value;
+  let ms = MACS.filter(m => q ? (m.h+' '+m.a+' '+m.lg).toLocaleLowerCase('tr-TR').includes(q) : dayOf(m.k)===d);
+  if(q) ms = ms.slice(-60);
+  $('ml').innerHTML = ms.map(m=>'<button class="mi" onclick="pickM(\''+m.id+'\')"><b class="sc">'+(m.s?m.s[0]+'-'+m.s[1]:'')+'</b>'+
+    esc(m.h)+' - '+esc(m.a)+'<small>'+(q?dm(dayOf(m.k))+' ':'')+hm(m.k)+' · '+esc(m.lg)+'</small></button>').join('') ||
+    '<p class="empty" style="padding:10px">Maç bulunamadı.</p>';
+}
+function mkSelect(){
+  let h='', g='';
+  for(const [grp,c,l] of MARKETS){ if(grp!==g){ if(g) h+='</optgroup>'; h+='<optgroup label="'+grp+'">'; g=grp; } h+='<option value="'+c+'">'+esc(l)+'</option>'; }
+  return h+'</optgroup>';
+}
+function pickM(id){
+  const m = MBY[id]; pick = {m:id, ad:m.h+' - '+m.a, lg:m.lg, k:m.k};
+  setCanli(Date.now() >= Date.parse(m.k)); showLegForm();
+}
+function pickManual(){
+  const ad = prompt('Maç adı (örn. Galatasaray - Fenerbahçe):'); if(!ad) return;
+  pick = {m:null, ad:ad, lg:'Liste dışı', k:new Date().toISOString(), manual:true}; setCanli(false); showLegForm();
+}
+function setCanli(v){ canli = v; const a=$('b-on'), b=$('b-pre'); if(a){ a.classList.toggle('on',v); b.classList.toggle('on',!v); } }
+function showLegForm(){
+  $('legf').style.display = 'block';
+  $('legt').innerHTML = '<b>'+esc(pick.ad)+'</b><small>'+esc(pick.lg)+(pick.manual?' · sonucu sen gireceksin':'')+'</small>';
+  $('odd').value=''; setCanli(canli); $('odd').focus();
+}
+function addLeg(){
+  const o = parseFloat(($('odd').value||'').replace(',','.'));
+  if(!(o>1)) { msg('Oranı gir (örn. 1.76).'); return; }
+  const b = $('mk').value;
+  draft.push(Object.assign({}, pick, {b:b, bl:MARKETS.find(x=>x[1]===b)[2], o:o, canli:canli, sonuc:null}));
+  $('legf').style.display='none'; pick=null; msg(''); renderDraft();
+}
+function renderDraft(){
+  let o=1; draft.forEach(l=>o*=l.o);
+  $('draft').innerHTML = draft.map((l,i)=>'<div class="leg"><div>'+esc(l.ad)+'<small>'+esc(l.bl)+' · '+(l.canli?'canlı':'maç öncesi')+'</small></div>'+
+    '<div><b>'+l.o.toFixed(2)+'</b> <button class="btn sm" onclick="draft.splice('+i+',1);renderDraft()">×</button></div></div>').join('');
+  const t = parseFloat(($('stake').value||'').replace(',','.'))||0;
+  $('tot').innerHTML = draft.length ? (draft.length+' maç · toplam oran <b>'+o.toFixed(2)+'</b>'+(t?' · olası kazanç <b>'+(t*o).toLocaleString('tr-TR',{maximumFractionDigits:2})+' TL</b>':'')) : 'Kupon boş: yukarıdan maç seç.';
+  $('savebox').style.display = draft.length ? 'block' : 'none';
+}
+async function saveCoupon(){
+  const t = parseFloat(($('stake').value||'').replace(',','.'));
+  if(!(t>0)){ msg('Kupon bedelini (TL) gir.'); return; }
+  const kp = {id:'k'+Date.now(), t:new Date().toISOString(), tutar:t, legs:draft.map(l=>({m:l.m,ad:l.ad,lg:l.lg,k:l.k,b:l.b,bl:l.bl,o:l.o,canli:l.canli,sonuc:null}))};
+  msg('Kaydediliyor…', true);
+  try{ await ghSave(d=>d.kuponlar.push(kp), 'Kupon eklendi'); draft=[]; $('stake').value=''; renderDraft(); renderAll(); msg('Kupon kaydedildi ✓', true); }
+  catch(e){ msg(esc(e.message)); }
+}
+async function delK(id){ if(!confirm('Bu kupon silinsin mi?')) return;
+  try{ await ghSave(d=>{d.kuponlar=d.kuponlar.filter(k=>k.id!==id)}, 'Kupon silindi'); renderAll(); msg('Silindi', true);}catch(e){ msg(esc(e.message)); } }
+async function setRes(id, i, v){
+  try{ await ghSave(d=>{const k=d.kuponlar.find(k=>k.id===id); if(k) k.legs[i].sonuc=v;}, 'Sonuç girildi'); renderAll(); msg('Kaydedildi', true);}catch(e){ msg(esc(e.message)); } }
+function renderCoupons(){
+  const ks = DATA.kuponlar.slice().sort((a,b)=>(b.t||'').localeCompare(a.t||''));
+  $('kps').innerHTML = ks.map(k=>{ const s=kState(k), t=+k.tutar||0;
+    const lab = s.st==='tuttu'?'<span class="pos">Kazandı</span>':(s.st==='yatti'?'<span class="neg">Kaybetti</span>':'Bekliyor');
+    return '<div class="kp"><div class="kh"><span>'+dm(dayOf(k.t))+' · '+k.legs.length+' maç · '+t.toLocaleString('tr-TR')+' TL × '+s.o.toFixed(2)+'</span><span>'+lab+'</span></div>'+
+      k.legs.map((l,i)=>{ const r=s.rs[i]; const m=l.m?MBY[l.m]:null;
+        const mark = r===null ? ((l.m===null||l.b==='diger') ? '<button class="btn sm" onclick="setRes(\''+k.id+'\','+i+',\'tuttu\')">Tuttu</button> <button class="btn sm" onclick="setRes(\''+k.id+'\','+i+',\'yatti\')">Yattı</button>' : '⏳')
+          : (r?'<span class="pos">✓</span>':'<span class="neg">✗</span>');
+        return '<div class="leg"><div>'+esc(l.ad)+(m&&m.s?' <b>'+m.s[0]+'-'+m.s[1]+'</b>':'')+'<small>'+esc(l.bl)+' · '+(+l.o).toFixed(2)+(l.canli?' · canlı':'')+'</small></div><div>'+mark+'</div></div>'; }).join('')+
+      '<div style="text-align:right;margin-top:6px"><button class="btn sm" onclick="delK(\''+k.id+'\')">Sil</button></div></div>'; }).join('') ||
+    '<p class="empty">Henüz kayıtlı kupon yok.</p>';
+}
+function renderAll(){ renderSummary(); renderCoupons(); }
+function saveTok(){ try{ localStorage.setItem('nb_token', $('tk').value.trim()); }catch(e){} testTok(); }
+async function testTok(){
+  if(!tok()){ $('tks').textContent='Anahtar girilmedi: kupon kaydedemezsin.'; $('tks').style.color='var(--neg)'; return; }
+  try{ const {data} = await ghLoad(); DATA = data; DATA.kuponlar = DATA.kuponlar||[]; renderAll();
+    $('tks').textContent='Anahtar çalışıyor ✓'; $('tks').style.color='var(--ac)'; }
+  catch(e){ $('tks').textContent=e.message; $('tks').style.color='var(--neg)'; }
+}
+async function init(){
+  $('mk').innerHTML = mkSelect();
+  try{ const r = await fetch('data/maclar.json?t='+Date.now()); const j = await r.json(); MACS=j.maclar||[]; DAILY=j.daily; FROM=j.from; }catch(e){ MACS=[]; }
+  if(DAILY){ const lo = Date.now()-36*3600e3; MACS = MACS.filter(m=>Date.parse(m.k)>=lo); }
+  MACS.forEach(m=>MBY[m.id]=m);
+  renderDays(); renderList(); renderDraft();
+  if(tok()) await testTok();
+  else { try{ const r = await fetch('data/bahislerim.json?t='+Date.now()); if(r.ok){ DATA=await r.json(); DATA.kuponlar=DATA.kuponlar||[]; } }catch(e){} renderAll(); testTok(); }
+}
+init();
+"""
+
+
+def write_bet_html():
+    repo = json.dumps(os.environ.get("GITHUB_REPOSITORY", "") or "nattbot2302/nattbot")
+    js = BET_JS.replace("__REPO__", repo).replace("__MARKETS__", json.dumps(BET_MARKETS, ensure_ascii=False))
+    page = (f"<!doctype html><html lang='tr'><head><meta charset='utf-8'>"
+            f"<meta name='viewport' content='width=device-width, initial-scale=1'>"
+            f"<title>Kuponlarım</title><style>{CSS}{BET_CSS}</style></head><body>"
+            "<header><div class='top'><h1>Kuponlarım</h1><a class='back' href='index.html'>← Günün maçları</a></div></header>"
+            "<div class='wrapb'><div id='sum'></div>"
+            "<div class='card'><h2>Yeni kupon</h2>"
+            "<div class='row2'><select id='day' class='sel' onchange=\"$('q').value='';renderList()\"></select>"
+            "<input id='q' class='in' placeholder='Takım ara' oninput='renderList()'></div>"
+            "<div id='ml' class='mlist'></div>"
+            "<div style='margin-top:8px'><button class='btn sm' onclick='pickManual()'>+ Listede olmayan maç</button></div>"
+            "<div id='legf' class='legf' style='display:none'><div id='legt' class='leg' style='border:0'></div>"
+            "<select id='mk' class='sel'></select>"
+            "<div class='row2'><input id='odd' class='in' inputmode='decimal' placeholder='Oran (örn. 1.76)'></div>"
+            "<div class='row2'><button id='b-pre' class='btn' onclick='setCanli(false)'>Maç öncesi</button>"
+            "<button id='b-on' class='btn' onclick='setCanli(true)'>Canlı</button></div>"
+            "<div class='row2'><button class='btn pri' onclick='addLeg()'>Kupona ekle</button>"
+            "<button class='btn' onclick=\"$('legf').style.display='none'\">Vazgeç</button></div></div>"
+            "<div class='sec'>Kupon</div><div id='draft'></div><div id='tot' class='tot'></div>"
+            "<div id='savebox' style='display:none'><input id='stake' class='in' inputmode='decimal' placeholder='Kupon bedeli (TL)' oninput='renderDraft()'>"
+            "<div class='row2'><button class='btn pri' onclick='saveCoupon()'>Kuponu kaydet</button></div></div>"
+            "<div id='msg' class='msg'></div></div>"
+            "<h2 style='margin-top:16px'>Kayıtlı kuponlar</h2><div id='kps'></div>"
+            "<details class='rp' style='margin-top:14px'><summary><b>Ayarlar: GitHub anahtarı</b> <span id='tks' class='note'></span></summary>"
+            "<div class='tc'>Kuponların repoya kaydedilmesi için bir kez anahtar girmen gerekir. Anahtar sadece bu "
+            "telefonun tarayıcısında saklanır, sitede yayınlanmaz.<br>1. <a href='https://github.com/settings/personal-access-tokens/new' target='_blank'>"
+            "Yeni anahtar oluştur</a> sayfasını aç.<br>2. Token name: <b>kupon</b>, Expiration: 1 yıl.<br>3. Repository access: "
+            "<b>Only select repositories</b> → <b>nattbot</b>.<br>4. Permissions → Repository permissions → <b>Contents</b>: "
+            "<b>Read and write</b>.<br>5. Generate token → kopyala → aşağıya yapıştır → Kaydet.</div>"
+            "<input id='tk' class='in' type='password' placeholder='github_pat_...'>"
+            "<div class='row2'><button class='btn pri' onclick='saveTok()'>Kaydet</button></div></details>"
+            f"</div><script>{js}</script></body></html>")
+    with open("bahis.html", "w", encoding="utf-8") as f:
+        f.write(page)
+
+
 def all_results(leagues):
     res = {}
     for L in leagues:
@@ -2941,7 +3350,8 @@ def write_html(leagues, now, st=None):
             meta += f" · İY verisi maçların {pct(hm['cov'])}'ında var"
         tabs.append(f"<section class='tab' id='{tid}'><h2>{E(L['name'])}</h2>"
                     f"<p class='row'>{meta}</p>{body}</section>")
-    nav.append("</optgroup><option value='karne'>Karne</option>")
+    nav.append("</optgroup><option value='bahis'>Bahislerim (kazanç analizi)</option><option value='karne'>Karne</option>")
+    tabs.append(f"<section class='tab' id='bahis'>{bets_tab(st, MACS_BY_ID)}</section>")
     tabs.append(f"<section class='tab' id='karne'>{karne_tab(st, now)}{coupon_karne(st, results)}</section>")
     nav.append("<option value='dogruluk'>Doğruluk</option>")
     tabs.append(f"<section class='tab' id='dogruluk'>{accuracy_tab(leagues)}</section>")
@@ -2951,8 +3361,10 @@ def write_html(leagues, now, st=None):
             f"<meta name='viewport' content='width=device-width, initial-scale=1'>"
             f"<title>Günün Maçları</title><style>{CSS}{RP_CSS}</style></head><body>"
             f"<header><div style='display:flex;justify-content:space-between;align-items:center'><h1>Günün Maçları</h1>"
+            f"<span><a href='bahis.html?v={int(now.timestamp())}' style='background:var(--card);color:var(--tx);border:1px solid var(--bd);"
+            f"text-decoration:none;font-weight:700;font-size:13px;padding:5px 11px;border-radius:16px;margin-right:6px'>Kuponlarım</a>"
             f"<a href='canli.html?v={int(now.timestamp())}' style='background:#d93025;color:#fff;text-decoration:none;font-weight:700;"
-            f"font-size:13px;padding:6px 12px;border-radius:16px'>● Canlı</a></div><div class='upd'>Güncelleme: {local:%d.%m.%Y %H:%M} · "
+            f"font-size:13px;padding:6px 12px;border-radius:16px'>● Canlı</a></span></div><div class='upd'>Güncelleme: {local:%d.%m.%Y %H:%M} · "
             f"Maçlar: {d0:%d.%m %H:%M} - {d1:%d.%m %H:%M} · Model tahmindir, kâr garantisi vermez."
             f"</div></header><div id='alarm' style='padding:0 12px'></div><nav><select id='navsel' onchange='show(this.value)'>{''.join(nav)}</select></nav>{''.join(tabs)}"
             f"<script>{JS}{RP_JS}</script><script>const REPO = {json.dumps(os.environ.get('GITHUB_REPOSITORY', ''))};"

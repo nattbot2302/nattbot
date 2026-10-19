@@ -1,0 +1,45 @@
+{
+ "kuponlar": [
+  {
+   "id": "k20261018192248",
+   "t": "2026-10-18T19:22:48+03:00",
+   "tutar": 300,
+   "kaynak": "ekran görüntüsü",
+   "legs": [
+    {
+     "m": "401876438",
+     "ad": "Le Havre AC - Auxerre",
+     "lg": "Fransa Ligue 1",
+     "k": "2026-10-18T15:15:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.76,
+     "canli": true,
+     "sonuc": null
+    },
+    {
+     "m": "401876433",
+     "ad": "Paris FC - Rennes",
+     "lg": "Fransa Ligue 1",
+     "k": "2026-10-18T15:15:00+00:00",
+     "b": "o45",
+     "bl": "4.5 Üst",
+     "o": 1.59,
+     "canli": true,
+     "sonuc": null
+    },
+    {
+     "m": "401884768",
+     "ad": "Gladbach - Hoffenheim",
+     "lg": "Almanya Bundesliga",
+     "k": "2026-10-18T15:30:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.37,
+     "canli": true,
+     "sonuc": null
+    }
+   ]
+  }
+ ]
+}
