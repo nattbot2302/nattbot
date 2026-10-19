@@ -1083,6 +1083,7 @@ def process_league(slug, name, calendar, now):
         return info
     past = [m for m in finished if m["date"] < d0]      # bugünün sonuçları modele sızmasın
     info["nfin"] = len(past)
+    info["ny"] = sum(1 for m in past if m["date"] >= d0 - dt.timedelta(days=1))
     if len(past) < 30:
         info["err"] = f"Yetersiz geçmiş veri ({len(past)} maç)"
         return info
@@ -2601,7 +2602,7 @@ def make_snapshot(leagues, now):
         if not m or L.get("err"):
             continue
         hm = m.get("half") or {}
-        lg[L["name"]] = {"n": L["nfin"], "ha": round(m["ha"] ** 2, 3), "f": round(hm.get("f", 0), 3),
+        lg[L["name"]] = {"n": L["nfin"], "ny": L.get("ny", 0), "ha": round(m["ha"] ** 2, 3), "f": round(hm.get("f", 0), 3),
                          "rho": m["rho"], "k": (L.get("kc") or (0, 0))[0], "c": (L.get("kc") or (0, 0))[1],
                          "g90": round(L["avg90"], 2) if L.get("avg90") else None}
     tr = {f"{k}/{t}": [round(v["hit"], 3), v["n"], v["ok"], round(v["base"], 3)] for (k, t), v in (TRUST or {}).items()}
@@ -2669,7 +2670,9 @@ def learn_html(st, now):
     added = sum((cur["leagues"][n]["n"] or 0) - (prev["leagues"][n]["n"] or 0) for n in common
                 if prev["leagues"][n]["n"] is not None)
     newl = [n for n in cur["leagues"] if n not in prev["leagues"]]
-    out += f"<div class='row'>Modele eklenen yeni biten maç: <b>+{max(added, 0)}</b> (toplam {cur['nmatch']})</div>"
+    ny = sum(x.get("ny", 0) for x in cur["leagues"].values())
+    out += (f"<div class='row'>Dün biten ve modele eklenen maç: <b>{ny}</b> · modelin kullandığı toplam maç: "
+            f"{cur['nmatch']} (son ~14 ay; en eski maçlar pencereden düşer)</div>")
     if newl:
         out += f"<div class='row'>Yeni eklenen lig: <b>{E(', '.join(newl))}</b></div>"
     # güven filtresi değişimleri
@@ -2704,7 +2707,7 @@ def learn_html(st, now):
         notes = []
         if abs(b["ha"] - a["ha"]) >= 0.01:
             notes.append(f"ev avantajı {a['ha']:.2f}→{b['ha']:.2f}")
-        if a["f"] and abs(b["f"] - a["f"]) >= 0.005:
+        if a["f"] and abs(b["f"] - a["f"]) >= 0.01:
             notes.append(f"ilk yarı gol payı %{a['f'] * 100:.0f}→%{b['f'] * 100:.0f}")
         if abs(b["rho"] - a["rho"]) >= 0.01:
             notes.append(f"beraberlik eğilimi {a['rho']:+.2f}→{b['rho']:+.2f}")
