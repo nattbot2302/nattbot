@@ -596,6 +596,7 @@ CLASH = {"o25": {"u25"}, "o35": {"u25"}, "o45": {"u25"}, "u25": {"o25", "o35", "
 TRUST = None             # bahis türü + seviye bazında geçmiş başarı (main() içinde doldurulur)
 TRUST_EVAL = None
 GLOBAL_TH = None         # tüm liglerden birleşik takım geçmişi (Avrupa kupaları için)
+PREV_SNAPSHOT = None
 TRUST_MIN_N = 25
 TRUST_LIFT = 0.03        # geçmişte ortalamadan en az 3 puan iyi olmalı
 
@@ -1650,7 +1651,9 @@ def send_mail(st, leagues, now):
 
 
 def main():
+    global PREV_SNAPSHOT
     now = dt.datetime.now(UTC)
+    PREV_SNAPSHOT = snapshot_from_html()       # sayfa yeniden yazılmadan önce önceki durumu oku
     leagues = []
     for slug, name, cal in LEAGUES:
         print("Lig:", slug, flush=True)
@@ -1676,6 +1679,7 @@ def main():
         finish_league(L, now, pool_eval, pool_all)
     st = load_store()
     update_store(st, leagues, now)
+    update_log(st, make_snapshot(leagues, now), PREV_SNAPSHOT, now)
     update_coupons(st, leagues, now)
     write_html(leagues, now, st)
     write_live_model(leagues, now)
@@ -2589,6 +2593,133 @@ def t1_tab(st, now):
     return out
 
 
+# ------------------------------------------------------------ model günlüğü: dün → bugün ne öğrendi
+def make_snapshot(leagues, now):
+    lg = {}
+    for L in leagues:
+        m = L.get("model")
+        if not m or L.get("err"):
+            continue
+        hm = m.get("half") or {}
+        lg[L["name"]] = {"n": L["nfin"], "ha": round(m["ha"] ** 2, 3), "f": round(hm.get("f", 0), 3),
+                         "rho": m["rho"], "k": (L.get("kc") or (0, 0))[0], "c": (L.get("kc") or (0, 0))[1],
+                         "g90": round(L["avg90"], 2) if L.get("avg90") else None}
+    tr = {f"{k}/{t}": [round(v["hit"], 3), v["n"], v["ok"], round(v["base"], 3)] for (k, t), v in (TRUST or {}).items()}
+    return {"t": now.isoformat(), "leagues": lg, "trust": tr, "nmatch": sum(x["n"] for x in lg.values())}
+
+
+def snapshot_from_html(path="index.html"):
+    """Önceki çalışmanın yayınladığı sayfadan model durumunu okur (günlük henüz yoksa)."""
+    try:
+        s = open(path, encoding="utf-8").read()
+    except Exception:  # noqa
+        return None
+    snap = {"t": "", "leagues": {}, "trust": {}, "nmatch": 0, "src": "sayfa"}
+    try:
+        i = s.index("Model parametreleri")
+        t = s[i:s.index("</table>", i)]
+        for row in re.findall(r"<tr>(.*?)</tr>", t):
+            c = [html.unescape(re.sub("<[^>]+>", "", x)).strip() for x in re.findall(r"<t[hd][^>]*>(.*?)</t[hd]>", row)]
+            if len(c) < 7 or c[0] == "Lig":
+                continue
+            snap["leagues"][c[0]] = {"n": None, "ha": float(c[1]), "f": float(c[2].strip("%")) / 100 if c[2] != "-" else 0,
+                                     "rho": float(c[3]), "k": float(c[5].strip("*")), "c": float(c[6]), "g90": None}
+        for name, n in re.findall(r"<h2>([^<]+)</h2>\s*<p class='row'>(\d+) geçmiş maç verisi", s):
+            name = html.unescape(name)
+            if name in snap["leagues"]:
+                snap["leagues"][name]["n"] = int(n)
+        inv = {v: k for k, v in GM_LABEL.items()}
+        for tier, lab, hit, n, base in re.findall(
+                r"Geçmiş: (Güçlü|Orta) ([^<]+?) önerileri <b class='\w+'>%(\d+)</b> tuttu \((\d+) maç; tüm maçlarda %(\d+)\)", s):
+            k = inv.get(html.unescape(lab))
+            if k:
+                t_ = 2 if tier == "Güçlü" else 1
+                snap["trust"][f"{k}/{t_}"] = [int(hit) / 100, int(n), None, int(base) / 100]
+        snap["nmatch"] = sum(x["n"] or 0 for x in snap["leagues"].values())
+    except Exception:  # noqa
+        return None
+    return snap if snap["leagues"] else None
+
+
+def update_log(st, snap, prev_html, now):
+    d0, _ = day_window(now)
+    day = f"{d0:%Y-%m-%d}"
+    log = st.setdefault("log", {})
+    if not any(k < day for k in log) and prev_html:
+        yd = f"{d0 - dt.timedelta(days=1):%Y-%m-%d}"
+        log[yd] = prev_html
+    log[day] = snap
+    for k in sorted(log)[:-60]:
+        del log[k]
+
+
+def learn_html(st, now):
+    d0, _ = day_window(now)
+    day = f"{d0:%Y-%m-%d}"
+    log = st.get("log", {})
+    cur = log.get(day)
+    prevs = [k for k in sorted(log) if k < day]
+    if not cur or not prevs:
+        return ""
+    pd_ = prevs[-1]
+    prev = log[pd_]
+    out = (f"<div class='card'><h2>Model dün ne öğrendi?</h2><p class='note'>{pd_[8:]}.{pd_[5:7]} durumu ile "
+           f"bugünkü durum karşılaştırması. Bunlar botun yeni sonuçlardan kendiliğinden çıkardığı değişikliklerdir.</p>")
+    common = [n for n in cur["leagues"] if n in prev["leagues"]]
+    added = sum((cur["leagues"][n]["n"] or 0) - (prev["leagues"][n]["n"] or 0) for n in common
+                if prev["leagues"][n]["n"] is not None)
+    newl = [n for n in cur["leagues"] if n not in prev["leagues"]]
+    out += f"<div class='row'>Modele eklenen yeni biten maç: <b>+{max(added, 0)}</b> (toplam {cur['nmatch']})</div>"
+    if newl:
+        out += f"<div class='row'>Yeni eklenen lig: <b>{E(', '.join(newl))}</b></div>"
+    # güven filtresi değişimleri
+    rows, on, off = [], [], []
+    for key, v in sorted(cur["trust"].items()):
+        p = prev["trust"].get(key)
+        k, t = key.split("/")
+        lab = f"{TIER_NAME[int(t)].capitalize()} {GM_LABEL.get(k, k)}"
+        if p and p[2] is not None and p[2] != v[2]:
+            (on if v[2] else off).append(lab)
+        if p and v[1] >= TRUST_MIN_N:
+            dh = (v[0] - p[0]) * 100
+            rows.append((abs(dh), lab, p, v, dh))
+    if on:
+        out += f"<div class='row'>Güven filtresi açtı (artık önerilebilir): <b class='pos'>{E(', '.join(on))}</b></div>"
+    if off:
+        out += f"<div class='row'>Güven filtresi kapattı (artık önerilmez): <b class='neg'>{E(', '.join(off))}</b></div>"
+    if rows:
+        rows.sort(key=lambda x: -x[0])
+        out += ("<div class='sec'>Bahis türlerinin geçmiş isabeti (dün → bugün)</div><div class='wrap'><table>"
+                "<tr><th>Öneri</th><th class='n'>Dün</th><th class='n'>Bugün</th><th class='n'>Fark</th></tr>")
+        for _, lab, p, v, dh in rows[:10]:
+            cls_ = "pos" if dh > 0.5 else ("neg" if dh < -0.5 else "")
+            out += (f"<tr><td>{E(lab)}</td><td class='n'>%{p[0] * 100:.0f} <span class='note'>({p[1]})</span></td>"
+                    f"<td class='n'>%{v[0] * 100:.0f} <span class='note'>({v[1]})</span></td>"
+                    f"<td class='n {cls_}'>{dh:+.1f}</td></tr>")
+        out += "</table></div>"
+    # lig parametreleri
+    ch = []
+    for n in common:
+        a, b = prev["leagues"][n], cur["leagues"][n]
+        notes = []
+        if abs(b["ha"] - a["ha"]) >= 0.01:
+            notes.append(f"ev avantajı {a['ha']:.2f}→{b['ha']:.2f}")
+        if a["f"] and abs(b["f"] - a["f"]) >= 0.005:
+            notes.append(f"ilk yarı gol payı %{a['f'] * 100:.0f}→%{b['f'] * 100:.0f}")
+        if abs(b["rho"] - a["rho"]) >= 0.01:
+            notes.append(f"beraberlik eğilimi {a['rho']:+.2f}→{b['rho']:+.2f}")
+        if abs(b["c"] - a["c"]) >= 0.01 or abs(b["k"] - a["k"]) >= 0.01:
+            notes.append(f"yüzde ayarı k {a['k']:.2f}→{b['k']:.2f}, c {a['c']:.2f}→{b['c']:.2f}")
+        if notes:
+            ch.append(f"<b>{E(n)}</b>: " + ", ".join(notes))
+    if ch:
+        out += "<div class='sec'>Liglerde değişen ayarlar</div>" + "".join(f"<div class='row'>{x}</div>" for x in ch)
+    else:
+        out += ("<div class='row'>Lig ayarlarında belirgin değişiklik yok: birkaç günlük yeni sonuç, yüzlerce maçlık "
+                "geçmişi çok az kaydırır. Asıl öğrenme takım güçlerinde ve bahis türlerinin isabetinde görünür.</div>")
+    return out + "</div>"
+
+
 def all_results(leagues):
     res = {}
     for L in leagues:
@@ -2612,7 +2743,7 @@ def write_html(leagues, now, st=None):
     tabs = [f"<section class='tab on' id='rapor'>{rapor_tab(leagues, now)}</section>",
             f"<section class='tab' id='ozet'>{cp_banner}{summary_tab(leagues)}</section>",
             f"<section class='tab' id='kupon'>{coupons_tab(st, today_cp, results, now)}</section>",
-            f"<section class='tab' id='t1'>{t1_tab(st, now)}</section>"]
+            f"<section class='tab' id='t1'>{learn_html(st, now)}{t1_tab(st, now)}</section>"]
     for i in order:
         L = leagues[i]
         tid = f"l{i}"
