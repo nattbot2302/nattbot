@@ -33,6 +33,7 @@ LEAGUES = [
     ("sco.1", "İskoçya 1. Lig", False),
     ("fra.2", "Fransa 2. Lig", False),
     ("ned.1", "Hollanda Eredivisie", False),
+    ("ned.2", "Hollanda 2. Lig", False),
     ("eng.2", "İngiltere Championship", False),
     ("aut.1", "Avusturya Bundesliga", False),
     ("bel.1", "Belçika Pro Lig", False),
