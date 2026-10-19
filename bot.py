@@ -235,7 +235,23 @@ def parse_event(ev):
     done = bool(st.get("completed"))
     hid, aid = str(home["team"]["id"]), str(away["team"]["id"])
     hg, ag = score(home), score(away)
-    return {
+
+    def stat(c, k):
+        for x in c.get("statistics") or []:
+            if x.get("name") == k:
+                try:
+                    return float(x.get("displayValue"))
+                except (TypeError, ValueError):
+                    return None
+        return None
+    sts = None
+    if done:
+        hs, hsot, as_, asot = (stat(home, "totalShots"), stat(home, "shotsOnTarget"),
+                               stat(away, "totalShots"), stat(away, "shotsOnTarget"))
+        if None not in (hs, hsot, as_, asot) and hs + as_ > 0 and hs >= hsot and as_ >= asot:
+            sts = {"hs": hs, "hsot": hsot, "as": as_, "asot": asot,
+                   "hc": stat(home, "wonCorners"), "ac": stat(away, "wonCorners"), "hp": stat(home, "possessionPct")}
+    return {"st": sts,
         "id": ev["id"], "date": date, "hid": hid, "aid": aid,
         "home": name(home), "away": name(away), "hg": hg, "ag": ag,
         "ht": ht_score(comp, hid, aid, hg, ag) if done else None,
@@ -309,6 +325,86 @@ def time_weights(matches, ref):
     return [0.5 ** (max((ref - m["date"]).days, 0) / HALF_LIFE) for m in matches]
 
 
+W_GRID = (0.0, 0.35, 0.6, 0.8)   # takım gücünde şut verisinin ağırlığı (0 = sadece gol)
+
+
+def xg_coef(matches):
+    """Gol ≈ a·isabetli şut + b·isabetsiz şut (ligin kendi verisinden en küçük kareler)."""
+    sxx = sxy = syy = sgx = sgy = 0.0
+    n = 0
+    for m in matches:
+        s = m.get("st")
+        if not s:
+            continue
+        for g, sot, sh in ((m["hg"], s["hsot"], s["hs"]), (m["ag"], s["asot"], s["as"])):
+            off = sh - sot
+            sxx += sot * sot
+            sxy += sot * off
+            syy += off * off
+            sgx += g * sot
+            sgy += g * off
+            n += 1
+    det = sxx * syy - sxy * sxy
+    if n < 100 or det <= 0:
+        return None
+    a = (sgx * syy - sgy * sxy) / det
+    b = (sxx * sgy - sxy * sgx) / det
+    if a <= 0:
+        return None
+    return (a, max(b, 0.0), n)
+
+
+def xg_of(m, coef):
+    s = m.get("st")
+    if not s or not coef:
+        return None, None
+    a, b, _ = coef
+    return a * s["hsot"] + b * (s["hs"] - s["hsot"]), a * s["asot"] + b * (s["as"] - s["asot"])
+
+
+def set_values(matches, coef, w):
+    """Takım gücü hesabında kullanılacak 'gol değeri': gol ile şut kalitesinin karışımı."""
+    for m in matches:
+        xh, xa = xg_of(m, coef)
+        if xh is None or w <= 0:
+            m["vh"], m["va"] = m["hg"], m["ag"]
+        else:
+            m["vh"] = (1 - w) * m["hg"] + w * xh
+            m["va"] = (1 - w) * m["ag"] + w * xa
+
+
+def choose_w(finished, now, coef):
+    """Şut verisine verilecek ağırlığı geçmiş tahmin başarısına göre seçer."""
+    res = {}
+    cov = sum(1 for m in finished if m.get("st")) / max(len(finished), 1)
+    if not coef or cov < 0.5:
+        set_values(finished, None, 0)
+        return 0.0, res, cov
+    dates = [m["date"] for m in finished]
+    refs = [now - dt.timedelta(days=d) for d in range(150, 9, -10)]
+    for w in W_GRID:
+        set_values(finished, coef, w)
+        ll = br = 0.0
+        n = 0
+        for ref in refs:
+            i0 = bisect.bisect_left(dates, ref)
+            i1 = bisect.bisect_left(dates, ref + dt.timedelta(days=10))
+            model = build_model(finished[:i0], ref)
+            if not model:
+                continue
+            for m in finished[i0:i1]:
+                lh, la = lambdas(model, m["hid"], m["aid"])
+                ll += m["hg"] * math.log(lh) - lh + m["ag"] * math.log(la) - la
+                p25 = 1 - sum(pois(i, lh + la) for i in range(3))
+                br += (p25 - (1 if m["hg"] + m["ag"] >= 3 else 0)) ** 2
+                n += 1
+        if n:
+            res[w] = (ll / n, br / n, n)
+    best = max(res, key=lambda w: res[w][0]) if res else 0.0
+    set_values(finished, coef, best)
+    return best, res, cov
+
+
 def fit_strength(matches, tw):
     """Zaman ağırlıklı + son-10 vurgulu, rakip gücüne göre düzeltilmiş hücum/savunma."""
     n = len(matches)
@@ -337,13 +433,14 @@ def fit_strength(matches, tw):
         for i, m in enumerate(matches):
             h, a = m["hid"], m["aid"]
             w1, w2 = wh[i], wa[i]
-            na[h] += w1 * m["hg"]
+            vh, va = m.get("vh", m["hg"]), m.get("va", m["ag"])
+            na[h] += w1 * vh
             da[h] += w1 * base * ha * dfn[a]
-            na[a] += w2 * m["ag"]
+            na[a] += w2 * va
             da[a] += w2 * base / ha * dfn[h]
-            nd[h] += w1 * m["ag"]
+            nd[h] += w1 * va
             dd[h] += w1 * base / ha * att[a]
-            nd[a] += w2 * m["hg"]
+            nd[a] += w2 * vh
             dd[a] += w2 * base * ha * att[h]
         att = {t: (na[t] + c) / (da[t] + c) for t in att}
         dfn = {t: (nd[t] + c) / (dd[t] + c) for t in dfn}
@@ -676,8 +773,16 @@ def rapor_ctx(past, ref):
     pairs = defaultdict(list)
     for m in past:
         pairs[frozenset((m["hid"], m["aid"]))].append(m)
+    xs = [xg_of(m, m.get("_coef")) for m in recent]
+    xs = [a + b for a, b in xs if a is not None]
     return {"base": base, "avg": sum(tot) / len(tot) if tot else None,
-            "avg1": sum(tot1) / len(tot1) if tot1 else None, "pairs": pairs, "th": team_history(past)}
+            "avg1": sum(tot1) / len(tot1) if tot1 else None, "pairs": pairs, "th": team_history(past),
+            "avgx": sum(xs) / len(xs) if len(xs) >= 30 else None}
+
+
+def xmean(rows, i, minn=6):
+    v = [x[i] for x in rows if len(x) > i and x[i] is not None]
+    return sum(v) / len(v) if len(v) >= minn else None
 
 
 def rapor_eval(ctx, m, r, nb, hn, an):
@@ -746,6 +851,22 @@ def rapor_eval(ctx, m, r, nb, hn, an):
             k2 = sum(1 for x in a10 if x[1] > 0)
             add(k1 / len(h10) >= 0.7 and k2 / len(a10) >= 0.7,
                 f"Gol attığı maç: {hn} {k1}/{len(h10)}, {an} {k2}/{len(a10)}")
+        ax = ctx.get("avgx")
+        if ax:
+            hxf, hxa, axf, axa = xmean(h10, 7), xmean(h10, 8), xmean(a10, 7), xmean(a10, 8)
+            if None not in (hxf, hxa, axf, axa):
+                if key in ("o25", "o35", "o45", "u25"):
+                    ex = (hxf + axa) / 2 + (axf + hxa) / 2
+                    ok = ex <= ax - 0.25 if key == "u25" else ex >= ax + 0.25
+                    add(ok, f"Şutlara göre beklenen toplam gol {ex:.1f} (lig {ax:.1f})")
+                elif key == "btts":
+                    eh, ea = (hxf + axa) / 2, (axf + hxa) / 2
+                    add(min(eh, ea) >= ax / 2 * 0.95,
+                        f"Şutlara göre beklenen gol: {hn} {eh:.1f}, {an} {ea:.1f} (takım ort. {ax / 2:.1f})")
+                elif ms:
+                    dh, da = hxf - hxa, axf - axa
+                    diff = dh - da if key == "ms1" else da - dh
+                    add(diff >= 0.5, f"Şut üstünlüğü (maç başı beklenen gol farkı): {hn} {dh:+.1f}, {an} {da:+.1f}")
         if key in ("iy05", "iy15", "iykg") and ctx["avg1"] and ctx["avg"]:
             rows1 = [x for x in h10 + a10 if x[3] is not None]
             g_all = sum(x[1] + x[2] for x in rows1)
@@ -845,7 +966,17 @@ def team_ctx(tid, ctx, table, rank, n):
     return {"rank": rank.get(tid), "n": n, "pts": t["p"], "pl": t["pl"], "form": form,
             "tag": pos_tag(rank.get(tid), n, t["pl"]),
             "gf": rows_mean(l10, 1), "ga": rows_mean(l10, 2), "gf1": rows_mean(l10, 3), "ga1": rows_mean(l10, 4),
+            "xf": xmean(l10, 7), "xa": xmean(l10, 8), "sf": xmean(l10, 9), "sa": xmean(l10, 10),
+            "cf": xmean(l10, 11), "ca": xmean(l10, 12),
+            "luck": (sum(x[1] for x in l10 if x[7] is not None) - sum(x[7] for x in l10 if x[7] is not None))
+            if sum(1 for x in l10 if x[7] is not None) >= 6 else None,
             "last5": [(x[6], x[1], x[2], x[5]) for x in rows[-5:]][::-1]}
+
+
+def rest_days(tid, kick, th):
+    rows = (th or {}).get(tid) or []
+    prev = [x[0] for x in rows if x[0] < kick - dt.timedelta(hours=3)]
+    return (kick - max(prev)).days if prev else None
 
 
 # ------------------------------------------------------------ değerli oran
@@ -899,14 +1030,20 @@ def fair(p):
 
 
 # ------------------------------------------------------------ takım istatistik
-def team_history(matches):
+def team_history(matches, coef=None):
+    """Takım satırı: (tarih, attı, yedi, İY attı, İY yedi, evde mi, rakip,
+    şut-kalitesi lehine, aleyhine, isabetli şut lehine, aleyhine, korner lehine, aleyhine)."""
     th = defaultdict(list)
     for m in matches:
         ht = m.get("ht")
+        s = m.get("st") or {}
+        xh, xa = xg_of(m, coef or m.get("_coef"))
         th[m["hid"]].append((m["date"], m["hg"], m["ag"],
-                             ht[0] if ht else None, ht[1] if ht else None, True, m["away"]))
+                             ht[0] if ht else None, ht[1] if ht else None, True, m["away"],
+                             xh, xa, s.get("hsot"), s.get("asot"), s.get("hc"), s.get("ac")))
         th[m["aid"]].append((m["date"], m["ag"], m["hg"],
-                             ht[1] if ht else None, ht[0] if ht else None, False, m["home"]))
+                             ht[1] if ht else None, ht[0] if ht else None, False, m["home"],
+                             xa, xh, s.get("asot"), s.get("hsot"), s.get("ac"), s.get("hc")))
     return th
 
 
@@ -1065,7 +1202,7 @@ def day_window(now):
 def process_league(slug, name, calendar, now):
     info = {"slug": slug, "name": name, "cards": [], "err": "", "nfin": 0,
             "avg90": None, "bt": [], "model": None, "results": {}, "rev": None, "kc": None,
-            "rp_bt": [], "rbase": {}}
+            "rp_bt": [], "rbase": {}, "xw": 0.0, "xwres": {}, "xcov": 0.0, "xcoef": None}
     try:
         finished, allm = fetch_league(slug, now)
     except Exception as e:  # noqa
@@ -1092,6 +1229,11 @@ def process_league(slug, name, calendar, now):
     if c90:
         info["avg90"] = sum(m["hg"] + m["ag"] for m in c90) / len(c90)
 
+    coef = xg_coef(past)
+    for m in finished:
+        m["_coef"] = coef
+    w, wres, cov = choose_w(finished, now, coef)
+    info.update(xw=w, xwres=wres, xcov=cov, xcoef=coef)
     model = build_model(past, d0.astimezone(UTC))
     info["model"] = model
     th = team_history(past)
@@ -1179,8 +1321,10 @@ def finish_league(info, now, pool_eval, pool_all):
             "hs": tstat(m["hid"], True), "as": tstat(m["aid"], False),
             "sim": [sim_text(x) for x in nb[:5]],
             "rapor": rapor_eval(rctx, m, r, nb, m["home"], m["away"]),
-            "tctx": {"h": team_ctx(m["hid"], rctx, table, rank, nteams),
-                     "a": team_ctx(m["aid"], rctx, table, rank, nteams)},
+            "tctx": {"h": dict(team_ctx(m["hid"], rctx, table, rank, nteams),
+                               rest=rest_days(m["hid"], m["date"], GLOBAL_TH or rctx["th"])),
+                     "a": dict(team_ctx(m["aid"], rctx, table, rank, nteams),
+                               rest=rest_days(m["aid"], m["date"], GLOBAL_TH or rctx["th"]))},
             "lavg": rctx["avg"], "ht": m.get("ht"),
         })
     info["cards"].sort(key=lambda c: (c["day"], c["time"]))
@@ -2052,6 +2196,17 @@ def skill_td(s):
     return f"<td class='n {'pos' if v > 0 else 'neg'}'>{v:+.0f}</td>"
 
 
+def xw_cells(L):
+    r = L.get("xwres") or {}
+    if not r:
+        return f"<td class='n'>-</td><td class='n'>{'veri yok' if L.get('xcov', 0) < 0.5 else '-'}</td>"
+    w = L.get("xw", 0.0)
+    b0, bw = r.get(0.0, (0, 0))[1], r.get(w, (0, 0))[1]
+    imp = (b0 - bw) / b0 * 100 if b0 else 0
+    cls_ = "pos" if imp > 0.05 else ""
+    return f"<td class='n'>{w:.2f}</td><td class='n {cls_}'>{'-%.1f%%' % imp if imp > 0.05 else '0'}</td>"
+
+
 def accuracy_tab(leagues):
     allrows = [r for L in leagues for r in L["bt"]]
     groups = [L for L in leagues if L["bt"]] + [{"name": "TÜMÜ", "bt": allrows}]
@@ -2137,10 +2292,14 @@ def accuracy_tab(leagues):
             "golünün deplasmana oranı. İY payı: gollerin ilk yarıda gelen kısmı. DC ρ: düşük "
             "skorların (0-0, 1-1) düzeltme katsayısı; negatif = beraberlikler sık. İY veri: ilk "
             "yarı skoru bulunabilen maç oranı. Ayar k: 1'den küçükse model fazla uç tahmin ediyordu ve "
-            "yüzdeler ortalamaya çekildi. Ayar c: 1'den büyükse model golü az tahmin ediyordu ve artırıldı.</p>")
+            "yüzdeler ortalamaya çekildi. Ayar c: 1'den büyükse model golü az tahmin ediyordu ve artırıldı. "
+            "Şut ağırlığı: takım gücü hesabında şut kalitesinin gole göre payı (0 = sadece gol); bot bunu her gün "
+            "geçmiş 150 günde en iyi tahmini veren değere göre seçer. 2.5Ü hata: bu seçimin 2.5 Üst tahmin "
+            "hatasını sadece gole göre ne kadar azalttığı.</p>")
     out += ("<div class='wrap'><table><tr><th>Lig</th><th class='n'>Ev avantajı</th>"
             "<th class='n'>İY payı</th><th class='n'>DC ρ</th><th class='n'>İY veri</th>"
-            "<th class='n'>Ayar k</th><th class='n'>Ayar c</th></tr>")
+            "<th class='n'>Ayar k</th><th class='n'>Ayar c</th><th class='n'>Şut ağırlığı</th>"
+            "<th class='n'>2.5Ü hata</th></tr>")
     for L in leagues:
         m = L.get("model")
         if not m:
@@ -2150,7 +2309,7 @@ def accuracy_tab(leagues):
                 f"<td class='n'>{pct(hm['f']) if hm else '-'}</td><td class='n'>{m['rho']:+.2f}</td>"
                 f"<td class='n'>{pct(hm['cov']) if hm else '-'}</td>"
                 f"<td class='n'>{L['kc'][0]:.2f}{'*' if L.get('kc_src') == 'ortak' else ''}</td>"
-                f"<td class='n'>{L['kc'][1]:.2f}</td></tr>")
+                f"<td class='n'>{L['kc'][1]:.2f}</td>{xw_cells(L)}</tr>")
     out += ("</table></div><p class='note'>* Bu ligin yeterli geçmiş testi olmadığı için tüm liglerin "
             "ortak ayarı kullanıldı.</p>")
     return out
@@ -2238,8 +2397,20 @@ def team_line(name, t):
              + (f" (ilk yarı {num(t['gf1'])} / {num(t['ga1'])})" if t["gf1"] is not None else ""))
     last = " · ".join(f"{'G' if gf > ga else ('B' if gf == ga else 'M')} {gf}-{ga} {E(opp)}{'' if home else ' (d)'}"
                       for opp, gf, ga, home in t["last5"])
+    extra = ""
+    if t.get("sf") is not None:
+        extra += (f"<br>Şut: maç başı {t['sf']:.1f} isabetli (rakibe {t['sa']:.1f})"
+                  + (f" · korner {t['cf']:.1f}" if t.get("cf") is not None else "")
+                  + (f" · şutlara göre beklenen gol {t['xf']:.1f} / yenen {t['xa']:.1f}" if t.get("xf") is not None else ""))
+    if t.get("luck") is not None and abs(t["luck"]) >= 3:
+        extra += (f"<br><span class='warn'>Son 10 maçta şutlarına göre {t['luck']:+.0f} gol "
+                  + ("fazla attı: şanslı gidiyor, gol ortalaması düşebilir" if t["luck"] > 0
+                     else "az attı: şanssız gidiyor, gol ortalaması artabilir") + "</span>")
+    if t.get("rest") is not None and t["rest"] <= 10:
+        extra += (f"<br>Son maçından bu yana {t['rest']} gün"
+                  + (" · <span class='warn'>yorgunluk / rotasyon riski</span>" if t["rest"] <= 3 else ""))
     return (f"<div class='tc'><b>{E(name)}</b> · {pos}<br>Form (yeniden eskiye): {form_html(t['form'])} · {goals}"
-            f"<br><span class='note'>Son 5: {last}</span></div>")
+            f"{extra}<br><span class='note'>Son 5: {last}</span></div>")
 
 
 def hist_text(key, tier):
@@ -2336,6 +2507,9 @@ LEARN_HTML = (
     "yeniden çeker ve şunları baştan hesaplar:<br>1. <b>Takım güçleri</b>: son maçlar daha ağır basar (100 günde ağırlık "
     "yarıya iner, takımın son 10 maçı ekstra önemlidir). Dün 5-1 biten bir maç bugünkü tahminlere zaten girmiştir.<br>"
     "2. <b>Yüzde ayarı</b>: modelin geçmişte fazla/az gol tahmin edip etmediği ölçülüp düzeltilir.<br>"
+    "2b. <b>Şut verisi</b>: goller şansa açık olduğu için takım gücü isabetli/isabetsiz şutlardan hesaplanan "
+    "'şut kalitesi' ile karıştırılır. Ne kadar karıştırılacağını bot her gün geçmiş 150 günde en iyi tahmini "
+    "veren orana göre seçer (Doğruluk sekmesi, 'Şut ağırlığı').<br>"
     "3. <b>Kontrol listesi eşikleri</b>: ligin güncel gol, KG ve ilk yarı oranları her gün yeniden hesaplanır.<br>"
     "4. <b>Güven filtresi (öğrenme)</b>: son 150 günde her bahis türünün Güçlü/Orta önerileri gerçekte ne kadar "
     "tuttuğu ölçülür. Ortalamadan en az 3 puan iyi değilse o bahis türü <b>günün önerisi olarak seçilmez</b>. "
@@ -2604,7 +2778,7 @@ def make_snapshot(leagues, now):
         hm = m.get("half") or {}
         lg[L["name"]] = {"n": L["nfin"], "ny": L.get("ny", 0), "ha": round(m["ha"] ** 2, 3), "f": round(hm.get("f", 0), 3),
                          "rho": m["rho"], "k": (L.get("kc") or (0, 0))[0], "c": (L.get("kc") or (0, 0))[1],
-                         "g90": round(L["avg90"], 2) if L.get("avg90") else None}
+                         "g90": round(L["avg90"], 2) if L.get("avg90") else None, "xw": L.get("xw", 0.0)}
     tr = {f"{k}/{t}": [round(v["hit"], 3), v["n"], v["ok"], round(v["base"], 3)] for (k, t), v in (TRUST or {}).items()}
     return {"t": now.isoformat(), "leagues": lg, "trust": tr, "nmatch": sum(x["n"] for x in lg.values())}
 
@@ -2711,6 +2885,8 @@ def learn_html(st, now):
             notes.append(f"ilk yarı gol payı %{a['f'] * 100:.0f}→%{b['f'] * 100:.0f}")
         if abs(b["rho"] - a["rho"]) >= 0.01:
             notes.append(f"beraberlik eğilimi {a['rho']:+.2f}→{b['rho']:+.2f}")
+        if b.get("xw") is not None and a.get("xw") is not None and abs(b["xw"] - a["xw"]) >= 0.01:
+            notes.append(f"şut ağırlığı {a['xw']:.2f}→{b['xw']:.2f}")
         if abs(b["c"] - a["c"]) >= 0.01 or abs(b["k"] - a["k"]) >= 0.01:
             notes.append(f"yüzde ayarı k {a['k']:.2f}→{b['k']:.2f}, c {a['c']:.2f}→{b['c']:.2f}")
         if notes:
