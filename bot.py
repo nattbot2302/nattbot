@@ -2920,6 +2920,9 @@ BET_MARKETS = (
     + [("İlk yarı", f"iy{p}{x}", f"İY {x[0]}.5 {'Üst' if p == 'o' else 'Alt'}") for x in ("05", "15", "25") for p in "ou"]
     + [("İlk yarı", "iykgv", "İY KG Var"), ("İlk yarı", "iykgy", "İY KG Yok")]
     + [("İY / MS", f"im{a}{b}", f"İY/MS {a.upper()}/{b.upper()}") for a in "1x2" for b in "1x2"]
+    + [("MS ve 2.5 Alt/Üst", f"ms{r}+{p}25", f"MS {r.upper()} ve 2.5 {'Üst' if p == 'o' else 'Alt'}")
+       for r in "1x2" for p in "ou"]
+    + [("Maç skoru", f"sk{h}-{a}", f"Skor {h}-{a}") for h in range(5) for a in range(5)]
     + [("Diğer", "diger", "Diğer (sonucu ben gireceğim)")]
 )
 BET_LABEL = {c: l for _, c, l in BET_MARKETS}
@@ -2931,7 +2934,13 @@ def bet_settle(code, res):
     """True/False, sonuç yoksa ya da manuel bahisse None. res = [hg, ag, h1, a1]."""
     if not res or res[0] is None or code == "diger":
         return None
+    if "+" in code:                       # birleşik bahis: hepsi tutmalı
+        parts = [bet_settle(c, res) for c in code.split("+")]
+        return None if None in parts else all(parts)
     hg, ag, h1, a1 = res
+    if code.startswith("sk"):
+        h, a = code[2:].split("-")
+        return hg == int(h) and ag == int(a)
     r = res3(hg, ag)
     if code in ("ms1", "msx", "ms2"):
         return r == {"ms1": 0, "msx": 1, "ms2": 2}[code]
@@ -3118,6 +3127,8 @@ BET_CSS = """
 .msg{font-size:14px;margin-top:8px}
 .kp{background:var(--card);border-radius:12px;padding:10px 12px;margin-bottom:8px}
 .kh{display:flex;justify-content:space-between;font-size:13px;color:var(--mu)}
+details.kp summary{list-style:none;cursor:pointer}details.kp summary::-webkit-details-marker{display:none}
+.ks{font-size:14px;margin-top:3px}details.kp[open] .ks{display:none}
 """
 
 BET_JS = r"""
@@ -3135,7 +3146,9 @@ function b64d(b){ return decodeURIComponent(escape(atob(b.replace(/\s/g,'')))); 
 function res3(h,a){ return h>a?0:(h===a?1:2); }
 function settle(code, s){
   if(!s || s[0]==null || code==='diger') return null;
+  if(code.includes('+')){ const p = code.split('+').map(c=>settle(c,s)); return p.includes(null) ? null : p.every(x=>x); }
   const [hg,ag,h1,a1] = s, r = res3(hg,ag);
+  if(code.startsWith('sk')){ const [h,a] = code.slice(2).split('-').map(Number); return hg===h && ag===a; }
   if(code==='ms1') return r===0; if(code==='msx') return r===1; if(code==='ms2') return r===2;
   if(code==='cs1x') return r!==2; if(code==='cs12') return r!==1; if(code==='csx2') return r!==0;
   if(/^[ou]\d\d$/.test(code)){ const ln=+code[1]+0.5; return code[0]==='o' ? hg+ag>ln : hg+ag<ln; }
@@ -3244,12 +3257,13 @@ function renderCoupons(){
   const ks = DATA.kuponlar.slice().sort((a,b)=>(b.t||'').localeCompare(a.t||''));
   $('kps').innerHTML = ks.map(k=>{ const s=kState(k), t=+k.tutar||0;
     const lab = s.st==='tuttu'?'<span class="pos">Kazandı</span>':(s.st==='yatti'?'<span class="neg">Kaybetti</span>':'Bekliyor');
-    return '<div class="kp"><div class="kh"><span>'+dm(dayOf(k.t))+' · '+k.legs.length+' maç · '+t.toLocaleString('tr-TR')+' TL × '+s.o.toFixed(2)+'</span><span>'+lab+'</span></div>'+
+    return '<details class="kp"><summary><div class="kh"><span>'+dm(dayOf(k.t))+' '+hm(k.t)+' · '+k.legs.length+' maç · '+t.toLocaleString('tr-TR')+' TL × '+s.o.toFixed(2)+'</span><span>'+lab+'</span></div>'+
+      '<div class="ks">'+esc(k.legs.map(l=>l.ad.split(' - ')[0]).slice(0,3).join(', '))+(k.legs.length>3?' …':'')+'</div></summary>'+
       k.legs.map((l,i)=>{ const r=s.rs[i]; const m=l.m?MBY[l.m]:null;
         const mark = r===null ? ((l.m===null||l.b==='diger') ? '<button class="btn sm" onclick="setRes(\''+k.id+'\','+i+',\'tuttu\')">Tuttu</button> <button class="btn sm" onclick="setRes(\''+k.id+'\','+i+',\'yatti\')">Yattı</button>' : '⏳')
           : (r?'<span class="pos">✓</span>':'<span class="neg">✗</span>');
         return '<div class="leg"><div>'+esc(l.ad)+(m&&m.s?' <b>'+m.s[0]+'-'+m.s[1]+'</b>':'')+'<small>'+esc(l.bl)+' · '+(+l.o).toFixed(2)+(l.canli?' · canlı':'')+'</small></div><div>'+mark+'</div></div>'; }).join('')+
-      '<div style="text-align:right;margin-top:6px"><button class="btn sm" onclick="delK(\''+k.id+'\')">Sil</button></div></div>'; }).join('') ||
+      '<div style="text-align:right;margin-top:6px"><button class="btn sm" onclick="delK(\''+k.id+'\')">Sil</button></div></details>'; }).join('') ||
     '<p class="empty">Henüz kayıtlı kupon yok.</p>';
 }
 function renderAll(){ renderSummary(); renderCoupons(); }

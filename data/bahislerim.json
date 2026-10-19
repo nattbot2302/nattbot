@@ -124,6 +124,224 @@
      "sonuc": null
     }
    ]
+  },
+  {
+   "id": "k20261017154708",
+   "t": "2026-10-17T15:47:08+03:00",
+   "tutar": 500,
+   "kaynak": "ekran görüntüsü",
+   "legs": [
+    {
+     "m": "401878771",
+     "ad": "Everton - Chelsea",
+     "lg": "İngiltere Premier Lig",
+     "k": "2026-10-17T11:30:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 2.17,
+     "canli": true,
+     "sonuc": null
+    }
+   ]
+  },
+  {
+   "id": "k20261017162508",
+   "t": "2026-10-17T16:25:08+03:00",
+   "tutar": 500,
+   "kaynak": "ekran görüntüsü",
+   "legs": [
+    {
+     "m": "401884764",
+     "ad": "Elversberg - Augsburg",
+     "lg": "Almanya Bundesliga",
+     "k": "2026-10-17T13:30:00+00:00",
+     "b": "ms1+o25",
+     "bl": "MS 1 ve 2.5 Üst",
+     "o": 2.95,
+     "canli": false,
+     "sonuc": null
+    },
+    {
+     "m": "401884766",
+     "ad": "Bremen - Paderborn",
+     "lg": "Almanya Bundesliga",
+     "k": "2026-10-17T13:30:00+00:00",
+     "b": "kgv",
+     "bl": "KG Var",
+     "o": 1.36,
+     "canli": false,
+     "sonuc": null
+    },
+    {
+     "m": "401884767",
+     "ad": "Hamburg - Stuttgart",
+     "lg": "Almanya Bundesliga",
+     "k": "2026-10-17T13:30:00+00:00",
+     "b": "kgv",
+     "bl": "KG Var",
+     "o": 1.28,
+     "canli": false,
+     "sonuc": null
+    },
+    {
+     "m": "401884769",
+     "ad": "Union Berlin - Dortmund",
+     "lg": "Almanya Bundesliga",
+     "k": "2026-10-17T13:30:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.33,
+     "canli": false,
+     "sonuc": null
+    },
+    {
+     "m": "401884765",
+     "ad": "Schalke - Mainz",
+     "lg": "Almanya Bundesliga",
+     "k": "2026-10-17T13:30:00+00:00",
+     "b": "ms1",
+     "bl": "MS 1",
+     "o": 2.51,
+     "canli": false,
+     "sonuc": null
+    }
+   ]
+  },
+  {
+   "id": "k20261017184059",
+   "t": "2026-10-17T18:40:59+03:00",
+   "tutar": 100,
+   "kaynak": "ekran görüntüsü",
+   "legs": [
+    {
+     "m": "401843459",
+     "ad": "Viking FK - Fredrikstad",
+     "lg": "Norveç 1. Lig",
+     "k": "2026-10-17T16:00:00+00:00",
+     "b": "sk4-0",
+     "bl": "Skor 4-0",
+     "o": 14.85,
+     "canli": false,
+     "sonuc": null
+    }
+   ]
+  },
+  {
+   "id": "k20261017201224",
+   "t": "2026-10-17T20:12:24+03:00",
+   "tutar": 250,
+   "kaynak": "ekran görüntüsü",
+   "legs": [
+    {
+     "m": "401843459",
+     "ad": "Viking FK - Fredrikstad",
+     "lg": "Norveç 1. Lig",
+     "k": "2026-10-17T16:00:00+00:00",
+     "b": "ms1",
+     "bl": "MS 1",
+     "o": 2.68,
+     "canli": true,
+     "sonuc": null
+    },
+    {
+     "m": "401874953",
+     "ad": "Bologna - Inter Milan",
+     "lg": "İtalya Serie A",
+     "k": "2026-10-17T16:00:00+00:00",
+     "b": "ms1",
+     "bl": "MS 1",
+     "o": 4.6,
+     "canli": true,
+     "sonuc": null
+    },
+    {
+     "m": "401879258",
+     "ad": "Newcastle - Aston Villa",
+     "lg": "İngiltere Premier Lig",
+     "k": "2026-10-17T16:30:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.34,
+     "canli": true,
+     "sonuc": null
+    }
+   ]
+  },
+  {
+   "id": "k20261017212857",
+   "t": "2026-10-17T21:28:57+03:00",
+   "tutar": 400,
+   "kaynak": "ekran görüntüsü",
+   "legs": [
+    {
+     "m": "761875",
+     "ad": "Philadelphia - Charlotte",
+     "lg": "ABD MLS",
+     "k": "2026-10-17T18:30:00+00:00",
+     "b": "iykgv",
+     "bl": "İY KG Var",
+     "o": 2.87,
+     "canli": false,
+     "sonuc": null
+    }
+   ]
+  },
+  {
+   "id": "k20261018222241",
+   "t": "2026-10-18T22:22:41+03:00",
+   "tutar": 500,
+   "kaynak": "ekran görüntüsü",
+   "legs": [
+    {
+     "m": "401841277",
+     "ad": "Fluminense - Santos",
+     "lg": "Brezilya 1. Lig",
+     "k": "2026-10-18T19:00:00+00:00",
+     "b": "iyo15",
+     "bl": "İY 1.5 Üst",
+     "o": 1.39,
+     "canli": true,
+     "sonuc": null
+    }
+   ]
+  },
+  {
+   "id": "k20261018231028",
+   "t": "2026-10-18T23:10:28+03:00",
+   "tutar": 250,
+   "kaynak": "ekran görüntüsü",
+   "legs": [
+    {
+     "m": "401841277",
+     "ad": "Fluminense - Santos",
+     "lg": "Brezilya 1. Lig",
+     "k": "2026-10-18T19:00:00+00:00",
+     "b": "o35",
+     "bl": "3.5 Üst",
+     "o": 3.66,
+     "canli": true,
+     "sonuc": null
+    }
+   ]
+  },
+  {
+   "id": "k20261018232146",
+   "t": "2026-10-18T23:21:46+03:00",
+   "tutar": 200,
+   "kaynak": "ekran görüntüsü",
+   "legs": [
+    {
+     "m": "401841277",
+     "ad": "Fluminense - Santos",
+     "lg": "Brezilya 1. Lig",
+     "k": "2026-10-18T19:00:00+00:00",
+     "b": "o55",
+     "bl": "5.5 Üst",
+     "o": 5.11,
+     "canli": true,
+     "sonuc": null
+    }
+   ]
   }
  ]
 }
