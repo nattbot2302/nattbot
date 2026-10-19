@@ -1,0 +1,230 @@
+<!doctype html><html lang='tr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>Kuponlarım</title><style>
+:root{--bg:#f4f5f7;--card:#fff;--tx:#1a1a1a;--mu:#666;--hi:#c8f0d2;--mid:#fdf0c4;--lo:#eee;--ac:#0a7d3b;--bd:#ddd;--neg:#c0392b;--warn:#b26a00}
+@media (prefers-color-scheme:dark){:root{--bg:#111;--card:#1c1c1e;--tx:#eee;--mu:#999;--hi:#1f5130;--mid:#5a4a14;--lo:#2a2a2c;--ac:#3ecf72;--bd:#333;--neg:#ff6b5e;--warn:#f0a940}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif}
+header{padding:12px 12px 0}h1{font-size:20px;margin:0}
+.upd{color:var(--mu);font-size:12px;margin:6px 0}
+nav{position:sticky;top:0;background:var(--bg);padding:8px 12px;z-index:5}
+nav select{width:100%;font-size:16px;font-weight:600;padding:10px 12px;border-radius:10px;background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+nav button{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:16px;padding:7px 12px;font-size:13px;flex:none}
+nav button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+nav small{opacity:.7}
+.tab{display:none;padding:4px 12px 24px}.tab.on{display:block}
+h2{font-size:17px;margin:4px 0 8px}h3{font-size:15px;margin:16px 0 6px}
+.card{background:var(--card);border-radius:12px;padding:14px;margin-bottom:12px}
+.meta,.row{color:var(--mu);font-size:13px;margin-top:6px}
+.row b{color:var(--tx);font-weight:600}
+.sec{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mu);margin:12px 0 6px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.b{text-align:center;border-radius:8px;padding:7px 4px;font-size:12px}
+.b b{font-size:17px}.hi{background:var(--hi)}.mid{background:var(--mid)}.lo{background:var(--lo)}
+.sc{float:right;font-weight:600;color:var(--tx)}
+.warn{color:var(--warn);font-size:12px;margin-top:6px}
+.wrap{overflow-x:auto;margin-top:6px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{padding:6px 5px;text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}
+th{color:var(--mu);font-weight:600}
+td.n,th.n{text-align:right}
+.pos{color:var(--ac);font-weight:600}.neg{color:var(--neg);font-weight:600}
+summary{margin-top:10px;font-size:13px;cursor:pointer}li{font-size:13px;color:var(--mu)}
+.fire{color:var(--ac);font-weight:700}
+.empty,.err{color:var(--mu);font-size:14px;padding:12px 0}
+.note{color:var(--mu);font-size:12.5px;line-height:1.45}
+.b small{display:block;font-size:10.5px;color:var(--mu);margin-top:1px}
+.b.val{outline:2px solid var(--ac);outline-offset:-2px}
+.radar{border:2px solid var(--warn);border-radius:12px;padding:12px;margin:10px 0 14px;background:var(--card)}
+.radar h3{margin:0 0 6px;color:var(--warn)}
+.valbox{border:2px solid var(--ac);border-radius:12px;padding:12px;margin:10px 0 14px;background:var(--card)}
+.valbox h3{margin:0 0 6px;color:var(--ac)}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;margin-right:4px}
+.tag.s{background:var(--warn);color:#fff}.tag.v{background:var(--ac);color:#fff}
+tr.hl td{font-weight:700;color:var(--tx)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.chip{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:14px;padding:5px 10px;font-size:12.5px;text-decoration:none}
+.chip small{color:var(--mu)}
+.cpf{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--mu);margin-top:8px;padding-top:8px;border-top:1px dashed var(--bd)}
+.cpf b{color:var(--tx)}
+.sub{margin-top:14px;padding:10px;border-radius:10px;background:var(--lo)}
+.sub h3{margin:0 0 4px}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+.alarm{border:2px solid #d93025;border-radius:12px;padding:10px 12px;margin:8px 0 2px;background:var(--card)}
+.ah{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px}
+.live{display:inline-block;background:#d93025;color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;animation:bl 1.6s infinite}
+@keyframes bl{50%{opacity:.55}}
+.arow{display:block;text-decoration:none;color:var(--tx);border-top:1px solid var(--bd);padding:8px 0 6px;margin-top:6px}
+.at{font-size:13.5px}.ab{font-size:14px;margin-top:3px}.ar{font-size:12px;color:var(--warn);margin-top:3px}
+.lv{font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:5px;color:#fff;background:var(--warn)}
+.arow.kritik .lv{background:#d93025}
+
+.wrapb{padding:4px 12px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.back{color:var(--ac);text-decoration:none;font-size:14px;font-weight:600}
+.in,.sel{width:100%;font-size:16px;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)}
+.row2{display:flex;gap:8px;margin-top:8px}.row2>*{flex:1}
+.btn{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:10px 12px;font-size:15px;font-weight:600}
+.btn.pri{background:var(--ac);border-color:var(--ac);color:#fff}
+.btn.sm{padding:6px 10px;font-size:13px;border-radius:8px}
+.btn.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.mlist{max-height:46vh;overflow-y:auto;margin-top:8px;border-radius:10px;border:1px solid var(--bd)}
+.mi{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:0;border-bottom:1px solid var(--bd);padding:9px 10px;font-size:14px}
+.mi small{display:block;color:var(--mu);font-size:12px}
+.mi b.sc{float:right}
+.legf{border:2px solid var(--ac);border-radius:12px;padding:10px;margin-top:10px}
+.leg{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid var(--bd);padding:7px 0;font-size:14px}
+.leg small{display:block;color:var(--mu);font-size:12px}
+.tot{font-size:15px;margin:10px 0}
+.msg{font-size:14px;margin-top:8px}
+.kp{background:var(--card);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.kh{display:flex;justify-content:space-between;font-size:13px;color:var(--mu)}
+</style></head><body><header><div class='top'><h1>Kuponlarım</h1><a class='back' href='index.html'>← Günün maçları</a></div></header><div class='wrapb'><div id='sum'></div><div class='card'><h2>Yeni kupon</h2><div class='row2'><select id='day' class='sel' onchange="$('q').value='';renderList()"></select><input id='q' class='in' placeholder='Takım ara' oninput='renderList()'></div><div id='ml' class='mlist'></div><div style='margin-top:8px'><button class='btn sm' onclick='pickManual()'>+ Listede olmayan maç</button></div><div id='legf' class='legf' style='display:none'><div id='legt' class='leg' style='border:0'></div><select id='mk' class='sel'></select><div class='row2'><input id='odd' class='in' inputmode='decimal' placeholder='Oran (örn. 1.76)'></div><div class='row2'><button id='b-pre' class='btn' onclick='setCanli(false)'>Maç öncesi</button><button id='b-on' class='btn' onclick='setCanli(true)'>Canlı</button></div><div class='row2'><button class='btn pri' onclick='addLeg()'>Kupona ekle</button><button class='btn' onclick="$('legf').style.display='none'">Vazgeç</button></div></div><div class='sec'>Kupon</div><div id='draft'></div><div id='tot' class='tot'></div><div id='savebox' style='display:none'><input id='stake' class='in' inputmode='decimal' placeholder='Kupon bedeli (TL)' oninput='renderDraft()'><div class='row2'><button class='btn pri' onclick='saveCoupon()'>Kuponu kaydet</button></div></div><div id='msg' class='msg'></div></div><h2 style='margin-top:16px'>Kayıtlı kuponlar</h2><div id='kps'></div><details class='rp' style='margin-top:14px'><summary><b>Ayarlar: GitHub anahtarı</b> <span id='tks' class='note'></span></summary><div class='tc'>Kuponların repoya kaydedilmesi için bir kez anahtar girmen gerekir. Anahtar sadece bu telefonun tarayıcısında saklanır, sitede yayınlanmaz.<br>1. <a href='https://github.com/settings/personal-access-tokens/new' target='_blank'>Yeni anahtar oluştur</a> sayfasını aç.<br>2. Token name: <b>kupon</b>, Expiration: 1 yıl.<br>3. Repository access: <b>Only select repositories</b> → <b>nattbot</b>.<br>4. Permissions → Repository permissions → <b>Contents</b>: <b>Read and write</b>.<br>5. Generate token → kopyala → aşağıya yapıştır → Kaydet.</div><input id='tk' class='in' type='password' placeholder='github_pat_...'><div class='row2'><button class='btn pri' onclick='saveTok()'>Kaydet</button></div></details></div><script>
+const REPO = "nattbot2302/nattbot", MARKETS = [["Maç sonucu", "ms1", "MS 1"], ["Maç sonucu", "msx", "MS X"], ["Maç sonucu", "ms2", "MS 2"], ["Çifte şans", "cs1x", "Çifte şans 1-X"], ["Çifte şans", "cs12", "Çifte şans 1-2"], ["Çifte şans", "csx2", "Çifte şans X-2"], ["Alt / Üst", "o05", "0.5 Üst"], ["Alt / Üst", "u05", "0.5 Alt"], ["Alt / Üst", "o15", "1.5 Üst"], ["Alt / Üst", "u15", "1.5 Alt"], ["Alt / Üst", "o25", "2.5 Üst"], ["Alt / Üst", "u25", "2.5 Alt"], ["Alt / Üst", "o35", "3.5 Üst"], ["Alt / Üst", "u35", "3.5 Alt"], ["Alt / Üst", "o45", "4.5 Üst"], ["Alt / Üst", "u45", "4.5 Alt"], ["Alt / Üst", "o55", "5.5 Üst"], ["Alt / Üst", "u55", "5.5 Alt"], ["Karşılıklı gol", "kgv", "KG Var"], ["Karşılıklı gol", "kgy", "KG Yok"], ["İlk yarı", "iy1", "İY 1"], ["İlk yarı", "iyx", "İY X"], ["İlk yarı", "iy2", "İY 2"], ["İlk yarı", "iyo05", "İY 0.5 Üst"], ["İlk yarı", "iyu05", "İY 0.5 Alt"], ["İlk yarı", "iyo15", "İY 1.5 Üst"], ["İlk yarı", "iyu15", "İY 1.5 Alt"], ["İlk yarı", "iyo25", "İY 2.5 Üst"], ["İlk yarı", "iyu25", "İY 2.5 Alt"], ["İlk yarı", "iykgv", "İY KG Var"], ["İlk yarı", "iykgy", "İY KG Yok"], ["İY / MS", "im11", "İY/MS 1/1"], ["İY / MS", "im1x", "İY/MS 1/X"], ["İY / MS", "im12", "İY/MS 1/2"], ["İY / MS", "imx1", "İY/MS X/1"], ["İY / MS", "imxx", "İY/MS X/X"], ["İY / MS", "imx2", "İY/MS X/2"], ["İY / MS", "im21", "İY/MS 2/1"], ["İY / MS", "im2x", "İY/MS 2/X"], ["İY / MS", "im22", "İY/MS 2/2"], ["Diğer", "diger", "Diğer (sonucu ben gireceğim)"]], API = 'https://api.github.com/repos/'+REPO+'/contents/data/bahislerim.json';
+let MACS = [], MBY = {}, DATA = {kuponlar:[]}, DAILY = false, FROM = '';
+let draft = [], pick = null, canli = false;
+const $ = id => document.getElementById(id);
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function tok(){ try{return localStorage.getItem('nb_token')||'';}catch(e){return '';} }
+function dayOf(iso){ return new Date(iso).toLocaleDateString('sv-SE',{timeZone:'Europe/Istanbul'}); }
+function hm(iso){ return new Date(iso).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Istanbul'}); }
+function dm(day){ return day.slice(8)+'.'+day.slice(5,7); }
+function b64e(s){ return btoa(unescape(encodeURIComponent(s))); }
+function b64d(b){ return decodeURIComponent(escape(atob(b.replace(/\s/g,'')))); }
+function res3(h,a){ return h>a?0:(h===a?1:2); }
+function settle(code, s){
+  if(!s || s[0]==null || code==='diger') return null;
+  const [hg,ag,h1,a1] = s, r = res3(hg,ag);
+  if(code==='ms1') return r===0; if(code==='msx') return r===1; if(code==='ms2') return r===2;
+  if(code==='cs1x') return r!==2; if(code==='cs12') return r!==1; if(code==='csx2') return r!==0;
+  if(/^[ou]\d\d$/.test(code)){ const ln=+code[1]+0.5; return code[0]==='o' ? hg+ag>ln : hg+ag<ln; }
+  if(code==='kgv') return hg>0&&ag>0; if(code==='kgy') return !(hg>0&&ag>0);
+  if(h1==null||a1==null) return null;
+  const r1 = res3(h1,a1);
+  if(code==='iy1') return r1===0; if(code==='iyx') return r1===1; if(code==='iy2') return r1===2;
+  if(/^iy[ou]\d\d$/.test(code)){ const ln=+code[3]+0.5; return code[2]==='o' ? h1+a1>ln : h1+a1<ln; }
+  if(code==='iykgv') return h1>0&&a1>0; if(code==='iykgy') return !(h1>0&&a1>0);
+  if(code.startsWith('im')){ const m={'1':0,'x':1,'2':2}; return r1===m[code[2]] && r===m[code[3]]; }
+  return null;
+}
+function legRes(l){ if(l.sonuc==='tuttu') return true; if(l.sonuc==='yatti') return false;
+  const m = l.m ? MBY[l.m] : null; return m && m.s ? settle(l.b, m.s) : null; }
+function kState(k){ const rs = k.legs.map(legRes); let o=1; k.legs.forEach(l=>o*=+l.o||1);
+  return {st: rs.some(r=>r===false)?'yatti':(rs.length&&rs.every(r=>r===true)?'tuttu':'bekliyor'), rs, o}; }
+
+async function ghLoad(){
+  const r = await fetch(API+'?ref=main&t='+Date.now(), {headers:{Authorization:'Bearer '+tok(), Accept:'application/vnd.github+json'}, cache:'no-store'});
+  if(r.status===404) return {data:{kuponlar:[]}, sha:null};
+  if(!r.ok) throw new Error('GitHub '+r.status+(r.status===401?' (anahtar geçersiz)':''));
+  const j = await r.json(); return {data: JSON.parse(b64d(j.content)), sha: j.sha};
+}
+async function ghSave(mut, msg){
+  if(!tok()) throw new Error('Önce aşağıdaki Ayarlar bölümünden GitHub anahtarını gir.');
+  for(let i=0;i<3;i++){
+    const {data, sha} = await ghLoad(); data.kuponlar = data.kuponlar||[]; mut(data);
+    const body = {message: msg, content: b64e(JSON.stringify(data, null, 1)), branch:'main'}; if(sha) body.sha = sha;
+    const r = await fetch(API, {method:'PUT', headers:{Authorization:'Bearer '+tok(), Accept:'application/vnd.github+json', 'Content-Type':'application/json'}, body: JSON.stringify(body)});
+    if(r.ok){ DATA = data; return; }
+    if(r.status!==409 && r.status!==422) throw new Error('Kaydedilemedi: GitHub '+r.status);
+  }
+  throw new Error('Kaydedilemedi, tekrar dene.');
+}
+function msg(t, ok){ const e=$('msg'); e.innerHTML = t; e.style.color = ok ? 'var(--ac)' : 'var(--neg)'; }
+
+function renderSummary(){
+  let n=0,w=0,stake=0,ret=0,pend=0;
+  for(const k of DATA.kuponlar){ const s=kState(k), t=+k.tutar||0;
+    if(s.st==='bekliyor'){ pend++; continue; } n++; stake+=t; if(s.st==='tuttu'){ w++; ret+=t*s.o; } }
+  const net = ret-stake;
+  $('sum').innerHTML = '<div class="grid"><div class="b lo">Kupon<br><b>'+w+'/'+n+'</b><small>tutan · '+pend+' bekliyor</small></div>'+
+    '<div class="b lo">Yatırılan<br><b>'+Math.round(stake).toLocaleString('tr-TR')+'</b><small>TL</small></div>'+
+    '<div class="b '+(net>0?'hi':'lo')+'">Net<br><b>'+(net>=0?'+':'')+Math.round(net).toLocaleString('tr-TR')+'</b><small>'+(stake?('ROI %'+Math.round(net/stake*100)):'')+'</small></div></div>';
+}
+function renderDays(){
+  const days = [...new Set(MACS.map(m=>dayOf(m.k)))].sort();
+  const today = dayOf(new Date().toISOString());
+  $('day').innerHTML = days.map(d=>'<option value="'+d+'"'+(d===today?' selected':'')+'>'+dm(d)+(d===today?' (bugün)':'')+'</option>').join('');
+}
+function renderList(){
+  const q = $('q').value.trim().toLocaleLowerCase('tr-TR'), d = $('day').value;
+  let ms = MACS.filter(m => q ? (m.h+' '+m.a+' '+m.lg).toLocaleLowerCase('tr-TR').includes(q) : dayOf(m.k)===d);
+  if(q) ms = ms.slice(-60);
+  $('ml').innerHTML = ms.map(m=>'<button class="mi" onclick="pickM(\''+m.id+'\')"><b class="sc">'+(m.s?m.s[0]+'-'+m.s[1]:'')+'</b>'+
+    esc(m.h)+' - '+esc(m.a)+'<small>'+(q?dm(dayOf(m.k))+' ':'')+hm(m.k)+' · '+esc(m.lg)+'</small></button>').join('') ||
+    '<p class="empty" style="padding:10px">Maç bulunamadı.</p>';
+}
+function mkSelect(){
+  let h='', g='';
+  for(const [grp,c,l] of MARKETS){ if(grp!==g){ if(g) h+='</optgroup>'; h+='<optgroup label="'+grp+'">'; g=grp; } h+='<option value="'+c+'">'+esc(l)+'</option>'; }
+  return h+'</optgroup>';
+}
+function pickM(id){
+  const m = MBY[id]; pick = {m:id, ad:m.h+' - '+m.a, lg:m.lg, k:m.k};
+  setCanli(Date.now() >= Date.parse(m.k)); showLegForm();
+}
+function pickManual(){
+  const ad = prompt('Maç adı (örn. Galatasaray - Fenerbahçe):'); if(!ad) return;
+  pick = {m:null, ad:ad, lg:'Liste dışı', k:new Date().toISOString(), manual:true}; setCanli(false); showLegForm();
+}
+function setCanli(v){ canli = v; const a=$('b-on'), b=$('b-pre'); if(a){ a.classList.toggle('on',v); b.classList.toggle('on',!v); } }
+function showLegForm(){
+  $('legf').style.display = 'block';
+  $('legt').innerHTML = '<b>'+esc(pick.ad)+'</b><small>'+esc(pick.lg)+(pick.manual?' · sonucu sen gireceksin':'')+'</small>';
+  $('odd').value=''; setCanli(canli); $('odd').focus();
+}
+function addLeg(){
+  const o = parseFloat(($('odd').value||'').replace(',','.'));
+  if(!(o>1)) { msg('Oranı gir (örn. 1.76).'); return; }
+  const b = $('mk').value;
+  draft.push(Object.assign({}, pick, {b:b, bl:MARKETS.find(x=>x[1]===b)[2], o:o, canli:canli, sonuc:null}));
+  $('legf').style.display='none'; pick=null; msg(''); renderDraft();
+}
+function renderDraft(){
+  let o=1; draft.forEach(l=>o*=l.o);
+  $('draft').innerHTML = draft.map((l,i)=>'<div class="leg"><div>'+esc(l.ad)+'<small>'+esc(l.bl)+' · '+(l.canli?'canlı':'maç öncesi')+'</small></div>'+
+    '<div><b>'+l.o.toFixed(2)+'</b> <button class="btn sm" onclick="draft.splice('+i+',1);renderDraft()">×</button></div></div>').join('');
+  const t = parseFloat(($('stake').value||'').replace(',','.'))||0;
+  $('tot').innerHTML = draft.length ? (draft.length+' maç · toplam oran <b>'+o.toFixed(2)+'</b>'+(t?' · olası kazanç <b>'+(t*o).toLocaleString('tr-TR',{maximumFractionDigits:2})+' TL</b>':'')) : 'Kupon boş: yukarıdan maç seç.';
+  $('savebox').style.display = draft.length ? 'block' : 'none';
+}
+async function saveCoupon(){
+  const t = parseFloat(($('stake').value||'').replace(',','.'));
+  if(!(t>0)){ msg('Kupon bedelini (TL) gir.'); return; }
+  const kp = {id:'k'+Date.now(), t:new Date().toISOString(), tutar:t, legs:draft.map(l=>({m:l.m,ad:l.ad,lg:l.lg,k:l.k,b:l.b,bl:l.bl,o:l.o,canli:l.canli,sonuc:null}))};
+  msg('Kaydediliyor…', true);
+  try{ await ghSave(d=>d.kuponlar.push(kp), 'Kupon eklendi'); draft=[]; $('stake').value=''; renderDraft(); renderAll(); msg('Kupon kaydedildi ✓', true); }
+  catch(e){ msg(esc(e.message)); }
+}
+async function delK(id){ if(!confirm('Bu kupon silinsin mi?')) return;
+  try{ await ghSave(d=>{d.kuponlar=d.kuponlar.filter(k=>k.id!==id)}, 'Kupon silindi'); renderAll(); msg('Silindi', true);}catch(e){ msg(esc(e.message)); } }
+async function setRes(id, i, v){
+  try{ await ghSave(d=>{const k=d.kuponlar.find(k=>k.id===id); if(k) k.legs[i].sonuc=v;}, 'Sonuç girildi'); renderAll(); msg('Kaydedildi', true);}catch(e){ msg(esc(e.message)); } }
+function renderCoupons(){
+  const ks = DATA.kuponlar.slice().sort((a,b)=>(b.t||'').localeCompare(a.t||''));
+  $('kps').innerHTML = ks.map(k=>{ const s=kState(k), t=+k.tutar||0;
+    const lab = s.st==='tuttu'?'<span class="pos">Kazandı</span>':(s.st==='yatti'?'<span class="neg">Kaybetti</span>':'Bekliyor');
+    return '<div class="kp"><div class="kh"><span>'+dm(dayOf(k.t))+' · '+k.legs.length+' maç · '+t.toLocaleString('tr-TR')+' TL × '+s.o.toFixed(2)+'</span><span>'+lab+'</span></div>'+
+      k.legs.map((l,i)=>{ const r=s.rs[i]; const m=l.m?MBY[l.m]:null;
+        const mark = r===null ? ((l.m===null||l.b==='diger') ? '<button class="btn sm" onclick="setRes(\''+k.id+'\','+i+',\'tuttu\')">Tuttu</button> <button class="btn sm" onclick="setRes(\''+k.id+'\','+i+',\'yatti\')">Yattı</button>' : '⏳')
+          : (r?'<span class="pos">✓</span>':'<span class="neg">✗</span>');
+        return '<div class="leg"><div>'+esc(l.ad)+(m&&m.s?' <b>'+m.s[0]+'-'+m.s[1]+'</b>':'')+'<small>'+esc(l.bl)+' · '+(+l.o).toFixed(2)+(l.canli?' · canlı':'')+'</small></div><div>'+mark+'</div></div>'; }).join('')+
+      '<div style="text-align:right;margin-top:6px"><button class="btn sm" onclick="delK(\''+k.id+'\')">Sil</button></div></div>'; }).join('') ||
+    '<p class="empty">Henüz kayıtlı kupon yok.</p>';
+}
+function renderAll(){ renderSummary(); renderCoupons(); }
+function saveTok(){ try{ localStorage.setItem('nb_token', $('tk').value.trim()); }catch(e){} testTok(); }
+async function testTok(){
+  if(!tok()){ $('tks').textContent='Anahtar girilmedi: kupon kaydedemezsin.'; $('tks').style.color='var(--neg)'; return; }
+  try{ const {data} = await ghLoad(); DATA = data; DATA.kuponlar = DATA.kuponlar||[]; renderAll();
+    $('tks').textContent='Anahtar çalışıyor ✓'; $('tks').style.color='var(--ac)'; }
+  catch(e){ $('tks').textContent=e.message; $('tks').style.color='var(--neg)'; }
+}
+async function init(){
+  $('mk').innerHTML = mkSelect();
+  try{ const r = await fetch('data/maclar.json?t='+Date.now()); const j = await r.json(); MACS=j.maclar||[]; DAILY=j.daily; FROM=j.from; }catch(e){ MACS=[]; }
+  if(DAILY){ const lo = Date.now()-36*3600e3; MACS = MACS.filter(m=>Date.parse(m.k)>=lo); }
+  MACS.forEach(m=>MBY[m.id]=m);
+  renderDays(); renderList(); renderDraft();
+  if(tok()) await testTok();
+  else { try{ const r = await fetch('data/bahislerim.json?t='+Date.now()); if(r.ok){ DATA=await r.json(); DATA.kuponlar=DATA.kuponlar||[]; } }catch(e){} renderAll(); testTok(); }
+}
+init();
+</script></body></html>
