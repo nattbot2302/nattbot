@@ -40,6 +40,90 @@
      "sonuc": null
     }
    ]
+  },
+  {
+   "id": "k1792411289294",
+   "t": "2026-10-19T12:01:29.294Z",
+   "tutar": 250,
+   "legs": [
+    {
+     "m": "401875575",
+     "ad": "FC Groningen - Ajax",
+     "lg": "Hollanda Eredivisie",
+     "k": "2026-10-18T14:45:00+00:00",
+     "b": "iykgv",
+     "bl": "İY KG Var",
+     "o": 2.78,
+     "canli": false,
+     "sonuc": null
+    },
+    {
+     "m": "401881773",
+     "ad": "Sturm Graz - Grazer",
+     "lg": "Avusturya Bundesliga",
+     "k": "2026-10-18T15:00:00+00:00",
+     "b": "ms1",
+     "bl": "MS 1",
+     "o": 1.64,
+     "canli": false,
+     "sonuc": null
+    },
+    {
+     "m": "401843466",
+     "ad": "Valerenga - SK Brann",
+     "lg": "Norveç 1. Lig",
+     "k": "2026-10-18T15:00:00+00:00",
+     "b": "iyo15",
+     "bl": "İY 1.5 Üst",
+     "o": 1.76,
+     "canli": false,
+     "sonuc": null
+    },
+    {
+     "m": "401843463",
+     "ad": "Molde - IK Start",
+     "lg": "Norveç 1. Lig",
+     "k": "2026-10-18T15:00:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.21,
+     "canli": false,
+     "sonuc": null
+    },
+    {
+     "m": "401884768",
+     "ad": "Gladbach - Hoffenheim",
+     "lg": "Almanya Bundesliga",
+     "k": "2026-10-18T15:30:00+00:00",
+     "b": "iykgv",
+     "bl": "İY KG Var",
+     "o": 2.6,
+     "canli": false,
+     "sonuc": null
+    },
+    {
+     "m": "401874551",
+     "ad": "København - AGF",
+     "lg": "Danimarka 1. Lig",
+     "k": "2026-10-18T16:00:00+00:00",
+     "b": "ms1",
+     "bl": "MS 1",
+     "o": 1.42,
+     "canli": false,
+     "sonuc": null
+    },
+    {
+     "m": "401843460",
+     "ad": "Tromso - KFUM",
+     "lg": "Norveç 1. Lig",
+     "k": "2026-10-18T17:15:00+00:00",
+     "b": "iykgv",
+     "bl": "İY KG Var",
+     "o": 4.15,
+     "canli": false,
+     "sonuc": null
+    }
+   ]
   }
  ]
 }
