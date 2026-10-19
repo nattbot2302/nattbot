@@ -1,0 +1,142 @@
+US
+
+=== https://cdnbulten.nesine.com/api/bulten/getprebultenfull
+kod=200 boyut=667044 tür=application/json; charset=utf-8
+{"sg":{"eventVersion":979620039,"marketVersion":7379641100,"oddVersion":5896907882,"drawNo":20261019,"FB":1,"EA":[{"C":2677952,"EV":979306918,"ENN":"MLS - \u015Eampiyon Kim Olur?","TYPE":-1,"GT":-1,"D":"07.11.2026","ESD":1794009600000,"ED":1794009600000,"DAY":"Cumartesi","T":"03:00","P":0,"LC":2,"BC":"","LE":0,"BP":0,"BS":0,"NS":1,"MA":[],"MSA":[{"ID":56783576,"NO":10760,"MN":"\u015Eampiyon Kim Olur?","MV":979306919,"MT":3,"MBS":1,"SOV":0.00,"MS":1,"MSD":1768811220000,"MED":1794009600000,"OCA":[{"N":1,"ON":"Chicago Fire","O":12},{"N":2,"ON":"LA Galaxy","O":80},{"N":3,"ON":"New York Red Bulls",
+=== https://www.nesine.com/iddaa
+kod=200 boyut=63035 tür=text/html; charset=utf-8
+<!DOCTYPE html><html lang="tr"><head>        <script>        window.dataLayer = window.dataLayer || [];        window.gtag = window.gtag || function gtag() { window.dataLayer.push(arguments); };        </script>        <script>        (function () {            var isOld = typeof globalThis === 'undefined' ||                        typeof String.prototype.includes !== 'function' ||                        typeof Array.prototype.includes !== 'function';            if (isOld) {                var s = document.createElement('script');                s.src = '//
+=== https://sportsbookv2.iddaa.com/sportsbook/events?st=1&type=0&version=0
+kod=200 boyut=281890 tür=application/json; charset=utf-8
+{"isSuccess":true,"data":{"isdiff":false,"version":1792423189611,"events":[{"i":3216914,"bri":72388032,"v":977426942,"hn":"Voluntari","an":"FCSB","sid":1,"s":0,"bp":0,"il":true,"mbc":3,"kOdd":true,"m":[{"i":84574758,"t":2,"st":101,"v":973154058,"s":1,"mbc":3,"sov":"2.5","o":[{"no":1,"odd":2.08,"wodd":2.00,"n":"Alt"},{"no":2,"odd":1.42,"wodd":1.36,"n":"Üst"}]},{"i":84574734,"t":2,"st":60,"v":973154062,"s":1,"mbc":3,"sov":"1.5","o":[{"no":1,"odd":1.44,"wodd":1.39,"n":"Alt"},{"no":2,"odd":2.03,"wodd":1.95,"n":"Üst"}]},{"i":84574750,"t":2,"st":101,"v":973154057,"s":1,"mbc":3,"sov":"1.5","o":[{"n
+=== https://www.iddaa.com/program/futbol
+kod=200 boyut=17412 tür=text/html; charset=utf-8
+<!DOCTYPE html><html lang="tr"><head><meta charSet="utf-8"/><link rel="icon" href="/favicon.ico"/><link rel="dns-prefetch" href="//s.iddaa.com"/><link rel="preconnect" href="//s.iddaa.com"/><link rel="dns-prefetch" href="//i.iddaa.com"/><link rel="preconnect" href="//i.iddaa.com"/><link rel="dns-prefetch" href="//sportsbook.iddaa.com"/><link rel="preconnect" href="//sportsbook.iddaa.com"/><link rel="dns-prefetch" href="//contentv2.iddaa.com"/><link rel="preconnect" href="//contentv2.iddaa.com"/><link rel="dns-prefetch" href="https://analytics.twitter.com"/><link rel="dns-prefetch" href="https:
+=== https://www.bilyoner.com/iddaa
+kod=200 boyut=11752 tür=text/html; charset=utf-8
+<!DOCTYPE html><html lang="tr" data-version="3.109.0"><head><script data-cfasync="false">(()=>{function t(e,t){var a=document.documentElement;a.setAttribute("data-theme",e),a.style.backgroundColor={light:"#f5f6f6",dark:"#2f3133"}[e],a.style.colorScheme=e,document.body&&(document.body.style.backgroundColor={light:"#f5f6f6",dark:"#2f3133"}[e]);try{document.cookie="user-theme="+(t||e)+"; path=/; max-age=31536000; SameSite=Lax"+("https:"===location.protocol?"; Secure":"")}catch(e){}}try{for(var e="light",a="",o=(location.search||"").replace(/^\?/,""),r=o?o.split("&"):[],c=0;c<r.length;c++)try{var 
+=== https://www.misli.com/iddaa
+kod=200 boyut=1222 tür=text/html
+<!doctype html><html lang="tr-TR" id="device" data-n-head="%7B%22lang%22:%7B%221%22:%22tr-TR%22%7D,%22id%22:%7B%221%22:%22device%22%7D%7D">  <head>    <meta data-n-head="1" charset="utf-8"><meta data-n-head="1" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta data-n-head="1" name="apple-mobile-web-app-title" content="Misli"><meta data-n-head="1" name="application-name" content="Misli"><meta data-n-head="1" name="theme-color" content="#303538"><meta data-n-head="1" name="apple-mobile-web-app-status-bar-style" content="#fe4201"><meta data-n-head="1" name="sma
+=== nesine yapısı
+.sg dict 9
+.sg.eventVersion int 979627384
+.sg.marketVersion int 7379726238
+.sg.oddVersion int 5897029920
+.sg.drawNo int 20261019
+.sg.FB int 1
+.sg.EA list 894
+.sg.EA[0].C int 2677952
+.sg.EA[0].EV int 979306918
+.sg.EA[0].ENN str 'MLS - Şampiyon Kim Olur?'
+.sg.EA[0].TYPE int -1
+.sg.EA[0].GT int -1
+.sg.EA[0].D str '07.11.2026'
+.sg.EA[0].ESD int 1794009600000
+.sg.EA[0].ED int 1794009600000
+.sg.EA[0].DAY str 'Cumartesi'
+.sg.EA[0].T str '03:00'
+.sg.EA[0].P int 0
+.sg.EA[0].LC int 2
+.sg.EA[0].BC str ''
+.sg.EA[0].LE int 0
+.sg.EA[0].BP int 0
+.sg.EA[0].BS int 0
+.sg.EA[0].NS int 1
+.sg.EA[0].MA list 0
+.sg.EA[0].MSA list 1
+.sg.EA[0].CE int 0
+.sg.EA[0].BRID int 344020
+.sg.EA[0].NID int 2677952
+.sg.EA[0].OLE int 0
+.sg.EA[0].HPI int 47
+.sg.EA[0].API int 52
+.sg.EWMA list 26
+.sg.EWMA[0].C int 3329109
+.sg.EWMA[0].TYPE int 1
+.sg.EWMA[0].D str '19.10.2026'
+.sg.EWMA[0].ESD int 1792423200000
+.sg.EWMA[0].HN str 'Damac'
+.sg.EWMA[0].AN str 'Al Tai'
+.sg.EWMA[0].ENO str 'Damac FC - Al-Tai FC'
+.sg.EWMA[0].LC str '1_5576'
+.sg.EWMA[0].LN str 'Suudi Arabistan 1. Lig'
+.sg.EWMA[0].LO int 21174
+.sg.EWMA[0].NID int 3221901
+.sg.LA list 235
+.sg.LA[0].LID int 2
+.sg.LA[0].N str 'ABD Major Lig Playoff'
+.sg.LA[0].CC str 'US'
+.sg.LA[0].SO int 1025
+.sg.BMV dict 4
+.sg.BMV.FDV int 494
+.sg.BMV.PFV int 175
+.sg.BMV.LFV int 58
+.sg.BMV.BMVI int 15
+.nsn dict 16
+.nsn.nsnDataVersion str '64bd8396a939881fbe55de9d06256ea9'
+.nsn.percentages list 0
+.nsn.outcomePercentages dict 0
+.nsn.nsnBultenNames list 49
+.nsn.nsnBultenNames[0].EID int 3092918
+.nsn.nsnBultenNames[0].MID int 76450797
+.nsn.nsnBultenNames[0].ON int 9
+.nsn.nsnBultenNames[0].N str 'H. Kralove'
+.nsn.nsnBultenNames[0].C int 3
+.nsn.nsnBultenNames[0].NID int 3092918
+.nsn.nsnBroadcasts list 1400
+.nsn.nsnBroadcasts[0].E int 3245921
+.nsn.nsnBroadcasts[0].M int 672623
+.nsn.nsnBroadcasts[0].NID int 3245921
+.nsn.editorChoices list 387
+.nsn.editorChoices[0].id str '1000'
+.nsn.editorChoices[0].name str 'Senih Yurga'
+.nsn.editorChoices[0].code str '3218203'
+.nsn.editorChoices[0].outcome str '1'
+.nsn.editorChoices[0].marketId str '85006703'
+.nsn.editorChoices[0].nevId int 3218203
+.nsn.editorChoices[0].eventType int 1
+.nsn.editorChoices[0].marketName str '1. Yarı Karşılıklı Gol'
+.nsn.editorChoices[0].outcomeName str 'Var'
+.nsn.editorChoices[0].odd float 3.83
+.nsn.editorVideos list 0
+.nsn.editorShortVideos list 23
+.nsn.editorDetails list 28
+.nsn.editorDetails[0].id str '1135'
+.nsn.editorDetails[0].name str 'Veli Yiğit'
+.nsn.editorDetails[0].image str 'https://img.nesine.com/50fa13cb-f31e-4f0c-ad2f-491f26e36e9a
+.nsn.editorDetails[0].eventTypes list 1
+.nsn.editors dict 28
+.nsn.editors.1125 str 'Yiğit Ayık'
+.nsn.editors.1135 str 'Veli Yiğit'
+.nsn.editors.1112 str 'Hasan Adıyaman'
+.nsn.editors.1136 str 'Erbatur Ergenekon'
+.nsn.editors.1133 str 'Anıl Yazar'
+.nsn.editors.1006 str 'Ümit Avcı'
+.nsn.editors.1003 str 'Ozan German'
+.nsn.editors.1000 str 'Senih Yurga'
+.nsn.editors.1037 str 'Emre Can Demirci'
+.nsn.editors.1131 str 'Mustafa Demirtaş'
+.nsn.editors.1141 str 'AltLigler TR'
+.nsn.editors.1014 str 'Fuat Türk'
+.nsn.editors.1130 str 'Oğuz Oruç'
+.nsn.editors.1010 str 'Romario Özsavidis'
+.nsn.editors.1044 str 'Erke Tümer'
+.nsn.editors.1138 str 'Can Önduygu'
+.nsn.editors.1032 str 'Tansu Gürsel'
+.nsn.editors.1042 str 'Merih Önal'
+.nsn.editors.-1 str 'Ortak Seçimler'
+.nsn.editors.1076 str 'Umut Can Üreyen'
+.nsn.editors.1085 str 'Hakan Güleç'
+.nsn.editors.1050 str 'Sarper Can Ayaz'
+.nsn.editors.1051 str 'Orhan Aşkıner'
+.nsn.editors.1018 str 'Mertcan Bulca'
+.nsn.editors.1039 str 'Görkem Candan'
+.nsn.editorComments list 80
+.nsn.bestWinnersBets dict 0
+.nsn.relatedEvents list 0
+.nsn.hintEvents list 527
+.nsn.sporTotoEvents list 0
+.nsn.nsnTVLiveEvents list 33
+=== iddaa.com yapısı
+{"isSuccess":true,"data":{"isdiff":false,"version":1792423189611,"events":[{"i":3216914,"bri":72388032,"v":977426942,"hn":"Voluntari","an":"FCSB","sid":1,"s":0,"bp":0,"il":true,"mbc":3,"kOdd":true,"m":[{"i":84574758,"t":2,"st":101,"v":973154058,"s":1,"mbc":3,"sov":"2.5","o":[{"no":1,"odd":2.08,"wodd":2.00,"n":"Alt"},{"no":2,"odd":1.42,"wodd":1.36,"n":"Üst"}]},{"i":84574734,"t":2,"st":60,"v":973154062,"s":1,"mbc":3,"sov":"1.5","o":[{"no":1,"odd":1.44,"wodd":1.39,"n":"Alt"},{"no":2,"odd":2.03,"wodd":1.95,"n":"Üst"}]},{"i":84574750,"t":2,"st":101,"v":973154057,"s":1,"mbc":3,"sov":"1.5","o":[{"no":1,"odd":4.09,"wodd":3.93,"n":"Alt"},{"no":2,"odd":1.06,"wodd":1.00,"n":"Üst"}]},{"i":84574742,"t":2,"st":101,"v":973154059,"s":1,"mbc":3,"sov":"3.5","o":[{"no":1,"odd":1.38,"wodd":1.33,"n":"Alt"},{"no":2,"odd":2.17,"wodd":2.08,"n":"Üst"}]},{"i":84574752,"t":2,"st":700,"v":973154072,"s":1,"mbc":3,"sov":"2.5","o":[{"no":1,"odd":8.14,"wodd":7.82,"n":"Alt ve Var"},{"no":2,"odd":1.80,"wodd":1.73,"n":"Üst ve Var"},{"no":3,"odd":2.71,"wodd":2.60,"n":"Alt ve Yok"},{"no":4,"odd":5.91,"wodd":5.68,"n":"Üst ve Yok"}]},{"i":84574745,"t":2,"st":36,"v":973154063,"s":1,"mbc":3,"o":[{"no":1,"odd":4.33,"wodd":4.16,"n":"1"},{"no":2,"odd":2.67,"wodd":2.57,"n":"0"},{"no":3,"odd":1.72,"wodd":1.66,"n":"2"}]},{"i":84574733,"t":1,"st":1,"v":973154051,"s":1,"mbc":3,"o":[{"no":1,"odd":4.66,"wodd":4.48,"n":"1"},{"no":2,"odd":3.90,"wodd":3.75,"n":"0"},{"no":3,"odd":1.40,"wodd":1.34,"n":"2"}]},{"i":84574730,"t
