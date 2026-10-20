@@ -821,7 +821,74 @@ def rapor_ctx(past, ref):
     xs = [a + b for a, b in xs if a is not None]
     return {"base": base, "avg": sum(tot) / len(tot) if tot else None,
             "avg1": sum(tot1) / len(tot1) if tot1 else None, "pairs": pairs, "th": team_history(past),
-            "avgx": sum(xs) / len(xs) if len(xs) >= 30 else None}
+            "avgx": sum(xs) / len(xs) if len(xs) >= 30 else None, "gmb": gm_base(recent)}
+
+
+GI_BINS = [(1, 15), (16, 30), (31, 45), (46, 60), (61, 75), (76, 120)]
+GI_LABEL = ["1-15", "16-30", "31-45", "46-60", "61-75", "76-90"]
+GI_N = 15          # gol dakikası analizinde takım başına son maç sayısı
+
+
+def gi_bin(mn):
+    mn = abs(mn)
+    for i, (a, b) in enumerate(GI_BINS):
+        if a <= mn <= b:
+            return i
+    return len(GI_BINS) - 1
+
+
+def gm_stats(rows):
+    """Gol dakikalı maçlardan (takımın gözünden işaretli listeler) dakika ve maç içi durum istatistikleri.
+    rows: [(attığı, yediği, [işaretli dakikalar]), ...]"""
+    rs = [r for r in rows if r[2] is not None]
+    n = len(rs)
+    if n == 0:
+        return None
+    f, a, anyg = [0] * 6, [0] * 6, [0] * 6
+    for _, _, g in rs:
+        seen = set()
+        for x in g:
+            i = gi_bin(x)
+            (f if x > 0 else a)[i] += 1
+            seen.add(i)
+        for i in seen:
+            anyg[i] += 1
+    wg = [r for r in rs if r[2]]
+    sf = [r for r in wg if r[2][0] > 0]          # ilk golü attığı
+    cf = [r for r in wg if r[2][0] < 0]          # ilk golü yediği
+
+    def rate(lst, fn):
+        return (sum(1 for r in lst if fn(r)), len(lst))
+    return {
+        "n": n, "f": f, "a": a, "any": anyg,
+        "early": rate(rs, lambda r: any(abs(x) <= 30 for x in r[2])),
+        "late": rate(rs, lambda r: any(abs(x) >= 76 for x in r[2])),
+        "open": rate(wg, lambda r: len(r[2]) >= 3),                    # ilk golden sonra 2+ gol daha
+        "sfwin": rate(sf, lambda r: r[0] > r[1]),                      # öne geçince kazandı
+        "reply": rate(cf, lambda r: any(x > 0 for x in r[2])),          # geriye düşünce gol attı
+        "comeback": rate(cf, lambda r: r[0] >= r[1]),                  # geriye düşünce puan aldı
+    }
+
+
+def team_gm(rows):
+    return gm_stats([(x[1], x[2], x[13]) for x in rows if len(x) > 13])
+
+
+def rr(t):
+    return t[0] / t[1] if t and t[1] else None
+
+
+def gm_base(recent):
+    """Lig tabanı: maç bazında erken/geç gol, açılma; takım bazında öne geçince kazanma, geri dönüş."""
+    ms = [m for m in recent if m.get("gm") is not None]
+    if len(ms) < 60:
+        return None
+    rows = [(m["hg"], m["ag"], m["gm"]) for m in ms] + [(m["ag"], m["hg"], [-x for x in m["gm"]]) for m in ms]
+    st = gm_stats(rows)
+    half = gm_stats([(m["hg"], m["ag"], m["gm"]) for m in ms])
+    return {"n": len(ms), "early": rr(half["early"]), "late": rr(half["late"]), "open": rr(half["open"]),
+            "sfwin": rr(st["sfwin"]), "reply": rr(st["reply"]), "comeback": rr(st["comeback"]),
+            "f": [x / len(ms) for x in half["f"]], "a": [x / len(ms) for x in half["a"]]}
 
 
 def xmean(rows, i, minn=6):
@@ -926,6 +993,38 @@ def rapor_eval(ctx, m, r, nb, hn, an):
                 k2 = sum(1 for x in a1 if x[3] > 0)
                 add(k1 / len(h1) >= 0.45 and k2 / len(a1) >= 0.45,
                     f"İlk yarıda gol attığı maç: {hn} {k1}/{len(h1)}, {an} {k2}/{len(a1)}")
+        gb = ctx.get("gmb")
+        if gb:
+            hs_, as_ = team_gm(hr[-GI_N:]), team_gm(ar[-GI_N:])
+            if hs_ and as_ and hs_["n"] >= 8 and as_["n"] >= 8:
+                def cmb(k):
+                    a_, b_ = hs_[k], as_[k]
+                    return (a_[0] + b_[0]) / (a_[1] + b_[1]) if a_[1] + b_[1] else None
+                if key in ("iy05", "iy15", "iykg") and gb["early"]:
+                    v = cmb("early")
+                    add(v is not None and v >= gb["early"] + 0.08,
+                        f"İlk 30 dakikada gol olan maç: {hn} {hs_['early'][0]}/{hs_['early'][1]}, "
+                        f"{an} {as_['early'][0]}/{as_['early'][1]} (lig %{gb['early'] * 100:.0f})")
+                elif key in ("o25", "o35", "o45", "u25") and gb["open"]:
+                    v = cmb("open")
+                    if v is not None and hs_["open"][1] + as_["open"][1] >= 12:
+                        ok = v <= gb["open"] - 0.08 if key == "u25" else v >= gb["open"] + 0.08
+                        add(ok, f"İlk golden sonra 2+ gol daha gelen maç: {hn} {hs_['open'][0]}/{hs_['open'][1]}, "
+                                f"{an} {as_['open'][0]}/{as_['open'][1]} (lig %{gb['open'] * 100:.0f})")
+                elif key == "btts" and gb["reply"]:
+                    a_, b_ = hs_["reply"], as_["reply"]
+                    if a_[1] >= 3 and b_[1] >= 3:
+                        add(a_[0] / a_[1] >= gb["reply"] and b_[0] / b_[1] >= gb["reply"],
+                            f"Geriye düşünce gol attığı maç: {hn} {a_[0]}/{a_[1]}, {an} {b_[0]}/{b_[1]} "
+                            f"(lig %{gb['reply'] * 100:.0f})")
+                elif ms and gb["sfwin"]:
+                    fav, opp = (hs_, as_) if key == "ms1" else (as_, hs_)
+                    fn_, on_ = (hn, an) if key == "ms1" else (an, hn)
+                    if fav["sfwin"][1] >= 3 and opp["comeback"][1] >= 3:
+                        add(rr(fav["sfwin"]) >= gb["sfwin"] and rr(opp["comeback"]) <= gb["comeback"],
+                            f"{fn_} öne geçince kazandı {fav['sfwin'][0]}/{fav['sfwin'][1]}; "
+                            f"{on_} geriye düşünce puan aldı {opp['comeback'][0]}/{opp['comeback'][1]} "
+                            f"(lig %{gb['sfwin'] * 100:.0f} / %{gb['comeback'] * 100:.0f})")
         tot = len(checks)
         okc = sum(1 for ok, _ in checks if ok)
         ratio = okc / tot if tot else 0
@@ -1076,7 +1175,8 @@ def fair(p):
 # ------------------------------------------------------------ takım istatistik
 def team_history(matches, coef=None):
     """Takım satırı: (tarih, attı, yedi, İY attı, İY yedi, evde mi, rakip,
-    şut-kalitesi lehine, aleyhine, isabetli şut lehine, aleyhine, korner lehine, aleyhine)."""
+    şut-kalitesi lehine, aleyhine, isabetli şut lehine, aleyhine, korner lehine, aleyhine,
+    gol dakikaları: attığı +dk, yediği -dk)."""
     th = defaultdict(list)
     for m in matches:
         ht = m.get("ht")
@@ -1084,10 +1184,12 @@ def team_history(matches, coef=None):
         xh, xa = xg_of(m, coef or m.get("_coef"))
         th[m["hid"]].append((m["date"], m["hg"], m["ag"],
                              ht[0] if ht else None, ht[1] if ht else None, True, m["away"],
-                             xh, xa, s.get("hsot"), s.get("asot"), s.get("hc"), s.get("ac")))
+                             xh, xa, s.get("hsot"), s.get("asot"), s.get("hc"), s.get("ac"),
+                             m.get("gm")))
         th[m["aid"]].append((m["date"], m["ag"], m["hg"],
                              ht[1] if ht else None, ht[0] if ht else None, False, m["home"],
-                             xa, xh, s.get("asot"), s.get("hsot"), s.get("ac"), s.get("hc")))
+                             xa, xh, s.get("asot"), s.get("hsot"), s.get("ac"), s.get("hc"),
+                             [-x for x in m["gm"]] if m.get("gm") is not None else None))
     return th
 
 
@@ -1370,6 +1472,8 @@ def finish_league(info, now, pool_eval, pool_all):
             "hs": tstat(m["hid"], True), "as": tstat(m["aid"], False),
             "sim": [sim_text(x) for x in nb[:5]],
             "rapor": rapor_eval(rctx, m, r, nb, m["home"], m["away"]),
+            "gi": {"h": team_gm(rctx["th"].get(m["hid"], [])[-GI_N:]), "a": team_gm(rctx["th"].get(m["aid"], [])[-GI_N:]),
+                   "lg": rctx.get("gmb")},
             "tctx": {"h": dict(team_ctx(m["hid"], rctx, table, rank, nteams),
                                rest=rest_days(m["hid"], m["date"], GLOBAL_TH or rctx["th"])),
                      "a": dict(team_ctx(m["aid"], rctx, table, rank, nteams),
@@ -2516,6 +2620,43 @@ def bet_block(c, key, title="", context=True):
             f"<div class='yorum'>{E(rp_comment(c, key, context))}</div>")
 
 
+def gi_html(c):
+    g = c.get("gi") or {}
+    h, a, lg = g.get("h"), g.get("a"), g.get("lg")
+    if not h or not a or h["n"] < 5 or a["n"] < 5:
+        return ""
+
+    def cell(v, n, ref):
+        r = v / n
+        cls = " class='n pos'" if ref and r >= ref * 1.4 and v >= 3 else " class='n'"
+        return f"<td{cls}>{v}</td>"
+    rows = ""
+    for i, lab in enumerate(GI_LABEL):
+        ref = (lg["f"][i] + lg["a"][i]) / 2 if lg else None
+        lgc = f"<td class='n'>{(lg['f'][i] + lg['a'][i]):.2f}</td>" if lg else ""
+        rows += (f"<tr><td>{lab}</td>{cell(h['f'][i], h['n'], ref)}{cell(h['a'][i], h['n'], ref)}"
+                 f"{cell(a['f'][i], a['n'], ref)}{cell(a['a'][i], a['n'], ref)}{lgc}</tr>")
+    lgh = "<th class='n'>Lig</th>" if lg else ""
+
+    def frac(t):
+        return f"{t[0]}/{t[1]}" if t[1] else "-"
+
+    def line(nm, x):
+        return (f"<li><b>{E(nm)}</b> ({x['n']} maç): ilk 30 dk'da gol olan maç {frac(x['early'])} · son 15 dk'da gol olan maç "
+                f"{frac(x['late'])} · öne geçince kazandı {frac(x['sfwin'])} · geriye düşünce gol attı {frac(x['reply'])}, "
+                f"puan aldı {frac(x['comeback'])} · ilk golden sonra 2+ gol daha {frac(x['open'])}</li>")
+    lgl = ""
+    if lg:
+        lgl = (f"<li><b>Lig ortalaması</b>: ilk 30 dk'da gol %{lg['early'] * 100:.0f} · son 15 dk'da gol %{lg['late'] * 100:.0f} · "
+               f"öne geçen kazanır %{lg['sfwin'] * 100:.0f} · geriye düşen gol atar %{lg['reply'] * 100:.0f}, puan alır "
+               f"%{lg['comeback'] * 100:.0f} · ilk golden sonra 2+ gol %{lg['open'] * 100:.0f}</li>")
+    return ("<div class='sec'>Gol dakikaları ve maç içi tepki</div>"
+            f"<p class='note'>Takımların gol dakikası bilinen son maçları. Sayılar gol adedi; yeşil: lig ortalamasının belirgin üstü. "
+            f"Lig sütunu: maç başı gol.</p><div class='wrap'><table><tr><th>Dakika</th><th class='n'>{E(c['home'])} attı</th>"
+            f"<th class='n'>yedi</th><th class='n'>{E(c['away'])} attı</th><th class='n'>yedi</th>{lgh}</tr>{rows}</table></div>"
+            f"<ul class='ck'>{line(c['home'], h)}{line(c['away'], a)}{lgl}</ul>")
+
+
 def rp_item(c, key, lname, full=True):
     ev = c["rapor"]["m"][key]
     tier = ev["tier"]
@@ -2549,7 +2690,7 @@ def rp_item(c, key, lname, full=True):
     if alt:
         body += bet_block(c, alt, "2. öneri: ", context=False)
     return (head + line1 + line2 + "</summary>" + body +
-            f"{team_line(c['home'], c['tctx']['h'])}{team_line(c['away'], c['tctx']['a'])}"
+            f"{team_line(c['home'], c['tctx']['h'])}{team_line(c['away'], c['tctx']['a'])}{gi_html(c)}"
             "<div class='sec'>Bu maçtaki tüm bahisler</div><div class='wrap'><table><tr><th>Bahis</th>"
             f"<th class='n'>Model</th><th class='n'>Kriter</th><th class='n'>Seviye</th></tr>{others}</table></div></details>")
 
