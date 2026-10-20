@@ -993,6 +993,11 @@ def rapor_eval(ctx, m, r, nb, hn, an):
                 k2 = sum(1 for x in a1 if x[3] > 0)
                 add(k1 / len(h1) >= 0.45 and k2 / len(a1) >= 0.45,
                     f"İlk yarıda gol attığı maç: {hn} {k1}/{len(h1)}, {an} {k2}/{len(a1)}")
+        # Gol dakikası / maç içi tepki maddeleri: geri testte isabeti artırmadığı için puana sayılmaz, bilgi olarak gösterilir
+        infos = []
+
+        def note(ok, text):
+            infos.append((bool(ok), text))
         gb = ctx.get("gmb")
         if gb:
             hs_, as_ = team_gm(hr[-GI_N:]), team_gm(ar[-GI_N:])
@@ -1002,26 +1007,26 @@ def rapor_eval(ctx, m, r, nb, hn, an):
                     return (a_[0] + b_[0]) / (a_[1] + b_[1]) if a_[1] + b_[1] else None
                 if key in ("iy05", "iy15", "iykg") and gb["early"]:
                     v = cmb("early")
-                    add(v is not None and v >= gb["early"] + 0.08,
+                    note(v is not None and v >= gb["early"] + 0.08,
                         f"İlk 30 dakikada gol olan maç: {hn} {hs_['early'][0]}/{hs_['early'][1]}, "
                         f"{an} {as_['early'][0]}/{as_['early'][1]} (lig %{gb['early'] * 100:.0f})")
                 elif key in ("o25", "o35", "o45", "u25") and gb["open"]:
                     v = cmb("open")
                     if v is not None and hs_["open"][1] + as_["open"][1] >= 12:
                         ok = v <= gb["open"] - 0.08 if key == "u25" else v >= gb["open"] + 0.08
-                        add(ok, f"İlk golden sonra 2+ gol daha gelen maç: {hn} {hs_['open'][0]}/{hs_['open'][1]}, "
+                        note(ok, f"İlk golden sonra 2+ gol daha gelen maç: {hn} {hs_['open'][0]}/{hs_['open'][1]}, "
                                 f"{an} {as_['open'][0]}/{as_['open'][1]} (lig %{gb['open'] * 100:.0f})")
                 elif key == "btts" and gb["reply"]:
                     a_, b_ = hs_["reply"], as_["reply"]
                     if a_[1] >= 3 and b_[1] >= 3:
-                        add(a_[0] / a_[1] >= gb["reply"] and b_[0] / b_[1] >= gb["reply"],
+                        note(a_[0] / a_[1] >= gb["reply"] and b_[0] / b_[1] >= gb["reply"],
                             f"Geriye düşünce gol attığı maç: {hn} {a_[0]}/{a_[1]}, {an} {b_[0]}/{b_[1]} "
                             f"(lig %{gb['reply'] * 100:.0f})")
                 elif ms and gb["sfwin"]:
                     fav, opp = (hs_, as_) if key == "ms1" else (as_, hs_)
                     fn_, on_ = (hn, an) if key == "ms1" else (an, hn)
                     if fav["sfwin"][1] >= 3 and opp["comeback"][1] >= 3:
-                        add(rr(fav["sfwin"]) >= gb["sfwin"] and rr(opp["comeback"]) <= gb["comeback"],
+                        note(rr(fav["sfwin"]) >= gb["sfwin"] and rr(opp["comeback"]) <= gb["comeback"],
                             f"{fn_} öne geçince kazandı {fav['sfwin'][0]}/{fav['sfwin'][1]}; "
                             f"{on_} geriye düşünce puan aldı {opp['comeback'][0]}/{opp['comeback'][1]} "
                             f"(lig %{gb['sfwin'] * 100:.0f} / %{gb['comeback'] * 100:.0f})")
@@ -1031,7 +1036,7 @@ def rapor_eval(ctx, m, r, nb, hn, an):
         tier = 0
         if tot >= RP_MIN_CHECKS and checks[0][0]:
             tier = 2 if ratio >= 0.8 else (1 if ratio >= 0.6 else 0)
-        out[key] = {"p": p, "base": base, "checks": checks, "ok": okc, "tot": tot, "tier": tier,
+        out[key] = {"p": p, "base": base, "checks": checks, "info": infos, "ok": okc, "tot": tot, "tier": tier,
                     "score": ratio + (p - base)}
     # Günün önerisi: kriterleri tutan, olması muhtemel (model en az %55) ve geçmişte işe yaramış bahis türü
     def ok_trust(k, tier):
@@ -2490,6 +2495,7 @@ ul.ck li{font-size:13px;padding:4px 0;border-bottom:1px solid var(--bd)}
 ul.ck li.y::before{content:'✓ ';color:var(--ac);font-weight:800}
 ul.ck li.n::before{content:'✗ ';color:var(--neg);font-weight:800}
 ul.ck li.n{color:var(--mu)}
+ul.ck li.i::before{content:'ℹ ';color:var(--mu)}
 .tc{font-size:12.5px;margin:6px 0;line-height:1.5}
 .fm b{display:inline-block;width:15px;text-align:center;border-radius:3px;color:#fff;font-size:10.5px;margin-right:1px}
 .fm .G{background:#0a7d3b}.fm .B{background:#888}.fm .M{background:#c0392b}
@@ -2614,6 +2620,8 @@ def rp_comment(c, key, context=True):
 def bet_block(c, key, title="", context=True):
     ev = c["rapor"]["m"][key]
     checks = "".join(f"<li class='{'y' if ok else 'n'}'>{E(t)}</li>" for ok, t in ev["checks"])
+    checks += "".join(f"<li class='i'>{E(t)} <span class='note'>· bilgi, {'lehine' if ok else 'aleyhine'}</span></li>"
+                      for ok, t in ev.get("info", []))
     head = (f"<div class='sec'>{title}{GM_LABEL[key]} · {ev['ok']}/{ev['tot']} kriter · model %{ev['p'] * 100:.0f} "
             f"<span class='tier t{ev['tier']}'>{TIER_NAME[ev['tier']]}</span></div>") if title else ""
     return (f"{head}<ul class='ck'>{checks}</ul>{hist_text(key, ev['tier'])}"
