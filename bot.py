@@ -1479,6 +1479,7 @@ def finish_league(info, now, pool_eval, pool_all):
             "hs": tstat(m["hid"], True), "as": tstat(m["aid"], False),
             "sim": [sim_text(x) for x in nb[:5]],
             "rapor": rapor_eval(rctx, m, r, nb, m["home"], m["away"]),
+            "tsc": {"h": score_freq(rctx["th"].get(m["hid"], [])[-10:]), "a": score_freq(rctx["th"].get(m["aid"], [])[-10:])},
             "gi": {"h": team_gm(rctx["th"].get(m["hid"], [])[-GI_N:]), "a": team_gm(rctx["th"].get(m["aid"], [])[-GI_N:]),
                    "lg": rctx.get("gmb")},
             "tctx": {"h": dict(team_ctx(m["hid"], rctx, table, rank, nteams),
@@ -3119,6 +3120,8 @@ BET_MARKETS = (
     + [("İlk yarı", c, l) for c, l in (("iy1", "İY 1"), ("iyx", "İY X"), ("iy2", "İY 2"))]
     + [("İlk yarı", f"iy{p}{x}", f"İY {x[0]}.5 {'Üst' if p == 'o' else 'Alt'}") for x in ("05", "15", "25") for p in "ou"]
     + [("İlk yarı", "iykgv", "İY KG Var"), ("İlk yarı", "iykgy", "İY KG Yok")]
+    + [("Takım golü", f"t{h}{t}{x}", f"{'Ev' if t == 'ev' else 'Dep'} {'İY ' if h else ''}{x[0]}.5 Üst")
+       for h in ("", "i") for t in ("ev", "dp") for x in (("05", "15", "25") if not h else ("05", "15"))]
     + [("İY / MS", f"im{a}{b}", f"İY/MS {a.upper()}/{b.upper()}") for a in "1x2" for b in "1x2"]
     + [("MS ve 2.5 Alt/Üst", f"ms{r}+{p}25", f"MS {r.upper()} ve 2.5 {'Üst' if p == 'o' else 'Alt'}")
        for r in "1x2" for p in "ou"]
@@ -3138,6 +3141,16 @@ def bet_settle(code, res):
         parts = [bet_settle(c, res) for c in code.split("+")]
         return None if None in parts else all(parts)
     hg, ag, h1, a1 = res
+    tm_ = re.match(r"^t(i?)(ev|dp)(\d)(\d)$", code)
+    if tm_:
+        ln = int(tm_.group(3)) + 0.5
+        if tm_.group(1):
+            if h1 is None or a1 is None:
+                return None
+            g = h1 if tm_.group(2) == "ev" else a1
+        else:
+            g = hg if tm_.group(2) == "ev" else ag
+        return g > ln
     if code.startswith("sk"):
         h, a = code[2:].split("-")
         return hg == int(h) and ag == int(a)
@@ -3421,6 +3434,8 @@ function settle(code, s){
   if(!s || s[0]==null || code==='diger') return null;
   if(code.includes('+')){ const p = code.split('+').map(c=>settle(c,s)); return p.includes(null) ? null : p.every(x=>x); }
   const [hg,ag,h1,a1] = s, r = res3(hg,ag);
+  const tm = code.match(/^t(i?)(ev|dp)(\d)(\d)$/);
+  if(tm){ const ln = +tm[3]+0.5; if(tm[1]){ if(h1==null||a1==null) return null; return (tm[2]==='ev'?h1:a1) > ln; } return (tm[2]==='ev'?hg:ag) > ln; }
   if(code.startsWith('sk')){ const [h,a] = code.slice(2).split('-').map(Number); return hg===h && ag===a; }
   if(code==='ms1') return r===0; if(code==='msx') return r===1; if(code==='ms2') return r===2;
   if(code==='cs1x') return r!==2; if(code==='cs12') return r!==1; if(code==='csx2') return r!==0;
@@ -4342,6 +4357,15 @@ AN_FILE = "data/analiz.json"
 DRAFT_FILE = "data/taslaklar.json"
 
 
+def score_freq(rows):
+    """Son maçlarda gol attığı / yediği maç sayısı (maç sonu ve ilk yarı)."""
+    r1 = [x for x in rows if x[3] is not None]
+    return {"n": len(rows), "s": sum(1 for x in rows if x[1] > 0), "c": sum(1 for x in rows if x[2] > 0),
+            "s2": sum(1 for x in rows if x[1] > 1), "c2": sum(1 for x in rows if x[2] > 1),
+            "n1": len(r1), "s1": sum(1 for x in r1 if x[3] > 0), "c1": sum(1 for x in r1 if x[4] > 0),
+            "s12": sum(1 for x in r1 if x[3] > 1), "c12": sum(1 for x in r1 if x[4] > 1)}
+
+
 def tc_text(t):
     if not t:
         return ""
@@ -4369,7 +4393,7 @@ def analiz_entry(c):
     return {"h": c["home"], "a": c["away"], "lg": c["league"], "k": c["kick"].isoformat(),
             "l": [round(x, 4) for x in (c["lam"][0], c["lam"][1], lam1[0], lam1[1])],
             "p": {k: round(r[k], 4) for k in PRED_KEYS if r.get(k) is not None},
-            "rp": rp, "low": bool(c.get("low")),
+            "rp": rp, "low": bool(c.get("low")), "tsc": c.get("tsc"),
             "tc": {"h": tc_text(c.get("tctx", {}).get("h")), "a": tc_text(c.get("tctx", {}).get("a"))}}
 
 
@@ -4410,8 +4434,10 @@ function snapOf(l){ return (l.m && AN.m[l.m]) || l.snap || null; }
 function legAn(l){
   const s = snapOf(l), o = {s};
   if(!s){ o.v = 'yok'; return o; }
-  const rk = RAPOR_OF[l.b], rp = rk && s.rp ? s.rp[rk] : null;
+  const rk = RAPOR_OF[l.b];
+  let rp = rk && s.rp ? s.rp[rk] : null;
   o.p = rp ? rp.p : modelP(l.b, {l:s.l, p:s.p});
+  if(!rp) rp = teamRp(l.b, s, o.p);
   o.rp = rp;
   if(rp){ const t = AN.trust[rk+'|'+rp.t]; if(t && rp.t>0) o.hist = t; }
   o.imp = (+l.o>1) ? 1/(+l.o) : null;
@@ -4422,6 +4448,20 @@ function legAn(l){
   else if(o.p<0.5) o.v = 'zayif';
   else o.v = 'belirsiz';
   return o;
+}
+// Takım golü bahisleri (Ev/Dep, maç sonu ya da ilk yarı): takımın gol attığı ve rakibin gol yediği maç sıklığı
+function teamRp(code, s, p){
+  const m = code.match(/^t(i?)(ev|dp)(\d)(\d)$/); if(!m || !s.tsc || p==null) return null;
+  const iy = !!m[1], ev = m[2]==='ev', two = m[3]==='1';
+  const me = ev ? s.tsc.h : s.tsc.a, op = ev ? s.tsc.a : s.tsc.h, nm = ev ? s.h : s.a, on = ev ? s.a : s.h;
+  if(!me || !op) return null;
+  const k = (iy?'1':'')+(two?'2':''), sk = 's'+k, ck_ = 'c'+k, n1 = iy?me.n1:me.n, n2 = iy?op.n1:op.n;
+  const what = (two?'2+ ':'')+'gol'+(iy?' (ilk yarıda)':'');
+  const c = [[p>=0.6?1:0, 'Model: '+pc(p)],
+             [n1&&me[sk]/n1>=0.6?1:0, nm+' son '+n1+' maçın '+me[sk]+' tanesinde '+what+' attı'],
+             [n2&&op[ck_]/n2>=0.6?1:0, on+' son '+n2+' maçın '+op[ck_]+' tanesinde '+what+' yedi']];
+  const ok = c.filter(x=>x[0]).length;
+  return {p, t: (c[0][0] && ok===3) ? 2 : ((c[0][0] && ok>=2) ? 1 : 0), ok, n:3, c, i:[]};
 }
 const VLAB = {guclu:['Güçlü','pos'], iyi:['Kupona uygun','pos'], belirsiz:['Belirsiz',''], zayif:['Zayıf halka','neg'], pahali:['Oran modele göre düşük','neg'], yok:['Model verisi yok','']};
 function legText(l, a){
