@@ -15,7 +15,8 @@
      "bl": "MS 2",
      "o": 1.26,
      "canli": false,
-     "sonuc": "yatti"
+     "sonuc": "yatti",
+     "mp": 0.6321
     },
     {
      "m": "401877591",
@@ -26,7 +27,8 @@
      "bl": "2.5 Üst",
      "o": 1.7,
      "canli": false,
-     "sonuc": "tuttu"
+     "sonuc": "tuttu",
+     "mp": 0.5877
     },
     {
      "m": "401877593",
@@ -37,7 +39,8 @@
      "bl": "MS 1",
      "o": 1.69,
      "canli": false,
-     "sonuc": "yatti"
+     "sonuc": "yatti",
+     "mp": 0.5152
     },
     {
      "m": "401877589",
@@ -48,7 +51,8 @@
      "bl": "2.5 Üst",
      "o": 1.85,
      "canli": false,
-     "sonuc": "tuttu"
+     "sonuc": "tuttu",
+     "mp": 0.6136
     },
     {
      "m": "401877594",
@@ -59,7 +63,8 @@
      "bl": "2.5 Üst",
      "o": 1.47,
      "canli": false,
-     "sonuc": "tuttu"
+     "sonuc": "tuttu",
+     "mp": 0.6585
     },
     {
      "m": "401877596",
@@ -70,7 +75,8 @@
      "bl": "2.5 Üst",
      "o": 1.54,
      "canli": false,
-     "sonuc": "tuttu"
+     "sonuc": "tuttu",
+     "mp": 0.6004
     }
    ]
   },
@@ -148,7 +154,8 @@
      "bl": "İY KG Var",
      "o": 2.78,
      "canli": false,
-     "sonuc": null
+     "sonuc": null,
+     "mp": 0.3392
     },
     {
      "m": "401881773",
@@ -159,7 +166,8 @@
      "bl": "MS 1",
      "o": 1.64,
      "canli": false,
-     "sonuc": null
+     "sonuc": null,
+     "mp": 0.5612
     },
     {
      "m": "401843466",
@@ -170,7 +178,8 @@
      "bl": "İY 1.5 Üst",
      "o": 1.76,
      "canli": false,
-     "sonuc": null
+     "sonuc": null,
+     "mp": 0.55
     },
     {
      "m": "401843463",
@@ -181,7 +190,8 @@
      "bl": "2.5 Üst",
      "o": 1.21,
      "canli": false,
-     "sonuc": null
+     "sonuc": null,
+     "mp": 0.7547
     },
     {
      "m": "401884768",
@@ -192,7 +202,8 @@
      "bl": "İY KG Var",
      "o": 2.6,
      "canli": false,
-     "sonuc": null
+     "sonuc": null,
+     "mp": 0.3564
     },
     {
      "m": "401874551",
@@ -203,7 +214,8 @@
      "bl": "MS 1",
      "o": 1.42,
      "canli": false,
-     "sonuc": null
+     "sonuc": null,
+     "mp": 0.5777
     },
     {
      "m": "401843460",
@@ -214,7 +226,8 @@
      "bl": "İY KG Var",
      "o": 4.15,
      "canli": false,
-     "sonuc": null
+     "sonuc": null,
+     "mp": 0.3093
     }
    ]
   },
@@ -263,7 +276,8 @@
      "bl": "KG Var",
      "o": 1.36,
      "canli": false,
-     "sonuc": null
+     "sonuc": null,
+     "mp": 0.5632
     },
     {
      "m": "401884767",
@@ -274,7 +288,8 @@
      "bl": "KG Var",
      "o": 1.28,
      "canli": false,
-     "sonuc": null
+     "sonuc": null,
+     "mp": 0.6939
     },
     {
      "m": "401884769",
@@ -285,7 +300,8 @@
      "bl": "2.5 Üst",
      "o": 1.33,
      "canli": false,
-     "sonuc": null
+     "sonuc": null,
+     "mp": 0.6591
     },
     {
      "m": "401884765",
@@ -296,7 +312,8 @@
      "bl": "MS 1",
      "o": 2.51,
      "canli": false,
-     "sonuc": null
+     "sonuc": null,
+     "mp": 0.4929
     }
    ]
   },
@@ -375,7 +392,8 @@
      "bl": "İY KG Var",
      "o": 2.87,
      "canli": false,
-     "sonuc": null
+     "sonuc": null,
+     "mp": 0.2988
     }
    ]
   },
@@ -504,7 +522,8 @@
      "bl": "İY 1.5 Üst",
      "o": 2.1,
      "canli": false,
-     "sonuc": null
+     "sonuc": null,
+     "mp": 0.427
     }
    ]
   }
