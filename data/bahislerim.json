@@ -1,6 +1,80 @@
 {
  "kuponlar": [
   {
+   "id": "k20261021124820",
+   "t": "2026-10-21T12:48:20+03:00",
+   "tutar": 100,
+   "kaynak": "ekran görüntüsü",
+   "legs": [
+    {
+     "m": "401877588",
+     "ad": "V-Varen - Sanfreece",
+     "lg": "Japonya J1 Lig",
+     "k": "2026-10-21T10:00:00+00:00",
+     "b": "ms2",
+     "bl": "MS 2",
+     "o": 1.26,
+     "canli": false,
+     "sonuc": "yatti"
+    },
+    {
+     "m": "401877591",
+     "ad": "Kyoto Sanga - Kashima",
+     "lg": "Japonya J1 Lig",
+     "k": "2026-10-21T10:00:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.7,
+     "canli": false,
+     "sonuc": "tuttu"
+    },
+    {
+     "m": "401877593",
+     "ad": "Yokohama FM - Tokyo Verdy",
+     "lg": "Japonya J1 Lig",
+     "k": "2026-10-21T10:00:00+00:00",
+     "b": "ms1",
+     "bl": "MS 1",
+     "o": 1.69,
+     "canli": false,
+     "sonuc": "yatti"
+    },
+    {
+     "m": "401877589",
+     "ad": "A Fukuoka - Gamba Osaka",
+     "lg": "Japonya J1 Lig",
+     "k": "2026-10-21T10:00:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.85,
+     "canli": false,
+     "sonuc": "tuttu"
+    },
+    {
+     "m": "401877594",
+     "ad": "Kawasaki - Vissel Kobe",
+     "lg": "Japonya J1 Lig",
+     "k": "2026-10-21T10:00:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.47,
+     "canli": false,
+     "sonuc": "tuttu"
+    },
+    {
+     "m": "401877596",
+     "ad": "Urawa Reds - JEF Utd Chiba",
+     "lg": "Japonya J1 Lig",
+     "k": "2026-10-21T10:30:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.54,
+     "canli": false,
+     "sonuc": "tuttu"
+    }
+   ]
+  },
+  {
    "id": "k20261019202446",
    "t": "2026-10-19T20:24:46+03:00",
    "tutar": 250,
