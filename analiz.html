@@ -171,7 +171,7 @@ function modelP(code, md){
   for(let i=0;i<N;i++){A.push(pois(i,lh1));B.push(pois(i,la1));C.push(pois(i,lh2));D.push(pois(i,la2));}
   let s=0, t=0;
   for(let h1=0;h1<N;h1++) for(let a1=0;a1<N;a1++){ const q=A[h1]*B[a1]; if(q<1e-9) continue;
-    for(let h2=0;h2<N;h2++) for(let a2=0;a2<N;a2++){ const pr=q*C[h2]*D[a2]; t+=pr; if(settle(code,[h1+h2,a1+a2,h1,a1])) s+=pr; } }
+    for(let h2=0;h2<N;h2++) for(let a2=0;a2<N;a2++){ const pr=q*C[h2]*D[a2]; t+=pr; const v=settle(code,[h1+h2,a1+a2,h1,a1]); if(v===null) return null; if(v) s+=pr; } }
   return t ? s/t : null;
 }
 function pc(x){ return '%'+(x*100<1 ? (x*100).toFixed(1) : Math.round(x*100)); }
@@ -383,8 +383,8 @@ function couponSummary(legs, ans){
   const idx = ans.map((a,i)=>[a.p,i]).filter(x=>x[0]!=null).sort((a,b)=>a[0]-b[0]);
   const weak = idx.filter(x=>x[0]<0.55 || ['zayif','pahali'].includes(ans[x[1]].v));
   if(weak.length){
-    const w = weak[0], without = prod/w[0];
-    h += '<p class="tx">En zayıf halka: <b>'+esc(legs[w[1]].ad)+' · '+esc(legs[w[1]].bl)+'</b> ('+pc(w[0])+'). Çıkarırsan kuponun ihtimali '+pc(prod)+' → <b>'+pc(without)+'</b>.'+
+    const w = weak[0], without = w[0]>0 ? prod/w[0] : null;
+    h += '<p class="tx">En zayıf halka: <b>'+esc(legs[w[1]].ad)+' · '+esc(legs[w[1]].bl)+'</b> ('+pc(w[0])+'). '+(without!=null?'Çıkarırsan kuponun ihtimali '+pc(prod)+' → <b>'+pc(without)+'</b>.':'')+
          (weak.length>1?' Riskli görünen diğer maçlar: '+weak.slice(1).map(x=>esc(legs[x[1]].ad.split(' - ')[0])+' ('+pc(x[0])+')').join(', ')+'.':'')+'</p>';
   } else h += '<p class="tx">Kupondaki her maç tek başına %55 ve üstü. Yine de maç sayısı arttıkça birlikte tutma ihtimali hızla düşer.</p>';
   const g = ans.filter(a=>a.v==='guclu'||a.v==='iyi').length;
