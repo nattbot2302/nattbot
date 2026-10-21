@@ -670,6 +670,8 @@ def analyze(lam_h, lam_a, rho=0.0, half=None, joint=True):
     r["iy05"] = 1 - g1[(0, 0)]
     r["iy15"] = sum(p for (i, j), p in g1.items() if i + j >= 2)
     r["iykg"] = sum(p for (i, j), p in g1.items() if i >= 1 and j >= 1)
+    r["ih05"] = sum(p for (i, j), p in g1.items() if i >= 1)
+    r["ia05"] = sum(p for (i, j), p in g1.items() if j >= 1)
     r["iy1"] = sum(p for (i, j), p in g1.items() if i > j)
     r["iyx"] = sum(p for (i, j), p in g1.items() if i == j)
     r["iy2"] = sum(p for (i, j), p in g1.items() if i < j)
@@ -726,9 +728,14 @@ GOAL_MARKETS = [
     ("o15", "1.5 Üst"), ("o25", "2.5 Üst"), ("o35", "3.5 Üst"), ("o45", "4.5 Üst"),
     ("btts", "KG Var"), ("u25", "2.5 Alt"),
 ]
-RP_MARKETS = GOAL_MARKETS + [("ms1", "MS 1"), ("ms2", "MS 2")]
+TEAM_MARKETS = [("h05", "Ev 0.5 Üst"), ("a05", "Dep 0.5 Üst"), ("h15", "Ev 1.5 Üst"), ("a15", "Dep 1.5 Üst"),
+                ("ih05", "Ev İY 0.5 Üst"), ("ia05", "Dep İY 0.5 Üst")]
+# takım golü bahsi -> (hücum eden taraf, gol eşiği, ilk yarı mı)
+TEAM_KEY = {"h05": ("h", 1, False), "a05": ("a", 1, False), "h15": ("h", 2, False), "a15": ("a", 2, False),
+            "ih05": ("h", 1, True), "ia05": ("a", 1, True)}
+RP_MARKETS = GOAL_MARKETS + TEAM_MARKETS + [("ms1", "MS 1"), ("ms2", "MS 2")]
 GM_LABEL = dict(RP_MARKETS)
-MAIN_EXCLUDE = {"o15", "iy05"}          # oranı çok düşük; günün önerisi olarak seçilmez
+MAIN_EXCLUDE = {"o15", "iy05", "h05", "a05"}   # oranı çok düşük; günün önerisi olarak seçilmez
 TIER_NAME = {2: "GÜÇLÜ", 1: "ORTA", 0: "ZAYIF"}
 RP_MIN_CHECKS = 5
 MAIN_MIN_P = 0.55        # günün önerisi için en düşük model olasılığı
@@ -762,6 +769,15 @@ def gev(key, gf, ga, gf1, ga1):
         return gf > ga
     if key == "ms2":
         return gf < ga
+    if key in TEAM_KEY:
+        side, n, half = TEAM_KEY[key]
+        if half:
+            if gf1 is None or ga1 is None:
+                return None
+            g = gf1 if side == "h" else ga1
+        else:
+            g = gf if side == "h" else ga
+        return g >= n
     if gf1 is None or ga1 is None:
         return None
     if key == "iy05":
@@ -792,7 +808,18 @@ def ppg(rows):
     return sum(3 if x[1] > x[2] else (1 if x[1] == x[2] else 0) for x in rows) / len(rows) if rows else None
 
 
+def team_val(key, x, side):
+    """Takım satırında (x: takımın gözünden) takım golü bahsi: hücum eden tarafsa attığı, değilse yediği gol."""
+    att, n, half = TEAM_KEY[key]
+    i = (3 if half else 1) if side == att else (4 if half else 2)
+    return None if x[i] is None else x[i] >= n
+
+
 def rows_rate(key, rows, side="h"):
+    if key in TEAM_KEY:
+        v = [team_val(key, x, side) for x in rows]
+        v = [x for x in v if x is not None]
+        return sum(v), len(v)
     if key in ("ms1", "ms2"):
         want_win = (key == "ms1") == (side == "h")
         v = [(x[1] > x[2]) if want_win else (x[1] < x[2]) for x in rows]
@@ -926,6 +953,11 @@ def rapor_eval(ctx, m, r, nb, hn, an):
                     win = (key == "ms1") == (side == "h")
                     word = "kazandı" if win else "kaybetti"
                     add(k / n >= base + 0.10, f"{who}: {n} maçta {k} {word} (%{k / n * 100:.0f})")
+                elif key in TEAM_KEY:
+                    att, ng, half = TEAM_KEY[key]
+                    word = ("attığı" if side == att else "yediği")
+                    add(k / n >= base + 0.10, f"{who}: {'ilk yarıda ' if half else ''}{'2+ ' if ng == 2 else ''}gol "
+                                              f"{word} maç {k}/{n} (%{k / n * 100:.0f})")
                 else:
                     add(k / n >= base + 0.10, f"{who}: {k}/{n} (%{k / n * 100:.0f})")
         nk = [m_ev(key, x) for x in nb]
@@ -938,6 +970,14 @@ def rapor_eval(ctx, m, r, nb, hn, an):
             for x in h2h:
                 hg_, ag_ = (x["hg"], x["ag"]) if x["hid"] == m["hid"] else (x["ag"], x["hg"])
                 hk.append(hg_ > ag_ if key == "ms1" else hg_ < ag_)
+        elif key in TEAM_KEY:   # bugünkü ev sahibine göre çevir
+            hk = []
+            for x in h2h:
+                sw = x["hid"] != m["hid"]
+                hg_, ag_ = (x["ag"], x["hg"]) if sw else (x["hg"], x["ag"])
+                ht_ = x.get("ht")
+                h1_, a1_ = ((ht_[1], ht_[0]) if sw else (ht_[0], ht_[1])) if ht_ else (None, None)
+                hk.append(gev(key, hg_, ag_, h1_, a1_))
         else:
             hk = [m_ev(key, x) for x in h2h]
         hk = [x for x in hk if x is not None]
@@ -959,6 +999,18 @@ def rapor_eval(ctx, m, r, nb, hn, an):
             if None not in parts:
                 exp = (parts[0] + parts[1]) / 2 + (parts[2] + parts[3]) / 2
                 add(exp >= ctx["avg1"] + 0.15, f"Son maçlara göre ilk yarı gol beklentisi {exp:.1f} (lig {ctx['avg1']:.1f})")
+        elif key in TEAM_KEY and len(h10) >= 6 and len(a10) >= 6:
+            att, ng, half = TEAM_KEY[key]
+            ar_, dr_ = (h10, a10) if att == "h" else (a10, h10)
+            an_, dn_ = (hn, an) if att == "h" else (an, hn)
+            gi_, ci_ = (3, 4) if half else (1, 2)
+            f_, c_ = rows_mean(ar_, gi_), rows_mean(dr_, ci_)
+            lavg = (ctx["avg1"] if half else ctx["avg"])
+            if f_ is not None and c_ is not None and lavg:
+                ex = (f_ + c_) / 2
+                add(ex >= lavg / 2 * (1.15 if ng == 1 else 1.3),
+                    f"Son maçlara göre {an_} {'ilk yarı ' if half else ''}gol beklentisi {ex:.1f} "
+                    f"({an_} maç başı {f_:.1f} attı, {dn_} {c_:.1f} yedi; lig takım ort. {lavg / 2:.1f})")
         elif key == "btts" and len(h10) >= 6 and len(a10) >= 6:
             k1 = sum(1 for x in h10 if x[1] > 0)
             k2 = sum(1 for x in a10 if x[1] > 0)
@@ -972,6 +1024,12 @@ def rapor_eval(ctx, m, r, nb, hn, an):
                     ex = (hxf + axa) / 2 + (axf + hxa) / 2
                     ok = ex <= ax - 0.25 if key == "u25" else ex >= ax + 0.25
                     add(ok, f"Şutlara göre beklenen toplam gol {ex:.1f} (lig {ax:.1f})")
+                elif key in TEAM_KEY and not TEAM_KEY[key][2]:
+                    att = TEAM_KEY[key][0]
+                    ex = (hxf + axa) / 2 if att == "h" else (axf + hxa) / 2
+                    nm_ = hn if att == "h" else an
+                    add(ex >= ax / 2 * (1.1 if TEAM_KEY[key][1] == 1 else 1.3),
+                        f"Şutlara göre {nm_} beklenen gol {ex:.1f} (takım ort. {ax / 2:.1f})")
                 elif key == "btts":
                     eh, ea = (hxf + axa) / 2, (axf + hxa) / 2
                     add(min(eh, ea) >= ax / 2 * 0.95,
@@ -1493,7 +1551,8 @@ def finish_league(info, now, pool_eval, pool_all):
 
 
 # ------------------------------------------------------------ kayıt ve karne
-PRED_KEYS = ["p1", "px", "p2", "o15", "o25", "o35", "o45", "btts", "iy05", "iy15", "iykg", "p21", "p12"]
+PRED_KEYS = ["p1", "px", "p2", "o15", "o25", "o35", "o45", "btts", "iy05", "iy15", "iykg", "p21", "p12",
+             "h05", "a05", "h15", "a15", "ih05", "ia05"]
 
 
 def load_store():
@@ -1555,6 +1614,8 @@ BIN_MARKETS = [("1.5 Üst/Alt", "o15", None), ("2.5 Üst/Alt", "o25", None), ("3
 
 def outcome(key, res):
     hg, ag, h1, a1 = res
+    if key in TEAM_KEY:
+        return gev(key, hg, ag, h1, a1)
     if key == "u25":
         return hg + ag <= 2
     if key == "ms1":
@@ -3130,7 +3191,8 @@ BET_MARKETS = (
 )
 BET_LABEL = {c: l for _, c, l in BET_MARKETS}
 BET_TO_RAPOR = {"ms1": "ms1", "ms2": "ms2", "o15": "o15", "o25": "o25", "o35": "o35", "o45": "o45", "u25": "u25",
-                "kgv": "btts", "iyo05": "iy05", "iyo15": "iy15", "iykgv": "iykg"}
+                "kgv": "btts", "iyo05": "iy05", "iyo15": "iy15", "iykgv": "iykg",
+                "tev05": "h05", "tdp05": "a05", "tev15": "h15", "tdp15": "a15", "tiev05": "ih05", "tidp05": "ia05"}
 
 
 def bet_settle(code, res):
@@ -3250,7 +3312,8 @@ def coupon_state(kp, macs):
 
 
 BET_PMAP = {"ms1": "p1", "msx": "px", "ms2": "p2", "o15": "o15", "o25": "o25", "o35": "o35", "o45": "o45",
-            "kgv": "btts", "iyo05": "iy05", "iyo15": "iy15", "iykgv": "iykg"}
+            "kgv": "btts", "iyo05": "iy05", "iyo15": "iy15", "iykgv": "iykg",
+            "tev05": "h05", "tdp05": "a05", "tev15": "h15", "tdp15": "a15", "tiev05": "ih05", "tidp05": "ia05"}
 BET_PNEG = {"u15": "o15", "u25": "o25", "u35": "o35", "u45": "o45", "kgy": "btts", "iyu05": "iy05",
             "iyu15": "iy15", "iykgy": "iykg"}
 
@@ -3450,7 +3513,8 @@ function settle(code, s){
   return null;
 }
 function pois(k,l){let p=Math.exp(-l);for(let i=1;i<=k;i++)p*=l/i;return p;}
-const PMAP={ms1:'p1',msx:'px',ms2:'p2',o15:'o15',o25:'o25',o35:'o35',o45:'o45',kgv:'btts',iyo05:'iy05',iyo15:'iy15',iykgv:'iykg'};
+const PMAP={ms1:'p1',msx:'px',ms2:'p2',o15:'o15',o25:'o25',o35:'o35',o45:'o45',kgv:'btts',iyo05:'iy05',iyo15:'iy15',iykgv:'iykg',
+            tev05:'h05',tdp05:'a05',tev15:'h15',tdp15:'a15',tiev05:'ih05',tidp05:'ia05'};
 const PNEG={u15:'o15',u25:'o25',u35:'o35',u45:'o45',kgy:'btts',iyu05:'iy05',iyu15:'iy15',iykgy:'iykg'};
 // Modelin maç öncesi olasılığı: biliniyorsa modelin kendi değeri, yoksa gol beklentilerinden (ilk yarı / ikinci yarı) hesap
 function modelP(code, md){
@@ -4427,7 +4491,8 @@ def write_analiz(leagues, now):
 
 ANALIZ_JS = r"""
 let AN = {m:{}, trust:{}};
-const RAPOR_OF = {ms1:'ms1',ms2:'ms2',o15:'o15',o25:'o25',o35:'o35',o45:'o45',u25:'u25',kgv:'btts',iyo05:'iy05',iyo15:'iy15',iykgv:'iykg'};
+const RAPOR_OF = {ms1:'ms1',ms2:'ms2',o15:'o15',o25:'o25',o35:'o35',o45:'o45',u25:'u25',kgv:'btts',iyo05:'iy05',iyo15:'iy15',iykgv:'iykg',
+                  tev05:'h05',tdp05:'a05',tev15:'h15',tdp15:'a15',tiev05:'ih05',tidp05:'ia05'};
 const TIER = {2:'Güçlü',1:'Orta',0:'Zayıf'};
 function snapOf(l){ return (l.m && AN.m[l.m]) || l.snap || null; }
 // Bir bacağın analizi
