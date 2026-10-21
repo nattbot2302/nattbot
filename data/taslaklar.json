@@ -37,7 +37,13 @@
        "iy15": 0.5809,
        "iykg": 0.3848,
        "p21": 0.0605,
-       "p12": 0.0338
+       "p12": 0.0338,
+       "h05": 0.9418,
+       "a05": 0.887,
+       "h15": 0.7762,
+       "a15": 0.6405,
+       "ih05": 0.6586,
+       "ia05": 0.5842
       },
       "rp": {
        "iy05": {
@@ -440,6 +446,244 @@
          ]
         ]
        },
+       "h05": {
+        "p": 0.9418,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %94 (lig ortalaması %84)"
+         ],
+         [
+          1,
+          "Club Brugge son maçları: gol attığı maç 10/10 (%100)"
+         ],
+         [
+          0,
+          "Lens son maçları: gol yediği maç 9/10 (%90)"
+         ],
+         [
+          1,
+          "Club Brugge evdeki son maçları: gol attığı maç 5/5 (%100)"
+         ],
+         [
+          1,
+          "Lens dışarıdaki son maçları: gol yediği maç 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 51/60 (%85)"
+         ],
+         [
+          0,
+          "Son maçlara göre Club Brugge gol beklentisi 2.0 (Club Brugge maç başı 2.5 attı, Lens 1.5 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Club Brugge beklenen gol 2.0 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.887,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %89 (lig ortalaması %73)"
+         ],
+         [
+          0,
+          "Club Brugge son maçları: gol yediği maç 5/10 (%50)"
+         ],
+         [
+          0,
+          "Lens son maçları: gol attığı maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "Club Brugge evdeki son maçları: gol yediği maç 2/5 (%40)"
+         ],
+         [
+          1,
+          "Lens dışarıdaki son maçları: gol attığı maç 5/5 (%100)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 51/60 (%85)"
+         ],
+         [
+          0,
+          "Son maçlara göre Lens gol beklentisi 1.6 (Lens maç başı 2.1 attı, Club Brugge 1.0 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Lens beklenen gol 1.9 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.7762,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %78 (lig ortalaması %62)"
+         ],
+         [
+          0,
+          "Club Brugge son maçları: 2+ gol attığı maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "Lens son maçları: 2+ gol yediği maç 6/10 (%60)"
+         ],
+         [
+          1,
+          "Club Brugge evdeki son maçları: 2+ gol attığı maç 4/5 (%80)"
+         ],
+         [
+          1,
+          "Lens dışarıdaki son maçları: 2+ gol yediği maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 40/60 (%67)"
+         ],
+         [
+          0,
+          "Son maçlara göre Club Brugge gol beklentisi 2.0 (Club Brugge maç başı 2.5 attı, Lens 1.5 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Club Brugge beklenen gol 2.0 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.6405,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %64 (lig ortalaması %46)"
+         ],
+         [
+          0,
+          "Club Brugge son maçları: 2+ gol yediği maç 3/10 (%30)"
+         ],
+         [
+          1,
+          "Lens son maçları: 2+ gol attığı maç 6/10 (%60)"
+         ],
+         [
+          0,
+          "Club Brugge evdeki son maçları: 2+ gol yediği maç 1/5 (%20)"
+         ],
+         [
+          1,
+          "Lens dışarıdaki son maçları: 2+ gol attığı maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 35/60 (%58)"
+         ],
+         [
+          0,
+          "Son maçlara göre Lens gol beklentisi 1.6 (Lens maç başı 2.1 attı, Club Brugge 1.0 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Lens beklenen gol 1.9 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.6586,
+        "t": 0,
+        "ok": 2,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %66 (lig ortalaması %58)"
+         ],
+         [
+          1,
+          "Club Brugge son maçları: ilk yarıda gol attığı maç 10/10 (%100)"
+         ],
+         [
+          0,
+          "Lens son maçları: ilk yarıda gol yediği maç 4/10 (%40)"
+         ],
+         [
+          1,
+          "Club Brugge evdeki son maçları: ilk yarıda gol attığı maç 5/5 (%100)"
+         ],
+         [
+          0,
+          "Lens dışarıdaki son maçları: ilk yarıda gol yediği maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 34/60 (%57)"
+         ],
+         [
+          0,
+          "Son maçlara göre Club Brugge ilk yarı gol beklentisi 0.8 (Club Brugge maç başı 1.1 attı, Lens 0.5 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.5842,
+        "t": 0,
+        "ok": 4,
+        "n": 7,
+        "c": [
+         [
+          1,
+          "Model: %58 (lig ortalaması %46)"
+         ],
+         [
+          0,
+          "Club Brugge son maçları: ilk yarıda gol yediği maç 4/10 (%40)"
+         ],
+         [
+          1,
+          "Lens son maçları: ilk yarıda gol attığı maç 6/10 (%60)"
+         ],
+         [
+          0,
+          "Club Brugge evdeki son maçları: ilk yarıda gol yediği maç 2/5 (%40)"
+         ],
+         [
+          1,
+          "Lens dışarıdaki son maçları: ilk yarıda gol attığı maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 34/60 (%57)"
+         ],
+         [
+          0,
+          "Son maçlara göre Lens ilk yarı gol beklentisi 0.8 (Lens maç başı 0.9 attı, Club Brugge 0.6 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
        "ms1": {
         "p": 0.5291,
         "t": 0,
@@ -593,7 +837,13 @@
        "iy15": 0.6541,
        "iykg": 0.4081,
        "p21": 0.0474,
-       "p12": 0.0192
+       "p12": 0.0192,
+       "h05": 0.9564,
+       "a05": 0.7973,
+       "h15": 0.8198,
+       "a15": 0.4738,
+       "ih05": 0.774,
+       "ia05": 0.5272
       },
       "rp": {
        "iy05": {
@@ -1001,6 +1251,244 @@
          ]
         ]
        },
+       "h05": {
+        "p": 0.9564,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %96 (lig ortalaması %84)"
+         ],
+         [
+          0,
+          "Aston Villa son maçları: gol attığı maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "Viking FK son maçları: gol yediği maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "Aston Villa evdeki son maçları: gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Viking FK dışarıdaki son maçları: gol yediği maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 57/60 (%95)"
+         ],
+         [
+          0,
+          "Son maçlara göre Aston Villa gol beklentisi 1.6 (Aston Villa maç başı 1.8 attı, Viking FK 1.4 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Aston Villa beklenen gol 1.5 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.7973,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %80 (lig ortalaması %73)"
+         ],
+         [
+          0,
+          "Aston Villa son maçları: gol yediği maç 7/10 (%70)"
+         ],
+         [
+          1,
+          "Viking FK son maçları: gol attığı maç 10/10 (%100)"
+         ],
+         [
+          0,
+          "Aston Villa evdeki son maçları: gol yediği maç 4/5 (%80)"
+         ],
+         [
+          1,
+          "Viking FK dışarıdaki son maçları: gol attığı maç 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 44/60 (%73)"
+         ],
+         [
+          0,
+          "Son maçlara göre Viking FK gol beklentisi 2.0 (Viking FK maç başı 2.6 attı, Aston Villa 1.4 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Viking FK beklenen gol 1.8 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.8198,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %82 (lig ortalaması %62)"
+         ],
+         [
+          0,
+          "Aston Villa son maçları: 2+ gol attığı maç 5/10 (%50)"
+         ],
+         [
+          0,
+          "Viking FK son maçları: 2+ gol yediği maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "Aston Villa evdeki son maçları: 2+ gol attığı maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Viking FK dışarıdaki son maçları: 2+ gol yediği maç 2/5 (%40)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 47/60 (%78)"
+         ],
+         [
+          0,
+          "Son maçlara göre Aston Villa gol beklentisi 1.6 (Aston Villa maç başı 1.8 attı, Viking FK 1.4 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Aston Villa beklenen gol 1.5 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.4738,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %47 (lig ortalaması %46)"
+         ],
+         [
+          0,
+          "Aston Villa son maçları: 2+ gol yediği maç 5/10 (%50)"
+         ],
+         [
+          1,
+          "Viking FK son maçları: 2+ gol attığı maç 7/10 (%70)"
+         ],
+         [
+          1,
+          "Aston Villa evdeki son maçları: 2+ gol yediği maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Viking FK dışarıdaki son maçları: 2+ gol attığı maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 26/60 (%43)"
+         ],
+         [
+          0,
+          "Son maçlara göre Viking FK gol beklentisi 2.0 (Viking FK maç başı 2.6 attı, Aston Villa 1.4 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Viking FK beklenen gol 1.8 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.774,
+        "t": 0,
+        "ok": 2,
+        "n": 7,
+        "c": [
+         [
+          1,
+          "Model: %77 (lig ortalaması %58)"
+         ],
+         [
+          0,
+          "Aston Villa son maçları: ilk yarıda gol attığı maç 5/10 (%50)"
+         ],
+         [
+          0,
+          "Viking FK son maçları: ilk yarıda gol yediği maç 5/10 (%50)"
+         ],
+         [
+          0,
+          "Aston Villa evdeki son maçları: ilk yarıda gol attığı maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Viking FK dışarıdaki son maçları: ilk yarıda gol yediği maç 2/5 (%40)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 43/60 (%72)"
+         ],
+         [
+          0,
+          "Son maçlara göre Aston Villa ilk yarı gol beklentisi 0.9 (Aston Villa maç başı 0.9 attı, Viking FK 0.8 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.5272,
+        "t": 0,
+        "ok": 3,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %53 (lig ortalaması %46)"
+         ],
+         [
+          0,
+          "Aston Villa son maçları: ilk yarıda gol yediği maç 4/10 (%40)"
+         ],
+         [
+          1,
+          "Viking FK son maçları: ilk yarıda gol attığı maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "Aston Villa evdeki son maçları: ilk yarıda gol yediği maç 1/5 (%20)"
+         ],
+         [
+          1,
+          "Viking FK dışarıdaki son maçları: ilk yarıda gol attığı maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 29/60 (%48)"
+         ],
+         [
+          1,
+          "Son maçlara göre Viking FK ilk yarı gol beklentisi 1.0 (Viking FK maç başı 1.4 attı, Aston Villa 0.7 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
        "ms1": {
         "p": 0.6851,
         "t": 0,
@@ -1159,7 +1647,13 @@
        "iy15": 0.4688,
        "iykg": 0.2831,
        "p21": 0.0573,
-       "p12": 0.0215
+       "p12": 0.0215,
+       "h05": 0.9308,
+       "a05": 0.7867,
+       "h15": 0.7459,
+       "a15": 0.4571,
+       "ih05": 0.6224,
+       "ia05": 0.4549
       },
       "rp": {
        "iy05": {
@@ -1567,6 +2061,244 @@
          ]
         ]
        },
+       "h05": {
+        "p": 0.9308,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %93 (lig ortalaması %84)"
+         ],
+         [
+          1,
+          "Betis son maçları: gol attığı maç 10/10 (%100)"
+         ],
+         [
+          0,
+          "Feyenoord son maçları: gol yediği maç 7/10 (%70)"
+         ],
+         [
+          1,
+          "Betis evdeki son maçları: gol attığı maç 5/5 (%100)"
+         ],
+         [
+          0,
+          "Feyenoord dışarıdaki son maçları: gol yediği maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 53/60 (%88)"
+         ],
+         [
+          0,
+          "Son maçlara göre Betis gol beklentisi 1.9 (Betis maç başı 2.1 attı, Feyenoord 1.7 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Betis beklenen gol 1.7 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.7867,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %79 (lig ortalaması %73)"
+         ],
+         [
+          0,
+          "Betis son maçları: gol yediği maç 7/10 (%70)"
+         ],
+         [
+          1,
+          "Feyenoord son maçları: gol attığı maç 10/10 (%100)"
+         ],
+         [
+          0,
+          "Betis evdeki son maçları: gol yediği maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Feyenoord dışarıdaki son maçları: gol attığı maç 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 43/60 (%72)"
+         ],
+         [
+          1,
+          "Son maçlara göre Feyenoord gol beklentisi 2.6 (Feyenoord maç başı 3.4 attı, Betis 1.8 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          1,
+          "Şutlara göre Feyenoord beklenen gol 2.2 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.7459,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %75 (lig ortalaması %62)"
+         ],
+         [
+          0,
+          "Betis son maçları: 2+ gol attığı maç 6/10 (%60)"
+         ],
+         [
+          0,
+          "Feyenoord son maçları: 2+ gol yediği maç 6/10 (%60)"
+         ],
+         [
+          0,
+          "Betis evdeki son maçları: 2+ gol attığı maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Feyenoord dışarıdaki son maçları: 2+ gol yediği maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 42/60 (%70)"
+         ],
+         [
+          0,
+          "Son maçlara göre Betis gol beklentisi 1.9 (Betis maç başı 2.1 attı, Feyenoord 1.7 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Betis beklenen gol 1.7 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.4571,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %46 (lig ortalaması %46)"
+         ],
+         [
+          0,
+          "Betis son maçları: 2+ gol yediği maç 5/10 (%50)"
+         ],
+         [
+          1,
+          "Feyenoord son maçları: 2+ gol attığı maç 9/10 (%90)"
+         ],
+         [
+          1,
+          "Betis evdeki son maçları: 2+ gol yediği maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Feyenoord dışarıdaki son maçları: 2+ gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 26/60 (%43)"
+         ],
+         [
+          1,
+          "Son maçlara göre Feyenoord gol beklentisi 2.6 (Feyenoord maç başı 3.4 attı, Betis 1.8 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Feyenoord beklenen gol 2.2 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.6224,
+        "t": 0,
+        "ok": 1,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %62 (lig ortalaması %58)"
+         ],
+         [
+          1,
+          "Betis son maçları: ilk yarıda gol attığı maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "Feyenoord son maçları: ilk yarıda gol yediği maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "Betis evdeki son maçları: ilk yarıda gol attığı maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Feyenoord dışarıdaki son maçları: ilk yarıda gol yediği maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 36/60 (%60)"
+         ],
+         [
+          0,
+          "Son maçlara göre Betis ilk yarı gol beklentisi 0.8 (Betis maç başı 1.0 attı, Feyenoord 0.6 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.4549,
+        "t": 0,
+        "ok": 3,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %45 (lig ortalaması %46)"
+         ],
+         [
+          0,
+          "Betis son maçları: ilk yarıda gol yediği maç 4/10 (%40)"
+         ],
+         [
+          1,
+          "Feyenoord son maçları: ilk yarıda gol attığı maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "Betis evdeki son maçları: ilk yarıda gol yediği maç 1/5 (%20)"
+         ],
+         [
+          1,
+          "Feyenoord dışarıdaki son maçları: ilk yarıda gol attığı maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 25/60 (%42)"
+         ],
+         [
+          1,
+          "Son maçlara göre Feyenoord ilk yarı gol beklentisi 1.2 (Feyenoord maç başı 1.7 attı, Betis 0.7 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
        "ms1": {
         "p": 0.6212,
         "t": 0,
@@ -1725,7 +2457,13 @@
        "iy15": 0.5026,
        "iykg": 0.3197,
        "p21": 0.04,
-       "p12": 0.029
+       "p12": 0.029,
+       "h05": 0.8862,
+       "a05": 0.8158,
+       "h15": 0.6388,
+       "a15": 0.5042,
+       "ih05": 0.6133,
+       "ia05": 0.5212
       },
       "rp": {
        "iy05": {
@@ -2133,6 +2871,244 @@
          ]
         ]
        },
+       "h05": {
+        "p": 0.8862,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %89 (lig ortalaması %84)"
+         ],
+         [
+          0,
+          "Como son maçları: gol attığı maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "Man United son maçları: gol yediği maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "Como evdeki son maçları: gol attığı maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Man United dışarıdaki son maçları: gol yediği maç 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 48/60 (%80)"
+         ],
+         [
+          0,
+          "Son maçlara göre Como gol beklentisi 1.7 (Como maç başı 2.2 attı, Man United 1.2 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Como beklenen gol 1.7 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.8158,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %82 (lig ortalaması %73)"
+         ],
+         [
+          1,
+          "Como son maçları: gol yediği maç 9/10 (%90)"
+         ],
+         [
+          0,
+          "Man United son maçları: gol attığı maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "Como evdeki son maçları: gol yediği maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Man United dışarıdaki son maçları: gol attığı maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 42/60 (%70)"
+         ],
+         [
+          0,
+          "Son maçlara göre Man United gol beklentisi 1.4 (Man United maç başı 1.7 attı, Como 1.2 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Man United beklenen gol 1.6 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.6388,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %64 (lig ortalaması %62)"
+         ],
+         [
+          0,
+          "Como son maçları: 2+ gol attığı maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "Man United son maçları: 2+ gol yediği maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "Como evdeki son maçları: 2+ gol attığı maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Man United dışarıdaki son maçları: 2+ gol yediği maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 37/60 (%62)"
+         ],
+         [
+          0,
+          "Son maçlara göre Como gol beklentisi 1.7 (Como maç başı 2.2 attı, Man United 1.2 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Como beklenen gol 1.7 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.5042,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %50 (lig ortalaması %46)"
+         ],
+         [
+          0,
+          "Como son maçları: 2+ gol yediği maç 2/10 (%20)"
+         ],
+         [
+          0,
+          "Man United son maçları: 2+ gol attığı maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "Como evdeki son maçları: 2+ gol yediği maç 0/5 (%0)"
+         ],
+         [
+          0,
+          "Man United dışarıdaki son maçları: 2+ gol attığı maç 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 29/60 (%48)"
+         ],
+         [
+          0,
+          "Son maçlara göre Man United gol beklentisi 1.4 (Man United maç başı 1.7 attı, Como 1.2 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Man United beklenen gol 1.6 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.6133,
+        "t": 0,
+        "ok": 1,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %61 (lig ortalaması %58)"
+         ],
+         [
+          1,
+          "Como son maçları: ilk yarıda gol attığı maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "Man United son maçları: ilk yarıda gol yediği maç 3/10 (%30)"
+         ],
+         [
+          0,
+          "Como evdeki son maçları: ilk yarıda gol attığı maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Man United dışarıdaki son maçları: ilk yarıda gol yediği maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 30/60 (%50)"
+         ],
+         [
+          0,
+          "Son maçlara göre Como ilk yarı gol beklentisi 0.8 (Como maç başı 1.2 attı, Man United 0.4 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.5212,
+        "t": 0,
+        "ok": 1,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %52 (lig ortalaması %46)"
+         ],
+         [
+          1,
+          "Como son maçları: ilk yarıda gol yediği maç 6/10 (%60)"
+         ],
+         [
+          0,
+          "Man United son maçları: ilk yarıda gol attığı maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "Como evdeki son maçları: ilk yarıda gol yediği maç 0/5 (%0)"
+         ],
+         [
+          0,
+          "Man United dışarıdaki son maçları: ilk yarıda gol attığı maç 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 25/60 (%42)"
+         ],
+         [
+          0,
+          "Son maçlara göre Man United ilk yarı gol beklentisi 0.7 (Man United maç başı 0.7 attı, Como 0.7 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
        "ms1": {
         "p": 0.4977,
         "t": 0,
@@ -2291,7 +3267,13 @@
        "iy15": 0.4749,
        "iykg": 0.2882,
        "p21": 0.0361,
-       "p12": 0.0297
+       "p12": 0.0297,
+       "h05": 0.8923,
+       "a05": 0.7879,
+       "h15": 0.6523,
+       "a15": 0.459,
+       "ih05": 0.6255,
+       "ia05": 0.4608
       },
       "rp": {
        "iy05": {
@@ -2698,6 +3680,244 @@
           "İlk golden sonra 2+ gol daha gelen maç: Lille 5/14, Galatasaray 5/10 (lig %69)"
          ]
         ]
+       },
+       "h05": {
+        "p": 0.8923,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %89 (lig ortalaması %84)"
+         ],
+         [
+          0,
+          "Lille son maçları: gol attığı maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "Galatasaray son maçları: gol yediği maç 9/10 (%90)"
+         ],
+         [
+          1,
+          "Lille evdeki son maçları: gol attığı maç 5/5 (%100)"
+         ],
+         [
+          1,
+          "Galatasaray dışarıdaki son maçları: gol yediği maç 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 50/60 (%83)"
+         ],
+         [
+          0,
+          "Son maçlara göre Lille gol beklentisi 1.6 (Lille maç başı 1.2 attı, Galatasaray 2.1 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Lille beklenen gol 2.0 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.7879,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %79 (lig ortalaması %73)"
+         ],
+         [
+          0,
+          "Lille son maçları: gol yediği maç 6/10 (%60)"
+         ],
+         [
+          0,
+          "Galatasaray son maçları: gol attığı maç 6/10 (%60)"
+         ],
+         [
+          0,
+          "Lille evdeki son maçları: gol yediği maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Galatasaray dışarıdaki son maçları: gol attığı maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 42/60 (%70)"
+         ],
+         [
+          0,
+          "Son maçlara göre Galatasaray gol beklentisi 1.2 (Galatasaray maç başı 1.1 attı, Lille 1.3 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Galatasaray beklenen gol 1.4 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.6523,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %65 (lig ortalaması %62)"
+         ],
+         [
+          0,
+          "Lille son maçları: 2+ gol attığı maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "Galatasaray son maçları: 2+ gol yediği maç 6/10 (%60)"
+         ],
+         [
+          0,
+          "Lille evdeki son maçları: 2+ gol attığı maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Galatasaray dışarıdaki son maçları: 2+ gol yediği maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 38/60 (%63)"
+         ],
+         [
+          0,
+          "Son maçlara göre Lille gol beklentisi 1.6 (Lille maç başı 1.2 attı, Galatasaray 2.1 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Lille beklenen gol 2.0 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.459,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %46 (lig ortalaması %46)"
+         ],
+         [
+          0,
+          "Lille son maçları: 2+ gol yediği maç 5/10 (%50)"
+         ],
+         [
+          0,
+          "Galatasaray son maçları: 2+ gol attığı maç 2/10 (%20)"
+         ],
+         [
+          0,
+          "Lille evdeki son maçları: 2+ gol yediği maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Galatasaray dışarıdaki son maçları: 2+ gol attığı maç 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 27/60 (%45)"
+         ],
+         [
+          0,
+          "Son maçlara göre Galatasaray gol beklentisi 1.2 (Galatasaray maç başı 1.1 attı, Lille 1.3 yedi; lig takım ort. 1.8)"
+         ],
+         [
+          0,
+          "Şutlara göre Galatasaray beklenen gol 1.4 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.6255,
+        "t": 0,
+        "ok": 3,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %63 (lig ortalaması %58)"
+         ],
+         [
+          0,
+          "Lille son maçları: ilk yarıda gol attığı maç 5/10 (%50)"
+         ],
+         [
+          1,
+          "Galatasaray son maçları: ilk yarıda gol yediği maç 7/10 (%70)"
+         ],
+         [
+          1,
+          "Lille evdeki son maçları: ilk yarıda gol attığı maç 4/5 (%80)"
+         ],
+         [
+          1,
+          "Galatasaray dışarıdaki son maçları: ilk yarıda gol yediği maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 35/60 (%58)"
+         ],
+         [
+          0,
+          "Son maçlara göre Lille ilk yarı gol beklentisi 0.8 (Lille maç başı 0.7 attı, Galatasaray 0.9 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.4608,
+        "t": 0,
+        "ok": 0,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %46 (lig ortalaması %46)"
+         ],
+         [
+          0,
+          "Lille son maçları: ilk yarıda gol yediği maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "Galatasaray son maçları: ilk yarıda gol attığı maç 5/10 (%50)"
+         ],
+         [
+          0,
+          "Lille evdeki son maçları: ilk yarıda gol yediği maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Galatasaray dışarıdaki son maçları: ilk yarıda gol attığı maç 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 25/60 (%42)"
+         ],
+         [
+          0,
+          "Son maçlara göre Galatasaray ilk yarı gol beklentisi 0.5 (Galatasaray maç başı 0.5 attı, Lille 0.4 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
        },
        "ms1": {
         "p": 0.5379,
