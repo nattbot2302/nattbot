@@ -1993,6 +1993,8 @@ def main():
     write_live_model(leagues, now)
     write_live_html()
     write_bet_html()
+    write_analiz(leagues, now)
+    write_analiz_html()
     send_mail(st, leagues, now)
     save_store(st)
 
@@ -3685,6 +3687,8 @@ def write_html(leagues, now, st=None):
             f"<header><div style='display:flex;justify-content:space-between;align-items:center'><h1>Günün Maçları</h1>"
             f"<span><a href='bahis.html?v={int(now.timestamp())}' style='background:var(--card);color:var(--tx);border:1px solid var(--bd);"
             f"text-decoration:none;font-weight:700;font-size:13px;padding:5px 11px;border-radius:16px;margin-right:6px'>Kuponlarım</a>"
+            f"<a href='analiz.html?v={int(now.timestamp())}' style='background:var(--card);color:var(--tx);border:1px solid var(--bd);"
+            f"text-decoration:none;font-weight:700;font-size:13px;padding:5px 11px;border-radius:16px;margin-right:6px'>Analiz</a>"
             f"<a href='canli.html?v={int(now.timestamp())}' style='background:#d93025;color:#fff;text-decoration:none;font-weight:700;"
             f"font-size:13px;padding:6px 12px;border-radius:16px'>● Canlı</a></span></div><div class='upd'>Güncelleme: {local:%d.%m.%Y %H:%M} · "
             f"Maçlar: {d0:%d.%m %H:%M} - {d1:%d.%m %H:%M} · Model tahmindir, kâr garantisi vermez."
@@ -4331,6 +4335,244 @@ def write_live_html():
     with open("canli.html", "w", encoding="utf-8") as f:
         f.write(page)
 
+
+
+# ------------------------------------------------------------ KUPON ANALİZİ (oynamadan önce)
+AN_FILE = "data/analiz.json"
+DRAFT_FILE = "data/taslaklar.json"
+
+
+def tc_text(t):
+    if not t:
+        return ""
+    parts = []
+    if t.get("rank"):
+        parts.append(f"{t['rank']}. sıra ({t['tag']})")
+    if t.get("form"):
+        parts.append(f"son 5: {t['form']}")
+    if t.get("gf") is not None:
+        parts.append(f"son 10 maçta maç başı {t['gf']:.1f} attı, {t['ga']:.1f} yedi")
+    if t.get("luck") is not None and abs(t["luck"]) >= 3:
+        parts.append("şutlarına göre " + ("şanslı gidiyor" if t["luck"] > 0 else "şanssız gidiyor"))
+    if t.get("rest") is not None and t["rest"] <= 3:
+        parts.append(f"son maçından beri {t['rest']} gün: rotasyon riski")
+    return " · ".join(parts)
+
+
+def analiz_entry(c):
+    r = c["r"]
+    lam1 = r.get("lam1") or [c["lam"][0] * 0.45, c["lam"][1] * 0.45]
+    rp = {}
+    for k, v in ((c.get("rapor") or {}).get("m") or {}).items():
+        rp[k] = {"p": round(v["p"], 4), "t": v["tier"], "ok": v["ok"], "n": v["tot"],
+                 "c": [[int(ok), t] for ok, t in v["checks"]], "i": [[int(ok), t] for ok, t in v.get("info", [])]}
+    return {"h": c["home"], "a": c["away"], "lg": c["league"], "k": c["kick"].isoformat(),
+            "l": [round(x, 4) for x in (c["lam"][0], c["lam"][1], lam1[0], lam1[1])],
+            "p": {k: round(r[k], 4) for k in PRED_KEYS if r.get(k) is not None},
+            "rp": rp, "low": bool(c.get("low")),
+            "tc": {"h": tc_text(c.get("tctx", {}).get("h")), "a": tc_text(c.get("tctx", {}).get("a"))}}
+
+
+def write_analiz(leagues, now):
+    ms = {}
+    for L in leagues:
+        for c in L.get("cards", []):
+            try:
+                ms[c["id"]] = analiz_entry(c)
+            except Exception as e:  # noqa
+                print("analiz verisi yazılamadı:", c.get("id"), e, flush=True)
+    trust = {f"{k}|{t}": [round(v["hit"], 3), v["n"], round(v["base"], 3)] for (k, t), v in (TRUST or {}).items()}
+    with open(AN_FILE, "w", encoding="utf-8") as f:
+        json.dump({"t": now.isoformat(), "trust": trust, "m": ms}, f, ensure_ascii=False, separators=(",", ":"))
+    # Bana fotoğrafla gönderilip eklenen taslaklarda maç verisinin kopyasını sakla (maç günü geçince de analiz görünsün)
+    try:
+        with open(DRAFT_FILE, encoding="utf-8") as f:
+            d = json.load(f)
+    except Exception:  # noqa
+        return
+    ch = False
+    for k in d.get("kuponlar", []):
+        for l in k.get("legs", []):
+            if l.get("m") and not l.get("snap") and str(l["m"]) in ms:
+                l["snap"] = ms[str(l["m"])]
+                ch = True
+    if ch:
+        with open(DRAFT_FILE, "w", encoding="utf-8") as f:
+            json.dump(d, f, ensure_ascii=False, indent=1)
+
+
+ANALIZ_JS = r"""
+let AN = {m:{}, trust:{}};
+const RAPOR_OF = {ms1:'ms1',ms2:'ms2',o15:'o15',o25:'o25',o35:'o35',o45:'o45',u25:'u25',kgv:'btts',iyo05:'iy05',iyo15:'iy15',iykgv:'iykg'};
+const TIER = {2:'Güçlü',1:'Orta',0:'Zayıf'};
+function snapOf(l){ return (l.m && AN.m[l.m]) || l.snap || null; }
+// Bir bacağın analizi
+function legAn(l){
+  const s = snapOf(l), o = {s};
+  if(!s){ o.v = 'yok'; return o; }
+  const rk = RAPOR_OF[l.b], rp = rk && s.rp ? s.rp[rk] : null;
+  o.p = rp ? rp.p : modelP(l.b, {l:s.l, p:s.p});
+  o.rp = rp;
+  if(rp){ const t = AN.trust[rk+'|'+rp.t]; if(t && rp.t>0) o.hist = t; }
+  o.imp = (+l.o>1) ? 1/(+l.o) : null;
+  if(o.p==null) o.v = 'yok';
+  else if(o.imp!=null && o.p < o.imp-0.05) o.v = 'pahali';
+  else if(o.p>=0.65 && (!rp || rp.t===2)) o.v = 'guclu';
+  else if(o.p>=0.55 && (!rp || rp.t>=1)) o.v = 'iyi';
+  else if(o.p<0.5) o.v = 'zayif';
+  else o.v = 'belirsiz';
+  return o;
+}
+const VLAB = {guclu:['Güçlü','pos'], iyi:['Kupona uygun','pos'], belirsiz:['Belirsiz',''], zayif:['Zayıf halka','neg'], pahali:['Oran modele göre düşük','neg'], yok:['Model verisi yok','']};
+function legText(l, a){
+  const s = a.s; if(!s) return 'Bu maç modelin takip ettiği liglerde değil ya da maç günü verisi henüz yok; analiz yapılamadı.';
+  const lam = s.l, tot = lam[0]+lam[1];
+  let t = 'Model maçta toplam '+tot.toFixed(1)+' gol bekliyor ('+s.h+' '+lam[0].toFixed(1)+', '+s.a+' '+lam[1].toFixed(1)+'; ilk yarıda '+(lam[2]+lam[3]).toFixed(1)+'). ';
+  if(a.p!=null) t += l.bl+' için tutma ihtimali '+pc(a.p)+'. ';
+  if(a.rp) t += 'Kontrol listesinde '+a.rp.ok+'/'+a.rp.n+' kriter tutuyor ('+TIER[a.rp.t]+'). ';
+  if(a.hist) t += 'Bu seviyedeki '+l.bl+' önerileri geçmişte '+pc(a.hist[0])+' tuttu ('+a.hist[1]+' maç; tüm maçlarda '+pc(a.hist[2])+'). ';
+  if(a.imp!=null) t += 'Girdiğin '+(+l.o).toFixed(2)+' oranı bu bahse '+pc(a.imp)+' ihtimal biçiyor'+(a.p!=null?(a.p<a.imp-0.05?'; model daha az emin.':(a.p>a.imp+0.05?'; model daha emin.':'; model de aynı yerde.')):'.')+' ';
+  if(s.low) t += 'Takımlardan birinin geçmiş verisi az, tahmin daha belirsiz. ';
+  return t;
+}
+function legHtml(l, a, i, kid){
+  const [vl, vc] = VLAB[a.v];
+  let h = '<details class="al"><summary><div class="alh"><span><b>'+esc(l.ad)+'</b><small>'+esc(l.bl)+(+l.o>1?' · '+(+l.o).toFixed(2):'')+'</small></span>'+
+          '<span class="alp">'+(a.p!=null?pc(a.p):'-')+'<small class="'+vc+'">'+vl+'</small></span></div></summary>';
+  h += '<p class="tx">'+esc(legText(l, a))+'</p>';
+  if(a.rp){
+    h += '<ul class="ck">'+a.rp.c.map(c=>'<li class="'+(c[0]?'y':'n')+'">'+esc(c[1])+'</li>').join('')+
+         a.rp.i.map(c=>'<li class="i">'+esc(c[1])+' <span class="note">· bilgi, '+(c[0]?'lehine':'aleyhine')+'</span></li>').join('')+'</ul>';
+  }
+  if(a.s && (a.s.tc.h||a.s.tc.a)) h += '<p class="note"><b>'+esc(a.s.h)+'</b>: '+esc(a.s.tc.h)+'<br><b>'+esc(a.s.a)+'</b>: '+esc(a.s.tc.a)+'</p>';
+  if(kid) h += '<div style="text-align:right"><button class="btn sm" onclick="delLeg(\''+kid+'\','+i+')">Bu maçı çıkar</button></div>';
+  return h+'</details>';
+}
+function couponSummary(legs, ans){
+  const ps = ans.map(a=>a.p), known = ps.filter(x=>x!=null);
+  if(!known.length) return '<p class="note">Kupondaki maçlar için model verisi yok.</p>';
+  const prod = known.reduce((x,y)=>x*y,1);
+  let o = 1; legs.forEach(l=>{ if(+l.o>1) o*=+l.o; });
+  let h = '<div class="ksum"><div>Kuponun tutma ihtimali (model)<b>'+pc(prod)+'</b><small>'+(prod>0?'yaklaşık '+Math.max(1,Math.round(1/prod))+' kuponda 1':'')+
+          (known.length<legs.length?' · '+(legs.length-known.length)+' maç hesaba katılmadı':'')+'</small></div>';
+  if(o>1) h += '<div>Oranların varsaydığı<b>'+pc(1/o)+'</b><small>toplam oran '+o.toFixed(2)+'</small></div>';
+  h += '</div>';
+  const idx = ans.map((a,i)=>[a.p,i]).filter(x=>x[0]!=null).sort((a,b)=>a[0]-b[0]);
+  const weak = idx.filter(x=>x[0]<0.55 || ['zayif','pahali'].includes(ans[x[1]].v));
+  if(weak.length){
+    const w = weak[0], without = prod/w[0];
+    h += '<p class="tx">En zayıf halka: <b>'+esc(legs[w[1]].ad)+' · '+esc(legs[w[1]].bl)+'</b> ('+pc(w[0])+'). Çıkarırsan kuponun ihtimali '+pc(prod)+' → <b>'+pc(without)+'</b>.'+
+         (weak.length>1?' Riskli görünen diğer maçlar: '+weak.slice(1).map(x=>esc(legs[x[1]].ad.split(' - ')[0])+' ('+pc(x[0])+')').join(', ')+'.':'')+'</p>';
+  } else h += '<p class="tx">Kupondaki her maç tek başına %55 ve üstü. Yine de maç sayısı arttıkça birlikte tutma ihtimali hızla düşer.</p>';
+  const g = ans.filter(a=>a.v==='guclu'||a.v==='iyi').length;
+  h += '<p class="note">'+legs.length+' maçın '+g+' tanesi kupona uygun görünüyor.</p>';
+  return h;
+}
+// --- sayfa: taslak oluşturma (bahis sayfasının fonksiyonlarını değiştirir)
+function renderSummary(){ $('sum').innerHTML=''; }
+function addLeg(){
+  const v = ($('odd').value||'').replace(',','.'), o = v ? parseFloat(v) : null;
+  if(v && !(o>1)){ msg('Oran 1\'den büyük olmalı (boş da bırakabilirsin).'); return; }
+  const b = $('mk').value;
+  draft.push(Object.assign({}, pick, {b:b, bl:MARKETS.find(x=>x[1]===b)[2], o:o, canli:false, sonuc:null}));
+  $('legf').style.display='none'; pick=null; msg(''); renderDraft();
+}
+function renderDraft(){
+  const ans = draft.map(legAn);
+  $('draft').innerHTML = draft.map((l,i)=>legHtml(l, ans[i]).replace('</details>','<div style="text-align:right"><button class="btn sm" onclick="draft.splice('+i+',1);renderDraft()">Çıkar</button></div></details>')).join('');
+  $('tot').innerHTML = draft.length ? couponSummary(draft, ans) : 'Kupon boş: yukarıdan maç seç.';
+  $('savebox').style.display = draft.length ? 'block' : 'none';
+}
+async function saveCoupon(){
+  const kp = {id:'t'+Date.now(), t:new Date().toISOString(), not:($('stake').value||'').trim(),
+              legs:draft.map(l=>({m:l.m,ad:l.ad,lg:l.lg,k:l.k,b:l.b,bl:l.bl,o:l.o,snap:snapOf(l)}))};
+  msg('Kaydediliyor…', true);
+  try{ await ghSave(d=>d.kuponlar.push(kp), 'Analiz kuponu eklendi'); draft=[]; $('stake').value=''; renderDraft(); renderAll(); msg('Kaydedildi ✓', true); }
+  catch(e){ msg(esc(e.message)); }
+}
+async function delLeg(id, i){ if(!confirm('Bu maç kupondan çıkarılsın mı?')) return;
+  try{ await ghSave(d=>{const k=d.kuponlar.find(k=>k.id===id); if(k) k.legs.splice(i,1);}, 'Analiz kuponu güncellendi'); renderAll(); }catch(e){ msg(esc(e.message)); } }
+async function playK(id){
+  const k = DATA.kuponlar.find(x=>x.id===id); if(!k) return;
+  if(k.legs.some(l=>!(+l.o>1))){ alert('Kayda aktarmak için her maçın oranı girilmiş olmalı.'); return; }
+  const t = parseFloat((prompt('Kupon bedeli (TL):')||'').replace(',','.')); if(!(t>0)) return;
+  const kp = {id:'k'+Date.now(), t:new Date().toISOString(), tutar:t, kaynak:'analiz sayfası',
+              legs:k.legs.map(l=>{ const a=legAn(l); return {m:l.m,ad:l.ad,lg:l.lg,k:l.k,b:l.b,bl:l.bl,o:+l.o,canli:false,sonuc:null,mp:a.p==null?null:Math.round(a.p*1e4)/1e4}; })};
+  const P = 'https://api.github.com/repos/'+REPO+'/contents/data/bahislerim.json';
+  try{
+    for(let i=0;i<3;i++){
+      const r = await fetch(P+'?ref=main&t='+Date.now(), {headers:{Authorization:'Bearer '+tok(), Accept:'application/vnd.github+json'}, cache:'no-store'});
+      let data={kuponlar:[]}, sha=null; if(r.ok){ const j=await r.json(); data=JSON.parse(b64d(j.content)); sha=j.sha; }
+      data.kuponlar=(data.kuponlar||[]); data.kuponlar.push(kp);
+      const body={message:'Kupon eklendi (analizden)', content:b64e(JSON.stringify(data,null,1)), branch:'main'}; if(sha) body.sha=sha;
+      const w = await fetch(P, {method:'PUT', headers:{Authorization:'Bearer '+tok(), Accept:'application/vnd.github+json','Content-Type':'application/json'}, body:JSON.stringify(body)});
+      if(w.ok){ msg('Kupon kayıtlarına eklendi ✓', true); return; }
+      if(w.status!==409 && w.status!==422) throw new Error('GitHub '+w.status);
+    }
+  }catch(e){ msg('Aktarılamadı: '+esc(e.message)); }
+}
+function renderCoupons(){
+  const ks = DATA.kuponlar.slice().sort((a,b)=>(b.t||'').localeCompare(a.t||''));
+  $('kps').innerHTML = ks.map((k,j)=>{
+    const ans = k.legs.map(legAn), known = ans.filter(a=>a.p!=null), prod = known.reduce((x,a)=>x*a.p,1);
+    return '<details class="kp"'+(j===0?' open':'')+'><summary><div class="kh"><span>'+dm(dayOf(k.t))+' '+hm(k.t)+' · '+k.legs.length+' maç'+(k.not?' · '+esc(k.not):'')+'</span>'+
+      '<span>'+(known.length?'model '+pc(prod):'')+'</span></div><div class="ks">'+esc(k.legs.map(l=>l.ad.split(' - ')[0]).slice(0,3).join(', '))+(k.legs.length>3?' …':'')+'</div></summary>'+
+      couponSummary(k.legs, ans)+k.legs.map((l,i)=>legHtml(l, ans[i], i, k.id)).join('')+
+      '<div style="text-align:right;margin-top:8px"><button class="btn sm pri" onclick="playK(\''+k.id+'\')">Oynadım: kupon kaydına ekle</button> '+
+      '<button class="btn sm" onclick="delK(\''+k.id+'\')">Sil</button></div></details>'; }).join('') ||
+    '<p class="empty">Henüz analiz edilen kupon yok. Yukarıdan kupon oluştur ya da kupon fotoğrafını Claude\'a gönder.</p>';
+}
+"""
+
+ANALIZ_CSS = """
+.al{border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin:6px 0;background:var(--card)}
+.al summary{list-style:none;cursor:pointer}.al summary::-webkit-details-marker{display:none}
+.alh{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.alh small{display:block;color:var(--mu);font-size:12px;font-weight:400}
+.alp{text-align:right;font-size:18px;font-weight:800;white-space:nowrap}.alp small{font-size:11.5px;font-weight:700}
+.tx{font-size:13.5px;line-height:1.5;margin:8px 0}
+.ksum{display:flex;gap:10px;margin:8px 0}.ksum div{flex:1;border:1px solid var(--bd);border-radius:10px;padding:8px;font-size:12px;color:var(--mu)}
+.ksum b{display:block;font-size:22px;color:var(--tx);margin:2px 0}.ksum small{display:block;font-size:11px}
+"""
+
+
+def write_analiz_html():
+    repo = json.dumps(os.environ.get("GITHUB_REPOSITORY", "") or "nattbot2302/nattbot")
+    js = (BET_JS.replace("__REPO__", repo).replace("__MARKETS__", json.dumps(BET_MARKETS, ensure_ascii=False))
+          .replace("/contents/data/bahislerim.json", "/contents/" + DRAFT_FILE)
+          .replace("fetch('data/bahislerim.json?t='", "fetch('" + DRAFT_FILE + "?t='")
+          .replace("renderDays(); renderList(); renderDraft();",
+                   "try{ const r = await fetch('" + AN_FILE + "?t='+Date.now()); if(r.ok) AN = await r.json(); }catch(e){}\n  renderDays(); renderList(); renderDraft();")
+          .replace("\ninit();\n", "\n" + ANALIZ_JS + "\ninit();\n"))
+    page = (f"<!doctype html><html lang='tr'><head><meta charset='utf-8'>"
+            f"<meta name='viewport' content='width=device-width, initial-scale=1'>"
+            f"<title>Kupon Analizi</title><style>{CSS}{BET_CSS}{RP_CSS}{ANALIZ_CSS}</style></head><body>"
+            "<header><div class='top'><h1>Kupon Analizi</h1><a class='back' href='index.html'>← Günün maçları</a></div>"
+            "<p class='note'>Oynamayı düşündüğün kuponu buraya gir ya da fotoğrafını Claude'a gönder; her maç için modelin tutma "
+            "ihtimali, kontrol listesi ve gerekçesi çıkar. Oran girmek isteğe bağlı: girersen oranın varsaydığı ihtimalle kıyaslanır. "
+            "Analiz, botun o günkü verisiyle yapılır (yarının maçları sabah 08:00 çalışmasından sonra gelir).</p></header>"
+            "<div class='wrapb'><div id='sum'></div>"
+            "<div class='card'><h2>Yeni kupon</h2>"
+            "<div class='row2'><select id='day' class='sel' onchange=\"$('q').value='';renderList()\"></select>"
+            "<input id='q' class='in' placeholder='Takım ara' oninput='renderList()'></div>"
+            "<div id='ml' class='mlist'></div>"
+            "<div id='legf' class='legf' style='display:none'><div id='legt' class='leg' style='border:0'></div>"
+            "<select id='mk' class='sel'></select>"
+            "<div class='row2'><input id='odd' class='in' inputmode='decimal' placeholder='Oran (isteğe bağlı)'></div>"
+            "<span id='b-pre'></span><span id='b-on'></span>"
+            "<div class='row2'><button class='btn pri' onclick='addLeg()'>Kupona ekle</button>"
+            "<button class='btn' onclick=\"$('legf').style.display='none'\">Vazgeç</button></div></div>"
+            "<div class='sec'>Kupon</div><div id='draft'></div><div id='tot' class='tot'></div>"
+            "<div id='savebox' style='display:none'><input id='stake' class='in' placeholder='Not (isteğe bağlı, örn. akşam kuponu)'>"
+            "<div class='row2'><button class='btn pri' onclick='saveCoupon()'>Analizi kaydet</button></div></div>"
+            "<div id='msg' class='msg'></div></div>"
+            "<h2 style='margin-top:16px'>Analiz edilen kuponlar</h2><div id='kps'></div>"
+            "<details class='rp' style='margin-top:14px'><summary><b>Ayarlar: GitHub anahtarı</b> <span id='tks' class='note'></span></summary>"
+            "<div class='tc'>Kupon sayfasında girdiğin anahtar burada da geçerlidir (aynı telefon ve tarayıcı).</div>"
+            "<div class='row2'><input id='tk' class='in' type='password' placeholder='github_pat_…'><button class='btn' onclick='saveTok()'>Kaydet</button></div></details>"
+            f"</div><script>{js}</script></body></html>")
+    with open("analiz.html", "w", encoding="utf-8") as f:
+        f.write(page)
 
 
 # -------------------------------------------------------------------- CANLI AKTARIM
