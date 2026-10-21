@@ -526,6 +526,74 @@
      "mp": 0.427
     }
    ]
+  },
+  {
+   "id": "k1792601465494",
+   "t": "2026-10-21T16:51:05.495Z",
+   "tutar": 500,
+   "kaynak": "analiz sayfası",
+   "legs": [
+    {
+     "m": "401915388",
+     "ad": "Club Brugge - Lens",
+     "lg": "Şampiyonlar Ligi",
+     "k": "2026-10-21T19:00:00+00:00",
+     "b": "tiev05",
+     "bl": "Ev İY 0.5 Üst",
+     "o": 1.41,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0
+    },
+    {
+     "m": "401915394",
+     "ad": "Aston Villa - Viking FK",
+     "lg": "Şampiyonlar Ligi",
+     "k": "2026-10-21T19:00:00+00:00",
+     "b": "tidp05",
+     "bl": "Dep İY 0.5 Üst",
+     "o": 2.36,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0
+    },
+    {
+     "m": "401915389",
+     "ad": "Betis - Feyenoord",
+     "lg": "Şampiyonlar Ligi",
+     "k": "2026-10-21T19:00:00+00:00",
+     "b": "tidp05",
+     "bl": "Dep İY 0.5 Üst",
+     "o": 1.82,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0
+    },
+    {
+     "m": "401915395",
+     "ad": "Como - Man United",
+     "lg": "Şampiyonlar Ligi",
+     "k": "2026-10-21T16:45:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.4,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.7414
+    },
+    {
+     "m": "401915396",
+     "ad": "Lille - Galatasaray",
+     "lg": "Şampiyonlar Ligi",
+     "k": "2026-10-21T16:45:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.52,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.7277
+    }
+   ]
   }
  ]
 }
