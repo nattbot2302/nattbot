@@ -54,7 +54,7 @@ HISTORY_DAYS = 420      # geçmiş veri penceresi
 HALF_LIFE = 100         # gün: zaman ağırlığı yarı ömrü
 LAST_N = 10             # takımın son N maçı
 BOOST = 1.5             # son N maça ek ağırlık çarpanı
-PRIOR = 5.0             # az maçı olan takımı lige çeken "sanal maç" sayısı
+PRIOR = 6.0             # az maçı olan takımı lige çeken "sanal maç" sayısı (sezon modelinde en iyi sonuç)
 HT_PRIOR = 8.0          # ilk yarı payında lig ortalamasına çeken "sanal gol" sayısı
 NEW_ATT, NEW_DEF = 0.85, 1.15   # verisi olmayan (yeni çıkan) takım varsayımı
 LOW_DATA = 5            # bundan az maçı olan takım "az veri" uyarısı alır
@@ -557,7 +557,52 @@ def fit_half(matches, tw):
     return {"f": f, "as": a_sh, "ds": d_sh, "cov": len(rows) / len(matches)}
 
 
+# ------------------------------------------------------------ sezon
+# Model, kontrol listesi ve lig ortalaması her ligin KENDİ sezon başlangıcından itibaren hesaplanır.
+# Sezon başı veriden bulunur: yaz arasından (≥40 gün boşluk) sonraki ilk maç; takvim yılı liglerinde
+# yılın ilk maçı; Avrupa kupalarında 1 Eylül (lig aşaması; Temmuz-Ağustos ön elemeleri ayrı tutulur).
+# Sezonda henüz SEASON_MIN maçtan az varsa (lig yeni başladıysa) önceki maçlar da kullanılır.
+SEASON_ONLY = True
+SEASON_MIN = 30
+
+
+def assign_seasons(slug, matches, calendar):
+    ms = sorted(matches, key=lambda m: m["date"])
+    if slug.startswith("uefa."):      # kupalarda mutlak etiket: tüm kupalarda aynı
+        for m in ms:
+            d = m["date"]
+            y = d.year if d.month >= 7 else d.year - 1
+            m["sz"] = y * 10 + (1 if 7 <= d.month < 9 else 2)
+        return
+    sid, prev = 0, None
+    for m in ms:
+        d = m["date"]
+        if prev is not None:
+            if calendar:
+                if d.year != prev.year:
+                    sid += 1
+            elif (d - prev).days >= 40 and 6 <= d.month <= 11:
+                sid += 1
+        m["sz"] = sid
+        prev = d
+
+
+def season_filter(matches, ref=None):
+    if not SEASON_ONLY or not matches or "sz" not in matches[-1]:
+        return matches
+    last = matches[-1]
+    if ref is not None:
+        i = bisect.bisect_left([m["date"] for m in matches], ref)
+        if i == 0:
+            return matches
+        last = matches[i - 1]
+        matches = matches[:i]
+    seas = [m for m in matches if m.get("sz") == last["sz"]]
+    return seas if len(seas) >= SEASON_MIN else matches
+
+
 def build_model(matches, ref):
+    matches = season_filter(matches)
     if len(matches) < 30:
         return None
     tw = time_weights(matches, ref)
@@ -646,7 +691,8 @@ def cup_layer(ref):
     if len(past) < 40:
         return None
     tw = time_weights(past, r)
-    allm = fit_strength(past, tw)
+    sp = season_filter(past)
+    allm = fit_strength(sp, time_weights(sp, r))
     tl = team_leagues(r)
 
     def rate(t):
@@ -930,6 +976,7 @@ TRUST = None             # bahis türü + seviye bazında geçmiş başarı (mai
 TRUST_EVAL = None
 GLOBAL_TH = None         # tüm liglerden birleşik takım geçmişi (Avrupa kupaları için)
 FETCHED = {}             # önceden çekilmiş lig verisi (kupalar)
+TEAM_TREND = {}          # takım -> kendi ligindeki form eğrisi
 PREV_SNAPSHOT = None
 MACS_BY_ID = {}
 TRUST_MIN_N = 25
@@ -1020,6 +1067,7 @@ def rows_mean(rows, i):
 
 
 def rapor_ctx(past, ref):
+    past = season_filter(past)
     recent = [m for m in past if m["date"] >= ref - dt.timedelta(days=365)] or past
     # kupalarda ön eleme maçları (Temmuz-Ağustos) lig ortalamasını şişirir: ortalamaya katılmaz
     rc = [m for m in recent if not (m.get("cup") and m["date"].month in (7, 8))]
@@ -1371,6 +1419,35 @@ def team_ctx(tid, ctx, table, rank, n):
             "last5": [(x[6], x[1], x[2], x[5]) for x in rows[-5:]][::-1]}
 
 
+FORM_BARS = "▁▂▃▄▅▆▇█"
+
+
+def form_trend(tid, past, model):
+    """Bu sezonki maçlarda rakibe göre performans: her maçta (attığı - beklenen) - (yediği - beklenen).
+    Değer olarak gol ile şut kalitesi karışımı (vh/va) kullanılır. Son 4 maç sezon ortalamasından
+    belirgin iyiyse yükselişte, kötüyse düşüşte."""
+    if not past or not model:
+        return None
+    sz = past[-1].get("sz")
+    rows = []
+    for m in past:
+        if m.get("sz") != sz or tid not in (m["hid"], m["aid"]):
+            continue
+        lh, la = lambdas(model, m["hid"], m["aid"])
+        vh, va = m.get("vh", m["hg"]), m.get("va", m["ag"])
+        perf = (vh - lh) - (va - la)
+        rows.append(perf if m["hid"] == tid else -perf)
+    if len(rows) < 5:
+        return None
+    last, allm = sum(rows[-4:]) / 4, sum(rows) / len(rows)
+    d = last - allm
+    lab = "yükselişte" if d >= 0.35 else ("düşüşte" if d <= -0.35 else "dengeli")
+    tail = rows[-8:]
+    lo, hi = min(tail), max(tail)
+    bars = "".join(FORM_BARS[int((x - lo) / (hi - lo + 1e-9) * 7.999)] for x in tail)
+    return {"lab": lab, "d": round(d, 2), "season": round(allm, 2), "last4": round(last, 2), "bars": bars, "n": len(rows)}
+
+
 def rest_days(tid, kick, th):
     rows = (th or {}).get(tid) or []
     prev = [x[0] for x in rows if x[0] < kick - dt.timedelta(hours=3)]
@@ -1509,7 +1586,7 @@ def backtest_raw(matches, now):
         if not model:
             continue
         rctx = rapor_ctx(matches[:idx], ref)
-        plams = [(lambdas(model, x["hid"], x["aid"]), x) for x in matches[:idx]]
+        plams = [(lambdas(model, x["hid"], x["aid"]), x) for x in season_filter(matches[:idx])]
         for m in matches[idx:]:
             if m["date"].date() != d:
                 continue
@@ -1612,6 +1689,7 @@ def process_league(slug, name, calendar, now):
     if slug.startswith("uefa."):
         for m in allm:
             m["cup"] = True
+    assign_seasons(slug, allm, calendar)
     info["results"] = {m["id"]: [m["hg"], m["ag"]] + (list(m["ht"]) if m.get("ht") else [None, None])
                        for m in finished}
     bf = dt.datetime.fromisoformat(BET_FROM).replace(tzinfo=TR)
@@ -1627,6 +1705,8 @@ def process_league(slug, name, calendar, now):
                        f"sonuçsuz, {len(recent_done)} maç sonuçlu)")
         return info
     past = [m for m in finished if m["date"] < d0]      # bugünün sonuçları modele sızmasın
+    past = season_filter(sorted(past, key=lambda m: m["date"]))
+    info["season_n"] = len(past)
     info["nfin"] = len(past)
     info["ny"] = sum(1 for m in past if m["date"] >= d0 - dt.timedelta(days=1))
     if len(past) < 30:
@@ -1737,9 +1817,11 @@ def finish_league(info, now, pool_eval, pool_all):
             "gi": {"h": team_gm(rctx["th"].get(m["hid"], [])[-GI_N:]), "a": team_gm(rctx["th"].get(m["aid"], [])[-GI_N:]),
                    "lg": rctx.get("gmb")},
             "tctx": {"h": dict(team_ctx(m["hid"], rctx, table, rank, nteams),
-                               rest=rest_days(m["hid"], m["date"], GLOBAL_TH or rctx["th"])),
+                               rest=rest_days(m["hid"], m["date"], GLOBAL_TH or rctx["th"]),
+                               trend=form_trend(m["hid"], past, model) or TEAM_TREND.get(m["hid"])),
                      "a": dict(team_ctx(m["aid"], rctx, table, rank, nteams),
-                               rest=rest_days(m["aid"], m["date"], GLOBAL_TH or rctx["th"]))},
+                               rest=rest_days(m["aid"], m["date"], GLOBAL_TH or rctx["th"]),
+                               trend=form_trend(m["aid"], past, model) or TEAM_TREND.get(m["aid"]))},
             "lavg": rctx["avg"], "ht": m.get("ht"),
         })
     info["cards"].sort(key=lambda c: (c["day"], c["time"]))
@@ -2223,7 +2305,7 @@ def main():
     for slug, name, cal in sorted(LEAGUES, key=lambda x: x[0].startswith("uefa.")):
         if slug.startswith("uefa.") and not CUP_ALL and not FETCHED:
             for L in leagues.values():
-                if not L["err"] and L.get("allm"):
+                if L.get("allm"):
                     CUP_DOM[L["slug"]] = sorted([m for m in L["allm"] if m["done"]], key=lambda m: m["date"])
             for cs, _, _ in LEAGUES:
                 if cs.startswith("uefa."):
@@ -2239,6 +2321,7 @@ def main():
                         m["cup"] = True
                         CUP_ALL.append(m)
             CUP_ALL.sort(key=lambda m: m["date"])
+            assign_seasons("uefa.all", CUP_ALL, False)
         print("Lig:", slug, flush=True)
         leagues[slug] = process_league(slug, name, cal, now)
     leagues = [leagues[s] for s, _, _ in LEAGUES]
@@ -2261,6 +2344,13 @@ def main():
     GLOBAL_TH = team_history(sorted(allpast, key=lambda m: m["date"]))
     global LIVE_CTX
     LIVE_CTX = live_context(leagues, allpast)
+    for L in leagues:                     # Avrupa maçları için takımların kendi ligindeki form eğrisi
+        if "_ctx" in L and not L["slug"].startswith("uefa."):
+            md_, ps_ = L["_ctx"][0], L["_ctx"][1]
+            for t in {x for m in ps_ for x in (m["hid"], m["aid"])}:
+                tr_ = form_trend(t, ps_, md_)
+                if tr_:
+                    TEAM_TREND[t] = tr_
     for L in leagues:
         finish_league(L, now, pool_eval, pool_all)
     update_odds_archive(leagues, now)
@@ -2763,6 +2853,7 @@ def accuracy_tab(leagues):
 
 # ------------------------------------------------------------ gol raporu sekmesi
 RP_CSS = """
+.bars{font-family:monospace;letter-spacing:1px;color:var(--ac)}
 .rpchips{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 10px}
 .rpchips button{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:14px;padding:6px 11px;font-size:12.5px;flex:none}
 .rpchips button.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
@@ -2853,6 +2944,12 @@ def team_line(name, t):
         extra += (f"<br><span class='warn'>Son 10 maçta şutlarına göre {t['luck']:+.0f} gol "
                   + ("fazla attı: şanslı gidiyor, gol ortalaması düşebilir" if t["luck"] > 0
                      else "az attı: şanssız gidiyor, gol ortalaması artabilir") + "</span>")
+    tr = t.get("trend")
+    if tr:
+        cls_ = {"yükselişte": "pos", "düşüşte": "neg"}.get(tr["lab"], "")
+        extra += (f"<br>Form eğrisi (bu sezon, son {min(tr['n'], 8)} maç): <span class='bars'>{tr['bars']}</span> "
+                  f"<b class='{cls_}'>{tr['lab']}</b> <span class='note'>(son 4 maç rakibe göre {tr['last4']:+.1f}, "
+                  f"sezon ort. {tr['season']:+.1f})</span>")
     if t.get("rest") is not None and t["rest"] <= 10:
         extra += (f"<br>Son maçından bu yana {t['rest']} gün"
                   + (" · <span class='warn'>yorgunluk / rotasyon riski</span>" if t["rest"] <= 3 else ""))
@@ -2989,9 +3086,13 @@ def rp_item(c, key, lname, full=True):
 
 LEARN_HTML = (
     "<details class='rp'><summary><b>Model kendini nasıl güncelliyor?</b> <span class='note'>(dokun)</span></summary>"
-    "<div class='tc'>Bot her çalıştığında (08:00 ve 14:00) en son biten maçlar dahil son ~14 ayın tüm sonuçlarını "
-    "yeniden çeker ve şunları baştan hesaplar:<br>1. <b>Takım güçleri</b>: son maçlar daha ağır basar (100 günde ağırlık "
-    "yarıya iner, takımın son 10 maçı ekstra önemlidir). Dün 5-1 biten bir maç bugünkü tahminlere zaten girmiştir.<br>"
+    "<div class='tc'>Bot her çalıştığında (08:00, 14:00, 23:30) en son biten maçlar dahil sonuçları yeniden çeker ve "
+    "şunları baştan hesaplar:<br>0. <b>Sadece bu sezon</b>: her lig kendi sezon başlangıcından itibaren değerlendirilir "
+    "(yaz arasından sonraki ilk maç; takvim yılı liglerinde yılın ilk maçı; Avrupa kupalarında 1 Eylül). Lig yeni başladıysa "
+    "ve sezonda 30 maçtan az varsa önceki maçlar da kullanılır. Avrupa maçlarında takımın gücü kendi ligindeki bu sezonki "
+    "gücü × ligin Avrupa'daki gücüdür.<br>1. <b>Takım güçleri</b>: sezon içinde son maçlar daha ağır basar (takımın son "
+    "10 maçı ekstra önemlidir). Dün 5-1 biten bir maç bugünkü tahminlere zaten girmiştir. Form eğrisi, son 4 maçın rakibe "
+    "göre performansını sezon ortalamasıyla kıyaslar (yükselişte / dengeli / düşüşte).<br>"
     "2. <b>Yüzde ayarı</b>: modelin geçmişte fazla/az gol tahmin edip etmediği ölçülüp düzeltilir.<br>"
     "2b. <b>Şut verisi</b>: goller şansa açık olduğu için takım gücü isabetli/isabetsiz şutlardan hesaplanan "
     "'şut kalitesi' ile karıştırılır. Ne kadar karıştırılacağını bot her gün geçmiş 150 günde en iyi tahmini "
@@ -4660,6 +4761,8 @@ def tc_text(t):
         parts.append(f"son 10 maçta maç başı {t['gf']:.1f} attı, {t['ga']:.1f} yedi")
     if t.get("luck") is not None and abs(t["luck"]) >= 3:
         parts.append("şutlarına göre " + ("şanslı gidiyor" if t["luck"] > 0 else "şanssız gidiyor"))
+    if t.get("trend"):
+        parts.append(f"form eğrisi {t['trend']['bars']} {t['trend']['lab']}")
     if t.get("rest") is not None and t["rest"] <= 3:
         parts.append(f"son maçından beri {t['rest']} gün: rotasyon riski")
     return " · ".join(parts)
