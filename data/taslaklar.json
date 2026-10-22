@@ -4046,6 +4046,1987 @@
      }
     }
    ]
+  },
+  {
+   "id": "t1792695989147",
+   "t": "2026-10-22T19:06:29.147Z",
+   "not": "",
+   "legs": [
+    {
+     "m": "401915836",
+     "ad": "Monaco - Freiburg",
+     "lg": "Konferans Ligi",
+     "k": "2026-10-22T19:00:00+00:00",
+     "b": "tiev05",
+     "bl": "Ev İY 0.5 Üst",
+     "o": 1.68,
+     "snap": {
+      "h": "Monaco",
+      "a": "Freiburg",
+      "lg": "Konferans Ligi",
+      "k": "2026-10-22T19:00:00+00:00",
+      "l": [
+       2.0667,
+       1.3524,
+       0.976,
+       0.5063
+      ],
+      "p": {
+       "p1": 0.533,
+       "px": 0.2248,
+       "p2": 0.2422,
+       "o15": 0.8617,
+       "o25": 0.6639,
+       "o35": 0.4458,
+       "o45": 0.2593,
+       "btts": 0.6539,
+       "iy05": 0.7729,
+       "iy15": 0.4362,
+       "iykg": 0.2476,
+       "p21": 0.0259,
+       "p12": 0.0282,
+       "h05": 0.8734,
+       "a05": 0.7414,
+       "h15": 0.6117,
+       "a15": 0.3916,
+       "ih05": 0.6231,
+       "ia05": 0.3973
+      },
+      "rp": {
+       "iy05": {
+        "p": 0.7729,
+        "t": 1,
+        "ok": 4,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %77 (lig ortalaması %66)"
+         ],
+         [
+          0,
+          "Monaco son maçları: 6/8 (%75)"
+         ],
+         [
+          1,
+          "Freiburg son maçları: 7/7 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 39/60 (%65)"
+         ],
+         [
+          1,
+          "Son maçlara göre ilk yarı gol beklentisi 1.5 (lig 1.1)"
+         ],
+         [
+          1,
+          "İki takımın son maçlarında gollerin %49'i ilk yarıda (lig %41)"
+         ]
+        ],
+        "i": []
+       },
+       "iy15": {
+        "p": 0.4362,
+        "t": 1,
+        "ok": 4,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %44 (lig ortalaması %32)"
+         ],
+         [
+          0,
+          "Monaco son maçları: 2/8 (%25)"
+         ],
+         [
+          1,
+          "Freiburg son maçları: 6/7 (%86)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 21/60 (%35)"
+         ],
+         [
+          1,
+          "Son maçlara göre ilk yarı gol beklentisi 1.5 (lig 1.1)"
+         ],
+         [
+          1,
+          "İki takımın son maçlarında gollerin %49'i ilk yarıda (lig %41)"
+         ]
+        ],
+        "i": []
+       },
+       "iykg": {
+        "p": 0.2476,
+        "t": 1,
+        "ok": 4,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %25 (lig ortalaması %15)"
+         ],
+         [
+          0,
+          "Monaco son maçları: 0/8 (%0)"
+         ],
+         [
+          1,
+          "Freiburg son maçları: 4/7 (%57)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 12/60 (%20)"
+         ],
+         [
+          1,
+          "İki takımın son maçlarında gollerin %49'i ilk yarıda (lig %41)"
+         ],
+         [
+          1,
+          "İlk yarıda gol attığı maç: Monaco 5/8, Freiburg 7/7"
+         ]
+        ],
+        "i": []
+       },
+       "o15": {
+        "p": 0.8617,
+        "t": 1,
+        "ok": 3,
+        "n": 5,
+        "c": [
+         [
+          1,
+          "Model: %86 (lig ortalaması %75)"
+         ],
+         [
+          0,
+          "Monaco son maçları: 6/8 (%75)"
+         ],
+         [
+          1,
+          "Freiburg son maçları: 6/7 (%86)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 45/60 (%75)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.0 (lig 2.6)"
+         ]
+        ],
+        "i": []
+       },
+       "o25": {
+        "p": 0.6639,
+        "t": 1,
+        "ok": 4,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %66 (lig ortalaması %54)"
+         ],
+         [
+          0,
+          "Monaco son maçları: 4/8 (%50)"
+         ],
+         [
+          1,
+          "Freiburg son maçları: 6/7 (%86)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 34/60 (%57)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.0 (lig 2.6)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 2.9 (lig 2.5)"
+         ]
+        ],
+        "i": []
+       },
+       "o35": {
+        "p": 0.4458,
+        "t": 1,
+        "ok": 4,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %45 (lig ortalaması %24)"
+         ],
+         [
+          0,
+          "Monaco son maçları: 1/8 (%12)"
+         ],
+         [
+          1,
+          "Freiburg son maçları: 4/7 (%57)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 16/60 (%27)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.0 (lig 2.6)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 2.9 (lig 2.5)"
+         ]
+        ],
+        "i": []
+       },
+       "o45": {
+        "p": 0.2593,
+        "t": 1,
+        "ok": 4,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %26 (lig ortalaması %8)"
+         ],
+         [
+          0,
+          "Monaco son maçları: 0/8 (%0)"
+         ],
+         [
+          1,
+          "Freiburg son maçları: 3/7 (%43)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 4/60 (%7)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.0 (lig 2.6)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 2.9 (lig 2.5)"
+         ]
+        ],
+        "i": []
+       },
+       "btts": {
+        "p": 0.6539,
+        "t": 1,
+        "ok": 4,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %65 (lig ortalaması %50)"
+         ],
+         [
+          1,
+          "Monaco son maçları: 5/8 (%62)"
+         ],
+         [
+          1,
+          "Freiburg son maçları: 5/7 (%71)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 29/60 (%48)"
+         ],
+         [
+          1,
+          "Gol attığı maç: Monaco 7/8, Freiburg 7/7"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen gol: Monaco 1.2, Freiburg 1.7 (takım ort. 1.3)"
+         ]
+        ],
+        "i": []
+       },
+       "u25": {
+        "p": 0.3361,
+        "t": 0,
+        "ok": 0,
+        "n": 6,
+        "c": [
+         [
+          0,
+          "Model: %34 (lig ortalaması %46)"
+         ],
+         [
+          0,
+          "Monaco son maçları: 4/8 (%50)"
+         ],
+         [
+          0,
+          "Freiburg son maçları: 1/7 (%14)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 26/60 (%43)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 3.0 (lig 2.6)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 2.9 (lig 2.5)"
+         ]
+        ],
+        "i": []
+       },
+       "h05": {
+        "p": 0.8734,
+        "t": 0,
+        "ok": 0,
+        "n": 6,
+        "c": [
+         [
+          0,
+          "Model: %87 (lig ortalaması %79)"
+         ],
+         [
+          0,
+          "Monaco son maçları: gol attığı maç 7/8 (%88)"
+         ],
+         [
+          0,
+          "Freiburg son maçları: gol yediği maç 5/7 (%71)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 51/60 (%85)"
+         ],
+         [
+          0,
+          "Son maçlara göre Monaco gol beklentisi 1.3 (Monaco maç başı 1.5 attı, Freiburg 1.1 yedi; lig takım ort. 1.3)"
+         ],
+         [
+          0,
+          "Şutlara göre Monaco beklenen gol 1.2 (takım ort. 1.3)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.7414,
+        "t": 2,
+        "ok": 5,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %74 (lig ortalaması %64)"
+         ],
+         [
+          1,
+          "Monaco son maçları: gol yediği maç 6/8 (%75)"
+         ],
+         [
+          1,
+          "Freiburg son maçları: gol attığı maç 7/7 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 34/60 (%57)"
+         ],
+         [
+          1,
+          "Son maçlara göre Freiburg gol beklentisi 1.7 (Freiburg maç başı 2.6 attı, Monaco 0.9 yedi; lig takım ort. 1.3)"
+         ],
+         [
+          1,
+          "Şutlara göre Freiburg beklenen gol 1.7 (takım ort. 1.3)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.6117,
+        "t": 0,
+        "ok": 3,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %61 (lig ortalaması %47)"
+         ],
+         [
+          1,
+          "Monaco son maçları: 2+ gol attığı maç 5/8 (%62)"
+         ],
+         [
+          0,
+          "Freiburg son maçları: 2+ gol yediği maç 3/7 (%43)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 33/60 (%55)"
+         ],
+         [
+          0,
+          "Son maçlara göre Monaco gol beklentisi 1.3 (Monaco maç başı 1.5 attı, Freiburg 1.1 yedi; lig takım ort. 1.3)"
+         ],
+         [
+          0,
+          "Şutlara göre Monaco beklenen gol 1.2 (takım ort. 1.3)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.3916,
+        "t": 1,
+        "ok": 4,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %39 (lig ortalaması %27)"
+         ],
+         [
+          0,
+          "Monaco son maçları: 2+ gol yediği maç 1/8 (%12)"
+         ],
+         [
+          1,
+          "Freiburg son maçları: 2+ gol attığı maç 5/7 (%71)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 13/60 (%22)"
+         ],
+         [
+          1,
+          "Son maçlara göre Freiburg gol beklentisi 1.7 (Freiburg maç başı 2.6 attı, Monaco 0.9 yedi; lig takım ort. 1.3)"
+         ],
+         [
+          1,
+          "Şutlara göre Freiburg beklenen gol 1.7 (takım ort. 1.3)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.6231,
+        "t": 2,
+        "ok": 5,
+        "n": 5,
+        "c": [
+         [
+          1,
+          "Model: %62 (lig ortalaması %38)"
+         ],
+         [
+          1,
+          "Monaco son maçları: ilk yarıda gol attığı maç 5/8 (%62)"
+         ],
+         [
+          1,
+          "Freiburg son maçları: ilk yarıda gol yediği maç 4/7 (%57)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 28/60 (%47)"
+         ],
+         [
+          1,
+          "Son maçlara göre Monaco ilk yarı gol beklentisi 0.8 (Monaco maç başı 0.9 attı, Freiburg 0.7 yedi; lig takım ort. 0.5)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.3973,
+        "t": 0,
+        "ok": 2,
+        "n": 5,
+        "c": [
+         [
+          0,
+          "Model: %40 (lig ortalaması %42)"
+         ],
+         [
+          0,
+          "Monaco son maçları: ilk yarıda gol yediği maç 1/8 (%12)"
+         ],
+         [
+          1,
+          "Freiburg son maçları: ilk yarıda gol attığı maç 7/7 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 23/60 (%38)"
+         ],
+         [
+          1,
+          "Son maçlara göre Freiburg ilk yarı gol beklentisi 0.7 (Freiburg maç başı 1.3 attı, Monaco 0.1 yedi; lig takım ort. 0.5)"
+         ]
+        ],
+        "i": []
+       },
+       "ms1": {
+        "p": 0.533,
+        "t": 0,
+        "ok": 1,
+        "n": 6,
+        "c": [
+         [
+          0,
+          "Model: %53 (lig ortalaması %53)"
+         ],
+         [
+          0,
+          "Monaco son maçları: 8 maçta 5 kazandı (%62)"
+         ],
+         [
+          0,
+          "Freiburg son maçları: 7 maçta 1 kaybetti (%14)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 39/60 (%65)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Monaco 2.1, Freiburg 2.3"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Monaco +0.1, Freiburg +1.1"
+         ]
+        ],
+        "i": []
+       },
+       "ms2": {
+        "p": 0.2422,
+        "t": 0,
+        "ok": 2,
+        "n": 6,
+        "c": [
+         [
+          0,
+          "Model: %24 (lig ortalaması %29)"
+         ],
+         [
+          0,
+          "Monaco son maçları: 8 maçta 1 kaybetti (%12)"
+         ],
+         [
+          1,
+          "Freiburg son maçları: 7 maçta 5 kazandı (%71)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 13/60 (%22)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Monaco 2.1, Freiburg 2.3"
+         ],
+         [
+          1,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Monaco +0.1, Freiburg +1.1"
+         ]
+        ],
+        "i": []
+       }
+      },
+      "low": true,
+      "tsc": {
+       "h": {
+        "n": 8,
+        "s": 7,
+        "c": 6,
+        "s2": 5,
+        "c2": 1,
+        "n1": 8,
+        "s1": 5,
+        "c1": 1,
+        "s12": 2,
+        "c12": 0
+       },
+       "a": {
+        "n": 7,
+        "s": 7,
+        "c": 5,
+        "s2": 5,
+        "c2": 3,
+        "n1": 7,
+        "s1": 7,
+        "c1": 4,
+        "s12": 2,
+        "c12": 1
+       }
+      },
+      "tc": {
+       "h": "9. sıra (sezon başı) · son 5: MGBGB · son 10 maçta maç başı 1.5 attı, 0.9 yedi · form eğrisi ██▁▆▇▅▅ dengeli",
+       "a": "8. sıra (sezon başı) · son 5: MGGBG · son 10 maçta maç başı 2.6 attı, 1.1 yedi · şutlarına göre şanslı gidiyor · form eğrisi ▅▄█▃▁▁ dengeli"
+      }
+     }
+    },
+    {
+     "m": "401915553",
+     "ad": "Besiktas - C Palace",
+     "lg": "Avrupa Ligi",
+     "k": "2026-10-22T19:00:00+00:00",
+     "b": "iyo15",
+     "bl": "İY 1.5 Üst",
+     "o": 1.96,
+     "snap": {
+      "h": "Besiktas",
+      "a": "C Palace",
+      "lg": "Avrupa Ligi",
+      "k": "2026-10-22T19:00:00+00:00",
+      "l": [
+       2.3517,
+       1.6006,
+       0.9447,
+       0.6795
+      ],
+      "p": {
+       "p1": 0.5429,
+       "px": 0.2002,
+       "p2": 0.2569,
+       "o15": 0.907,
+       "o25": 0.7548,
+       "o35": 0.5571,
+       "o45": 0.3617,
+       "btts": 0.7244,
+       "iy05": 0.8029,
+       "iy15": 0.4828,
+       "iykg": 0.3014,
+       "p21": 0.0478,
+       "p12": 0.0236,
+       "h05": 0.9048,
+       "a05": 0.7982,
+       "h15": 0.6808,
+       "a15": 0.4753,
+       "ih05": 0.6112,
+       "ia05": 0.4931
+      },
+      "rp": {
+       "iy05": {
+        "p": 0.8029,
+        "t": 0,
+        "ok": 2,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %80 (lig ortalaması %72)"
+         ],
+         [
+          0,
+          "C Palace son maçları: 8/10 (%80)"
+         ],
+         [
+          0,
+          "C Palace dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 26/36 (%72)"
+         ],
+         [
+          1,
+          "Son maçlara göre ilk yarı gol beklentisi 1.4 (lig 1.3)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %46'i ilk yarıda (lig %45)"
+         ]
+        ],
+        "i": []
+       },
+       "iy15": {
+        "p": 0.4828,
+        "t": 1,
+        "ok": 4,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %48 (lig ortalaması %39)"
+         ],
+         [
+          1,
+          "C Palace son maçları: 6/10 (%60)"
+         ],
+         [
+          1,
+          "C Palace dışarıdaki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 14/36 (%39)"
+         ],
+         [
+          1,
+          "Son maçlara göre ilk yarı gol beklentisi 1.4 (lig 1.3)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %46'i ilk yarıda (lig %45)"
+         ]
+        ],
+        "i": []
+       },
+       "iykg": {
+        "p": 0.3014,
+        "t": 0,
+        "ok": 2,
+        "n": 5,
+        "c": [
+         [
+          1,
+          "Model: %30 (lig ortalaması %11)"
+         ],
+         [
+          1,
+          "C Palace son maçları: 3/10 (%30)"
+         ],
+         [
+          0,
+          "C Palace dışarıdaki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 4/36 (%11)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %46'i ilk yarıda (lig %45)"
+         ]
+        ],
+        "i": []
+       },
+       "o15": {
+        "p": 0.907,
+        "t": 0,
+        "ok": 2,
+        "n": 5,
+        "c": [
+         [
+          1,
+          "Model: %91 (lig ortalaması %81)"
+         ],
+         [
+          0,
+          "C Palace son maçları: 8/10 (%80)"
+         ],
+         [
+          0,
+          "C Palace dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 29/36 (%81)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.3 (lig 2.9)"
+         ]
+        ],
+        "i": []
+       },
+       "o25": {
+        "p": 0.7548,
+        "t": 0,
+        "ok": 2,
+        "n": 5,
+        "c": [
+         [
+          1,
+          "Model: %75 (lig ortalaması %64)"
+         ],
+         [
+          0,
+          "C Palace son maçları: 7/10 (%70)"
+         ],
+         [
+          0,
+          "C Palace dışarıdaki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 23/36 (%64)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.3 (lig 2.9)"
+         ]
+        ],
+        "i": []
+       },
+       "o35": {
+        "p": 0.5571,
+        "t": 2,
+        "ok": 4,
+        "n": 5,
+        "c": [
+         [
+          1,
+          "Model: %56 (lig ortalaması %31)"
+         ],
+         [
+          1,
+          "C Palace son maçları: 7/10 (%70)"
+         ],
+         [
+          1,
+          "C Palace dışarıdaki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 11/36 (%31)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.3 (lig 2.9)"
+         ]
+        ],
+        "i": []
+       },
+       "o45": {
+        "p": 0.3617,
+        "t": 2,
+        "ok": 4,
+        "n": 5,
+        "c": [
+         [
+          1,
+          "Model: %36 (lig ortalaması %17)"
+         ],
+         [
+          1,
+          "C Palace son maçları: 5/10 (%50)"
+         ],
+         [
+          1,
+          "C Palace dışarıdaki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 6/36 (%17)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.3 (lig 2.9)"
+         ]
+        ],
+        "i": []
+       },
+       "btts": {
+        "p": 0.7244,
+        "t": 0,
+        "ok": 1,
+        "n": 4,
+        "c": [
+         [
+          1,
+          "Model: %72 (lig ortalaması %53)"
+         ],
+         [
+          0,
+          "C Palace son maçları: 5/10 (%50)"
+         ],
+         [
+          0,
+          "C Palace dışarıdaki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 19/36 (%53)"
+         ]
+        ],
+        "i": []
+       },
+       "u25": {
+        "p": 0.2452,
+        "t": 0,
+        "ok": 0,
+        "n": 5,
+        "c": [
+         [
+          0,
+          "Model: %25 (lig ortalaması %36)"
+         ],
+         [
+          0,
+          "C Palace son maçları: 3/10 (%30)"
+         ],
+         [
+          0,
+          "C Palace dışarıdaki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 13/36 (%36)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 4.3 (lig 2.9)"
+         ]
+        ],
+        "i": []
+       },
+       "h05": {
+        "p": 0.9048,
+        "t": 0,
+        "ok": 1,
+        "n": 4,
+        "c": [
+         [
+          1,
+          "Model: %90 (lig ortalaması %75)"
+         ],
+         [
+          0,
+          "C Palace son maçları: gol yediği maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "C Palace dışarıdaki son maçları: gol yediği maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 27/36 (%75)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.7982,
+        "t": 0,
+        "ok": 0,
+        "n": 4,
+        "c": [
+         [
+          0,
+          "Model: %80 (lig ortalaması %72)"
+         ],
+         [
+          0,
+          "C Palace son maçları: gol attığı maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "C Palace dışarıdaki son maçları: gol attığı maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 26/36 (%72)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.6808,
+        "t": 0,
+        "ok": 3,
+        "n": 4,
+        "c": [
+         [
+          1,
+          "Model: %68 (lig ortalaması %39)"
+         ],
+         [
+          1,
+          "C Palace son maçları: 2+ gol yediği maç 6/10 (%60)"
+         ],
+         [
+          1,
+          "C Palace dışarıdaki son maçları: 2+ gol yediği maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 14/36 (%39)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.4753,
+        "t": 0,
+        "ok": 2,
+        "n": 4,
+        "c": [
+         [
+          1,
+          "Model: %48 (lig ortalaması %39)"
+         ],
+         [
+          1,
+          "C Palace son maçları: 2+ gol attığı maç 5/10 (%50)"
+         ],
+         [
+          0,
+          "C Palace dışarıdaki son maçları: 2+ gol attığı maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 14/36 (%39)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.6112,
+        "t": 0,
+        "ok": 3,
+        "n": 4,
+        "c": [
+         [
+          1,
+          "Model: %61 (lig ortalaması %36)"
+         ],
+         [
+          1,
+          "C Palace son maçları: ilk yarıda gol yediği maç 7/10 (%70)"
+         ],
+         [
+          1,
+          "C Palace dışarıdaki son maçları: ilk yarıda gol yediği maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 13/36 (%36)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.4931,
+        "t": 0,
+        "ok": 0,
+        "n": 4,
+        "c": [
+         [
+          0,
+          "Model: %49 (lig ortalaması %47)"
+         ],
+         [
+          0,
+          "C Palace son maçları: ilk yarıda gol attığı maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "C Palace dışarıdaki son maçları: ilk yarıda gol attığı maç 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 17/36 (%47)"
+         ]
+        ],
+        "i": []
+       },
+       "ms1": {
+        "p": 0.5429,
+        "t": 0,
+        "ok": 2,
+        "n": 4,
+        "c": [
+         [
+          1,
+          "Model: %54 (lig ortalaması %44)"
+         ],
+         [
+          0,
+          "C Palace son maçları: 10 maçta 5 kaybetti (%50)"
+         ],
+         [
+          1,
+          "C Palace dışarıdaki son maçları: 5 maçta 3 kaybetti (%60)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 16/36 (%44)"
+         ]
+        ],
+        "i": []
+       },
+       "ms2": {
+        "p": 0.2569,
+        "t": 0,
+        "ok": 0,
+        "n": 4,
+        "c": [
+         [
+          0,
+          "Model: %26 (lig ortalaması %42)"
+         ],
+         [
+          0,
+          "C Palace son maçları: 10 maçta 4 kazandı (%40)"
+         ],
+         [
+          0,
+          "C Palace dışarıdaki son maçları: 5 maçta 1 kazandı (%20)"
+         ],
+         [
+          0,
+          "Benzer 36 maç: 15/36 (%42)"
+         ]
+        ],
+        "i": []
+       }
+      },
+      "low": true,
+      "tsc": {
+       "h": {
+        "n": 2,
+        "s": 2,
+        "c": 2,
+        "s2": 2,
+        "c2": 1,
+        "n1": 2,
+        "s1": 1,
+        "c1": 1,
+        "s12": 0,
+        "c12": 0
+       },
+       "a": {
+        "n": 10,
+        "s": 7,
+        "c": 7,
+        "s2": 5,
+        "c2": 6,
+        "n1": 10,
+        "s1": 4,
+        "c1": 7,
+        "s12": 2,
+        "c12": 4
+       }
+      },
+      "tc": {
+       "h": "4. sıra (sezon başı) · son 5: GG · son 10 maçta maç başı 3.5 attı, 1.5 yedi",
+       "a": "15. sıra (sezon başı) · son 5: MMGBG · son 10 maçta maç başı 1.6 attı, 2.0 yedi · form eğrisi ▂▁█▃▇█▁ dengeli"
+      }
+     }
+    },
+    {
+     "m": "401915835",
+     "ad": "Midtjylland - Sint-Truidense",
+     "lg": "Konferans Ligi",
+     "k": "2026-10-22T19:00:00+00:00",
+     "b": "tiev05",
+     "bl": "Ev İY 0.5 Üst",
+     "o": 1.55,
+     "snap": {
+      "h": "Midtjylland",
+      "a": "Sint-Truidense",
+      "lg": "Konferans Ligi",
+      "k": "2026-10-22T19:00:00+00:00",
+      "l": [
+       2.3744,
+       0.9919,
+       1.0387,
+       0.443
+      ],
+      "p": {
+       "p1": 0.6747,
+       "px": 0.1896,
+       "p2": 0.1356,
+       "o15": 0.855,
+       "o25": 0.6536,
+       "o35": 0.4342,
+       "o45": 0.2494,
+       "btts": 0.5763,
+       "iy05": 0.7727,
+       "iy15": 0.4359,
+       "iykg": 0.2312,
+       "p21": 0.037,
+       "p12": 0.0107,
+       "h05": 0.9069,
+       "a05": 0.6291,
+       "h15": 0.6859,
+       "a15": 0.2613,
+       "ih05": 0.646,
+       "ia05": 0.3579
+      },
+      "rp": {
+       "iy05": {
+        "p": 0.7727,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %77 (lig ortalaması %66)"
+         ],
+         [
+          0,
+          "Midtjylland son maçları: 7/10 (%70)"
+         ],
+         [
+          1,
+          "Sint-Truidense son maçları: 8/9 (%89)"
+         ],
+         [
+          1,
+          "Midtjylland evdeki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Sint-Truidense dışarıdaki son maçları: 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 40/60 (%67)"
+         ],
+         [
+          0,
+          "Son maçlara göre ilk yarı gol beklentisi 1.2 (lig 1.1)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %37'i ilk yarıda (lig %41)"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk 30 dakikada gol olan maç: Midtjylland 8/12, Sint-Truidense 6/9 (lig %49)"
+         ]
+        ]
+       },
+       "iy15": {
+        "p": 0.4359,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %44 (lig ortalaması %32)"
+         ],
+         [
+          0,
+          "Midtjylland son maçları: 2/10 (%20)"
+         ],
+         [
+          0,
+          "Sint-Truidense son maçları: 2/9 (%22)"
+         ],
+         [
+          0,
+          "Midtjylland evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          1,
+          "Sint-Truidense dışarıdaki son maçları: 2/4 (%50)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 24/60 (%40)"
+         ],
+         [
+          0,
+          "Son maçlara göre ilk yarı gol beklentisi 1.2 (lig 1.1)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %37'i ilk yarıda (lig %41)"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk 30 dakikada gol olan maç: Midtjylland 8/12, Sint-Truidense 6/9 (lig %49)"
+         ]
+        ]
+       },
+       "iykg": {
+        "p": 0.2312,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %23 (lig ortalaması %15)"
+         ],
+         [
+          0,
+          "Midtjylland son maçları: 1/10 (%10)"
+         ],
+         [
+          0,
+          "Sint-Truidense son maçları: 2/9 (%22)"
+         ],
+         [
+          0,
+          "Midtjylland evdeki son maçları: 0/5 (%0)"
+         ],
+         [
+          1,
+          "Sint-Truidense dışarıdaki son maçları: 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 11/60 (%18)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %37'i ilk yarıda (lig %41)"
+         ],
+         [
+          1,
+          "İlk yarıda gol attığı maç: Midtjylland 6/10, Sint-Truidense 5/9"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk 30 dakikada gol olan maç: Midtjylland 8/12, Sint-Truidense 6/9 (lig %49)"
+         ]
+        ]
+       },
+       "o15": {
+        "p": 0.855,
+        "t": 1,
+        "ok": 5,
+        "n": 7,
+        "c": [
+         [
+          1,
+          "Model: %85 (lig ortalaması %75)"
+         ],
+         [
+          1,
+          "Midtjylland son maçları: 9/10 (%90)"
+         ],
+         [
+          1,
+          "Sint-Truidense son maçları: 9/9 (%100)"
+         ],
+         [
+          0,
+          "Midtjylland evdeki son maçları: 4/5 (%80)"
+         ],
+         [
+          1,
+          "Sint-Truidense dışarıdaki son maçları: 4/4 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 45/60 (%75)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.1 (lig 2.6)"
+         ]
+        ],
+        "i": []
+       },
+       "o25": {
+        "p": 0.6536,
+        "t": 1,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %65 (lig ortalaması %54)"
+         ],
+         [
+          0,
+          "Midtjylland son maçları: 4/10 (%40)"
+         ],
+         [
+          0,
+          "Sint-Truidense son maçları: 5/9 (%56)"
+         ],
+         [
+          1,
+          "Midtjylland evdeki son maçları: 4/5 (%80)"
+         ],
+         [
+          1,
+          "Sint-Truidense dışarıdaki son maçları: 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 34/60 (%57)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.1 (lig 2.6)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.3 (lig 2.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Midtjylland 6/12, Sint-Truidense 5/9 (lig %57)"
+         ]
+        ]
+       },
+       "o35": {
+        "p": 0.4342,
+        "t": 1,
+        "ok": 6,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %43 (lig ortalaması %24)"
+         ],
+         [
+          0,
+          "Midtjylland son maçları: 2/10 (%20)"
+         ],
+         [
+          1,
+          "Sint-Truidense son maçları: 4/9 (%44)"
+         ],
+         [
+          1,
+          "Midtjylland evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          1,
+          "Sint-Truidense dışarıdaki son maçları: 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 16/60 (%27)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.1 (lig 2.6)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.3 (lig 2.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Midtjylland 6/12, Sint-Truidense 5/9 (lig %57)"
+         ]
+        ]
+       },
+       "o45": {
+        "p": 0.2494,
+        "t": 1,
+        "ok": 6,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %25 (lig ortalaması %8)"
+         ],
+         [
+          0,
+          "Midtjylland son maçları: 1/10 (%10)"
+         ],
+         [
+          1,
+          "Sint-Truidense son maçları: 3/9 (%33)"
+         ],
+         [
+          1,
+          "Midtjylland evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          1,
+          "Sint-Truidense dışarıdaki son maçları: 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 4/60 (%7)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.1 (lig 2.6)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.3 (lig 2.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Midtjylland 6/12, Sint-Truidense 5/9 (lig %57)"
+         ]
+        ]
+       },
+       "btts": {
+        "p": 0.5763,
+        "t": 1,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %58 (lig ortalaması %50)"
+         ],
+         [
+          1,
+          "Midtjylland son maçları: 8/10 (%80)"
+         ],
+         [
+          0,
+          "Sint-Truidense son maçları: 4/9 (%44)"
+         ],
+         [
+          1,
+          "Midtjylland evdeki son maçları: 4/5 (%80)"
+         ],
+         [
+          1,
+          "Sint-Truidense dışarıdaki son maçları: 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 26/60 (%43)"
+         ],
+         [
+          0,
+          "Gol attığı maç: Midtjylland 10/10, Sint-Truidense 6/9"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen gol: Midtjylland 1.8, Sint-Truidense 1.5 (takım ort. 1.3)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Geriye düşünce gol attığı maç: Midtjylland 3/3, Sint-Truidense 2/5 (lig %53)"
+         ]
+        ]
+       },
+       "u25": {
+        "p": 0.3464,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %35 (lig ortalaması %46)"
+         ],
+         [
+          1,
+          "Midtjylland son maçları: 6/10 (%60)"
+         ],
+         [
+          0,
+          "Sint-Truidense son maçları: 4/9 (%44)"
+         ],
+         [
+          0,
+          "Midtjylland evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Sint-Truidense dışarıdaki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 26/60 (%43)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 3.1 (lig 2.6)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.3 (lig 2.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Midtjylland 6/12, Sint-Truidense 5/9 (lig %57)"
+         ]
+        ]
+       },
+       "h05": {
+        "p": 0.9069,
+        "t": 1,
+        "ok": 6,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %91 (lig ortalaması %79)"
+         ],
+         [
+          1,
+          "Midtjylland son maçları: gol attığı maç 10/10 (%100)"
+         ],
+         [
+          0,
+          "Sint-Truidense son maçları: gol yediği maç 7/9 (%78)"
+         ],
+         [
+          1,
+          "Midtjylland evdeki son maçları: gol attığı maç 5/5 (%100)"
+         ],
+         [
+          1,
+          "Sint-Truidense dışarıdaki son maçları: gol yediği maç 4/4 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 49/60 (%82)"
+         ],
+         [
+          1,
+          "Son maçlara göre Midtjylland gol beklentisi 1.7 (Midtjylland maç başı 1.7 attı, Sint-Truidense 1.8 yedi; lig takım ort. 1.3)"
+         ],
+         [
+          1,
+          "Şutlara göre Midtjylland beklenen gol 1.8 (takım ort. 1.3)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.6291,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %63 (lig ortalaması %64)"
+         ],
+         [
+          1,
+          "Midtjylland son maçları: gol yediği maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "Sint-Truidense son maçları: gol attığı maç 6/9 (%67)"
+         ],
+         [
+          1,
+          "Midtjylland evdeki son maçları: gol yediği maç 4/5 (%80)"
+         ],
+         [
+          1,
+          "Sint-Truidense dışarıdaki son maçları: gol attığı maç 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 33/60 (%55)"
+         ],
+         [
+          0,
+          "Son maçlara göre Sint-Truidense gol beklentisi 1.4 (Sint-Truidense maç başı 1.9 attı, Midtjylland 0.9 yedi; lig takım ort. 1.3)"
+         ],
+         [
+          1,
+          "Şutlara göre Sint-Truidense beklenen gol 1.5 (takım ort. 1.3)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.6859,
+        "t": 1,
+        "ok": 6,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %69 (lig ortalaması %47)"
+         ],
+         [
+          0,
+          "Midtjylland son maçları: 2+ gol attığı maç 5/10 (%50)"
+         ],
+         [
+          0,
+          "Sint-Truidense son maçları: 2+ gol yediği maç 5/9 (%56)"
+         ],
+         [
+          1,
+          "Midtjylland evdeki son maçları: 2+ gol attığı maç 4/5 (%80)"
+         ],
+         [
+          1,
+          "Sint-Truidense dışarıdaki son maçları: 2+ gol yediği maç 3/4 (%75)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 33/60 (%55)"
+         ],
+         [
+          1,
+          "Son maçlara göre Midtjylland gol beklentisi 1.7 (Midtjylland maç başı 1.7 attı, Sint-Truidense 1.8 yedi; lig takım ort. 1.3)"
+         ],
+         [
+          1,
+          "Şutlara göre Midtjylland beklenen gol 1.8 (takım ort. 1.3)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.2613,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %26 (lig ortalaması %27)"
+         ],
+         [
+          0,
+          "Midtjylland son maçları: 2+ gol yediği maç 1/10 (%10)"
+         ],
+         [
+          1,
+          "Sint-Truidense son maçları: 2+ gol attığı maç 5/9 (%56)"
+         ],
+         [
+          0,
+          "Midtjylland evdeki son maçları: 2+ gol yediği maç 1/5 (%20)"
+         ],
+         [
+          1,
+          "Sint-Truidense dışarıdaki son maçları: 2+ gol attığı maç 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 14/60 (%23)"
+         ],
+         [
+          0,
+          "Son maçlara göre Sint-Truidense gol beklentisi 1.4 (Sint-Truidense maç başı 1.9 attı, Midtjylland 0.9 yedi; lig takım ort. 1.3)"
+         ],
+         [
+          0,
+          "Şutlara göre Sint-Truidense beklenen gol 1.5 (takım ort. 1.3)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.646,
+        "t": 2,
+        "ok": 7,
+        "n": 7,
+        "c": [
+         [
+          1,
+          "Model: %65 (lig ortalaması %38)"
+         ],
+         [
+          1,
+          "Midtjylland son maçları: ilk yarıda gol attığı maç 6/10 (%60)"
+         ],
+         [
+          1,
+          "Sint-Truidense son maçları: ilk yarıda gol yediği maç 5/9 (%56)"
+         ],
+         [
+          1,
+          "Midtjylland evdeki son maçları: ilk yarıda gol attığı maç 4/5 (%80)"
+         ],
+         [
+          1,
+          "Sint-Truidense dışarıdaki son maçları: ilk yarıda gol yediği maç 2/4 (%50)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 30/60 (%50)"
+         ],
+         [
+          1,
+          "Son maçlara göre Midtjylland ilk yarı gol beklentisi 0.7 (Midtjylland maç başı 0.7 attı, Sint-Truidense 0.8 yedi; lig takım ort. 0.5)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.3579,
+        "t": 0,
+        "ok": 2,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %36 (lig ortalaması %42)"
+         ],
+         [
+          0,
+          "Midtjylland son maçları: ilk yarıda gol yediği maç 2/10 (%20)"
+         ],
+         [
+          1,
+          "Sint-Truidense son maçları: ilk yarıda gol attığı maç 5/9 (%56)"
+         ],
+         [
+          0,
+          "Midtjylland evdeki son maçları: ilk yarıda gol yediği maç 0/5 (%0)"
+         ],
+         [
+          1,
+          "Sint-Truidense dışarıdaki son maçları: ilk yarıda gol attığı maç 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 21/60 (%35)"
+         ],
+         [
+          0,
+          "Son maçlara göre Sint-Truidense ilk yarı gol beklentisi 0.4 (Sint-Truidense maç başı 0.7 attı, Midtjylland 0.2 yedi; lig takım ort. 0.5)"
+         ]
+        ],
+        "i": []
+       },
+       "ms1": {
+        "p": 0.6747,
+        "t": 1,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %67 (lig ortalaması %53)"
+         ],
+         [
+          0,
+          "Midtjylland son maçları: 10 maçta 5 kazandı (%50)"
+         ],
+         [
+          0,
+          "Sint-Truidense son maçları: 9 maçta 4 kaybetti (%44)"
+         ],
+         [
+          1,
+          "Midtjylland evdeki son maçları: 5 maçta 4 kazandı (%80)"
+         ],
+         [
+          0,
+          "Sint-Truidense dışarıdaki son maçları: 4 maçta 2 kaybetti (%50)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 38/60 (%63)"
+         ],
+         [
+          1,
+          "Son 10 maç puan ortalaması: Midtjylland 2.0, Sint-Truidense 1.2"
+         ],
+         [
+          1,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Midtjylland +0.5, Sint-Truidense -0.0"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "Midtjylland öne geçince kazandı 7/9; Sint-Truidense geriye düşünce puan aldı 1/5 (lig %75 / %25)"
+         ]
+        ]
+       },
+       "ms2": {
+        "p": 0.1356,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %14 (lig ortalaması %29)"
+         ],
+         [
+          0,
+          "Midtjylland son maçları: 10 maçta 0 kaybetti (%0)"
+         ],
+         [
+          0,
+          "Sint-Truidense son maçları: 9 maçta 3 kazandı (%33)"
+         ],
+         [
+          0,
+          "Midtjylland evdeki son maçları: 5 maçta 0 kaybetti (%0)"
+         ],
+         [
+          0,
+          "Sint-Truidense dışarıdaki son maçları: 4 maçta 1 kazandı (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 13/60 (%22)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Midtjylland 2.0, Sint-Truidense 1.2"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Midtjylland +0.5, Sint-Truidense -0.0"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Sint-Truidense öne geçince kazandı 3/4; Midtjylland geriye düşünce puan aldı 3/3 (lig %75 / %25)"
+         ]
+        ]
+       }
+      },
+      "low": true,
+      "tsc": {
+       "h": {
+        "n": 10,
+        "s": 10,
+        "c": 8,
+        "s2": 5,
+        "c2": 1,
+        "n1": 10,
+        "s1": 6,
+        "c1": 2,
+        "s12": 1,
+        "c12": 0
+       },
+       "a": {
+        "n": 9,
+        "s": 6,
+        "c": 7,
+        "s2": 5,
+        "c2": 5,
+        "n1": 9,
+        "s1": 5,
+        "c1": 5,
+        "s12": 1,
+        "c12": 1
+       }
+      },
+      "tc": {
+       "h": "18. sıra (sezon başı) · son 5: GBGBG · son 10 maçta maç başı 1.7 attı, 0.9 yedi · form eğrisi ▅▁█▃▄▁▆▆ dengeli · son maçından beri 3 gün: rotasyon riski",
+       "a": "6. sıra (sezon başı) · son 5: GMMMG · son 10 maçta maç başı 1.9 attı, 1.8 yedi · form eğrisi ▅▅▇▂█▁▁▆ dengeli"
+      }
+     }
+    }
+   ]
   }
  ]
 }
