@@ -594,6 +594,50 @@
      "mp": 0.7277
     }
    ]
+  },
+  {
+   "id": "k1792696030474",
+   "t": "2026-10-22T19:07:10.474Z",
+   "tutar": 500,
+   "kaynak": "analiz sayfası",
+   "legs": [
+    {
+     "m": "401915836",
+     "ad": "Monaco - Freiburg",
+     "lg": "Konferans Ligi",
+     "k": "2026-10-22T19:00:00+00:00",
+     "b": "tiev05",
+     "bl": "Ev İY 0.5 Üst",
+     "o": 1.68,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.6231
+    },
+    {
+     "m": "401915553",
+     "ad": "Besiktas - C Palace",
+     "lg": "Avrupa Ligi",
+     "k": "2026-10-22T19:00:00+00:00",
+     "b": "iyo15",
+     "bl": "İY 1.5 Üst",
+     "o": 1.96,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.4828
+    },
+    {
+     "m": "401915835",
+     "ad": "Midtjylland - Sint-Truidense",
+     "lg": "Konferans Ligi",
+     "k": "2026-10-22T19:00:00+00:00",
+     "b": "tiev05",
+     "bl": "Ev İY 0.5 Üst",
+     "o": 1.55,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.646
+    }
+   ]
   }
  ]
 }
