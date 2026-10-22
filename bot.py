@@ -564,12 +564,119 @@ def build_model(matches, ref):
     model = fit_strength(matches, tw)
     model["rho"] = fit_rho(matches, tw, model)
     model["half"] = fit_half(matches, tw)
+    if matches[-1].get("cup") and CUP_DOM:
+        try:
+            model["cupx"] = cup_layer(ref)
+        except Exception as e:  # noqa
+            print("kupa lig gücü hesaplanamadı:", e, flush=True)
     return model
+
+
+# ------------------------------------------------------------ Avrupa kupaları: lig zorluğu
+# Kupa maçında takımın gücü = kendi ligindeki hücum/savunma gücü × ligin Avrupa'daki gücü.
+# Lig güçleri, kupalardaki ligler arası maçların sonuçlarından tahmin edilir (gerçek veride
+# 298 Avrupa maçında sadece kupa maçlarına dayanan eski yönteme göre belirgin daha iyi tahmin etti).
+# Kendi ligi takip edilmeyen takımlar ("diğer") için kupa maçlarından hesaplanan güç kullanılır.
+CUP_DOM = {}           # yerel lig -> biten maçlar (tarihe göre sıralı)
+CUP_ALL = []           # tüm kupa maçları (biten, sıralı)
+CUP_PS = 0.35          # lig gücü için önsel yayılım (log ölçekte)
+CUP_MIN_GAMES = 8      # yerel lig gücünün kullanılması için en az maç
+_CUP_CACHE = {}
+
+
+def _week(ref):
+    d = (ref - dt.timedelta(days=ref.weekday())).date()
+    return dt.datetime(d.year, d.month, d.day, tzinfo=UTC)
+
+
+def dom_model(slug, r):
+    key = ("m", slug, r)
+    if key not in _CUP_CACHE:
+        fin = CUP_DOM[slug]
+        i = bisect.bisect_left([m["date"] for m in fin], r)
+        _CUP_CACHE[key] = build_model(fin[:i], r)
+    return _CUP_CACHE[key]
+
+
+def team_leagues(r):
+    key = ("tl", r)
+    if key not in _CUP_CACHE:
+        c = defaultdict(lambda: defaultdict(int))
+        for sl, fin in CUP_DOM.items():
+            for m in fin:
+                if r - dt.timedelta(days=365) <= m["date"] < r:
+                    c[m["hid"]][sl] += 1
+                    c[m["aid"]][sl] += 1
+        _CUP_CACHE[key] = {t: max(cc, key=cc.get) for t, cc in c.items()}
+    return _CUP_CACHE[key]
+
+
+def fit_league_strength(rows):
+    """rows: (ağırlık, ev gol, dep gol, ev hücum, ev savunma, dep hücum, dep savunma, ev ligi, dep ligi)."""
+    S = defaultdict(float)
+    mh = ma = 1.3
+    for _ in range(40):
+        eh = sum(w * Ah * Da * math.exp(S[Lh] - S[La]) for w, hg, ag, Ah, Dh, Aa, Da, Lh, La in rows)
+        ea = sum(w * Aa * Dh * math.exp(S[La] - S[Lh]) for w, hg, ag, Ah, Dh, Aa, Da, Lh, La in rows)
+        mh = sum(r[0] * r[1] for r in rows) / max(eh, 1e-9)
+        ma = sum(r[0] * r[2] for r in rows) / max(ea, 1e-9)
+        g, H = defaultdict(float), defaultdict(float)
+        for w, hg, ag, Ah, Dh, Aa, Da, Lh, La in rows:
+            if Lh == La:
+                continue
+            lh = mh * Ah * Da * math.exp(S[Lh] - S[La])
+            la = ma * Aa * Dh * math.exp(S[La] - S[Lh])
+            d = (hg - lh) - (ag - la)
+            g[Lh] += w * d
+            g[La] -= w * d
+            H[Lh] += w * (lh + la)
+            H[La] += w * (lh + la)
+        for L in g:
+            if L != "diğer":
+                S[L] += 0.7 * (g[L] - S[L] / CUP_PS ** 2) / (H[L] + 1 / CUP_PS ** 2)
+    return mh, ma, dict(S)
+
+
+def cup_layer(ref):
+    r = _week(ref)
+    key = ("cx", r)
+    if key in _CUP_CACHE:
+        return _CUP_CACHE[key]
+    past = [m for m in CUP_ALL if r - dt.timedelta(days=400) <= m["date"] < r]
+    if len(past) < 40:
+        return None
+    tw = time_weights(past, r)
+    allm = fit_strength(past, tw)
+    tl = team_leagues(r)
+
+    def rate(t):
+        L = tl.get(t)
+        dm = dom_model(L, r) if L else None
+        if dm and dm["games"].get(t, 0) >= CUP_MIN_GAMES and t in dm["att"]:
+            return dm["att"][t], dm["dfn"][t], L
+        return allm["att"].get(t, NEW_ATT), allm["dfn"].get(t, NEW_DEF), "diğer"
+    rows = []
+    for w, m in zip(tw, past):
+        Ah, Dh, Lh = rate(m["hid"])
+        Aa, Da, La = rate(m["aid"])
+        rows.append((w, m["hg"], m["ag"], Ah, Dh, Aa, Da, Lh, La))
+    mh, ma, S = fit_league_strength(rows)
+    out = {"mh": mh, "ma": ma, "S": S, "rate": rate}
+    _CUP_CACHE[key] = out
+    return out
 
 
 def lambdas(model, h, a):
     if not model:
         return None
+    cx = model.get("cupx")
+    if cx:
+        Ah, Dh, Lh = cx["rate"](h)
+        Aa, Da, La = cx["rate"](a)
+        S = cx["S"]
+        lam_h = cx["mh"] * Ah * Da * math.exp(S.get(Lh, 0) - S.get(La, 0))
+        lam_a = cx["ma"] * Aa * Dh * math.exp(S.get(La, 0) - S.get(Lh, 0))
+        return min(max(lam_h, 0.15), 5.0), min(max(lam_a, 0.15), 5.0)
     att, dfn = model["att"], model["dfn"]
     b, ha = model["base"], model["ha"]
     lam_h = b * ha * att.get(h, NEW_ATT) * dfn.get(a, NEW_DEF)
@@ -700,6 +807,83 @@ def analyze(lam_h, lam_a, rho=0.0, half=None, joint=True):
     return r
 
 
+# ------------------------------------------------------------ oran arşivi ve orana göre benzer maçlar
+# ESPN maç bitince oranı siler; bu yüzden maç öncesi oranlar her gün arşive yazılır. Arşivde yeterli
+# sonuçlanmış maç birikince "benzer maçlar" oran profili (MS 1-X-2 ve 2.5 Alt/Üst) en yakın maçlardan seçilir.
+ODDS_FILE = "data/oran_arsiv.json"
+ODDS_MIN = 400          # orana göre benzer maç için arşivde gereken en az sonuçlanmış maç
+ODDS_KEEP_DAYS = 400
+ODDS_ARCH = {}
+
+
+def load_odds():
+    global ODDS_ARCH
+    try:
+        with open(ODDS_FILE, encoding="utf-8") as f:
+            ODDS_ARCH = json.load(f)
+    except Exception:  # noqa
+        ODDS_ARCH = {}
+    return ODDS_ARCH
+
+
+def odds_feat(o):
+    """Oranlardan piyasa ihtimalleri: (ev, deplasman, 2.5 üst ya da None)."""
+    try:
+        q = [1 / o["1"], 1 / o["X"], 1 / o["2"]]
+    except (KeyError, TypeError, ZeroDivisionError):
+        return None
+    t = sum(q)
+    ov = None
+    if o.get("line") == 2.5 and o.get("over") and o.get("under"):
+        a, b_ = 1 / o["over"], 1 / o["under"]
+        ov = a / (a + b_)
+    return q[0] / t, q[2] / t, ov
+
+
+def odds_neighbors(o, k=SIM_K):
+    f = odds_feat(o) if o else None
+    if not f:
+        return None
+    pool = []
+    for mid, e in ODDS_ARCH.items():
+        if not e.get("res"):
+            continue
+        g = odds_feat(e["o"])
+        if not g:
+            continue
+        d = (f[0] - g[0]) ** 2 + (f[1] - g[1]) ** 2
+        d += (f[2] - g[2]) ** 2 if f[2] is not None and g[2] is not None else 0.01
+        pool.append((d, e))
+    if len(pool) < ODDS_MIN:
+        return None
+    pool.sort(key=lambda x: x[0])
+    out = []
+    for _, e in pool[:k]:
+        hg, ag, h1, a1 = e["res"]
+        out.append({"hg": hg, "ag": ag, "ht": (h1, a1) if h1 is not None else None,
+                    "home": e["h"], "away": e["a"], "date": dt.datetime.fromisoformat(e["k"])})
+    return out
+
+
+def update_odds_archive(leagues, now):
+    arch = ODDS_ARCH
+    for L in leagues:
+        for c in L.get("cards", []):
+            o = c.get("odds")
+            if c["state"] == "pre" and c["kick"] > now and o and odds_feat(o):
+                e = arch.setdefault(c["id"], {})
+                e.update({"k": c["kick"].isoformat(), "lg": L["name"], "h": c["home"], "a": c["away"],
+                          "o": {k: o[k] for k in ("1", "X", "2", "line", "over", "under") if k in o}})
+        for mid, r in L.get("results", {}).items():
+            if mid in arch and not arch[mid].get("res") and r[0] is not None:
+                arch[mid]["res"] = list(r)
+    cut = (now - dt.timedelta(days=ODDS_KEEP_DAYS)).isoformat()
+    for mid in [m for m, e in arch.items() if e["k"] < cut]:
+        del arch[mid]
+    with open(ODDS_FILE, "w", encoding="utf-8") as f:
+        json.dump(arch, f, ensure_ascii=False, separators=(",", ":"))
+
+
 def neighbors(past_lams, lam_h, lam_a, k=SIM_K):
     """Beklenen gol profili bugünkü maça en yakın k geçmiş maç."""
     sc = sorted(past_lams, key=lambda x: (x[0][0] - lam_h) ** 2 + (x[0][1] - lam_a) ** 2)
@@ -745,6 +929,7 @@ CLASH = {"o25": {"u25"}, "o35": {"u25"}, "o45": {"u25"}, "u25": {"o25", "o35", "
 TRUST = None             # bahis türü + seviye bazında geçmiş başarı (main() içinde doldurulur)
 TRUST_EVAL = None
 GLOBAL_TH = None         # tüm liglerden birleşik takım geçmişi (Avrupa kupaları için)
+FETCHED = {}             # önceden çekilmiş lig verisi (kupalar)
 PREV_SNAPSHOT = None
 MACS_BY_ID = {}
 TRUST_MIN_N = 25
@@ -836,6 +1021,10 @@ def rows_mean(rows, i):
 
 def rapor_ctx(past, ref):
     recent = [m for m in past if m["date"] >= ref - dt.timedelta(days=365)] or past
+    # kupalarda ön eleme maçları (Temmuz-Ağustos) lig ortalamasını şişirir: ortalamaya katılmaz
+    rc = [m for m in recent if not (m.get("cup") and m["date"].month in (7, 8))]
+    if len(rc) >= 60:
+        recent = rc
     base = {}
     for key, _ in RP_MARKETS:
         v = [m_ev(key, m) for m in recent]
@@ -964,7 +1153,8 @@ def rapor_eval(ctx, m, r, nb, hn, an):
         nk = [x for x in nk if x is not None]
         if len(nk) >= 30:
             k = sum(nk)
-            add(k / len(nk) >= base + 0.06, f"Benzer {len(nk)} maç: {k}/{len(nk)} (%{k / len(nk) * 100:.0f})")
+            lab_ = f" ({ctx['nb_lab']})" if ctx.get("nb_lab") else ""
+            add(k / len(nk) >= base + 0.06, f"Benzer {len(nk)} maç{lab_}: {k}/{len(nk)} (%{k / len(nk) * 100:.0f})")
         if ms:   # aralarındaki maçlar: bugünkü ev sahibine göre
             hk = []
             for x in h2h:
@@ -1415,10 +1605,13 @@ def process_league(slug, name, calendar, now):
             "avg90": None, "bt": [], "model": None, "results": {}, "rev": None, "kc": None,
             "rp_bt": [], "rbase": {}, "xw": 0.0, "xwres": {}, "xcov": 0.0, "xcoef": None}
     try:
-        finished, allm = fetch_league(slug, now)
+        finished, allm = FETCHED.pop(slug) if slug in FETCHED else fetch_league(slug, now)
     except Exception as e:  # noqa
         info["err"] = f"Veri alınamadı: {e}"
         return info
+    if slug.startswith("uefa."):
+        for m in allm:
+            m["cup"] = True
     info["results"] = {m["id"]: [m["hg"], m["ag"]] + (list(m["ht"]) if m.get("ht") else [None, None])
                        for m in finished}
     bf = dt.datetime.fromisoformat(BET_FROM).replace(tzinfo=TR)
@@ -1514,7 +1707,10 @@ def finish_league(info, now, pool_eval, pool_all):
         r = analyze(*lam, rho=model["rho"], half=hl)
         low = [n for t, n in ((m["hid"], m["home"]), (m["aid"], m["away"]))
                if model["games"].get(t, 0) < LOW_DATA]
-        nb = neighbors(past_lams, *lam_raw)
+        nb = odds_neighbors(m.get("odds"))
+        rctx["nb_lab"] = "orana göre" if nb else ""
+        if not nb:
+            nb = neighbors(past_lams, *lam_raw)
         ss_ = sim_stats(nb)
         surprise = []
         if r.get("htft") and ss_["nht"] >= 20:
@@ -2021,10 +2217,31 @@ def main():
     global PREV_SNAPSHOT
     now = dt.datetime.now(UTC)
     PREV_SNAPSHOT = snapshot_from_html()       # sayfa yeniden yazılmadan önce önceki durumu oku
-    leagues = []
-    for slug, name, cal in LEAGUES:
+    load_odds()
+    leagues = {}
+    # önce yerel ligler: kupa maçlarındaki lig gücü düzeltmesi bunlara dayanır
+    for slug, name, cal in sorted(LEAGUES, key=lambda x: x[0].startswith("uefa.")):
+        if slug.startswith("uefa.") and not CUP_ALL and not FETCHED:
+            for L in leagues.values():
+                if not L["err"] and L.get("allm"):
+                    CUP_DOM[L["slug"]] = sorted([m for m in L["allm"] if m["done"]], key=lambda m: m["date"])
+            for cs, _, _ in LEAGUES:
+                if cs.startswith("uefa."):
+                    try:
+                        FETCHED[cs] = fetch_league(cs, now)
+                    except Exception as e:  # noqa
+                        print("kupa verisi alınamadı:", cs, e, flush=True)
+            cup_ids = set()
+            for fin, _ in FETCHED.values():
+                for m in fin:
+                    if m["id"] not in cup_ids:
+                        cup_ids.add(m["id"])
+                        m["cup"] = True
+                        CUP_ALL.append(m)
+            CUP_ALL.sort(key=lambda m: m["date"])
         print("Lig:", slug, flush=True)
-        leagues.append(process_league(slug, name, cal, now))
+        leagues[slug] = process_league(slug, name, cal, now)
+    leagues = [leagues[s] for s, _, _ in LEAGUES]
     allraw = [x for L in leagues for x in L.get("raw", [])]
     cut = now - dt.timedelta(days=BACKTEST_DAYS)
     pool_eval = fit_kc([x for x in allraw if x["date"] < cut])
@@ -2046,6 +2263,7 @@ def main():
     LIVE_CTX = live_context(leagues, allpast)
     for L in leagues:
         finish_league(L, now, pool_eval, pool_all)
+    update_odds_archive(leagues, now)
     MACS_BY_ID.update(write_maclar(leagues, now))
     st = load_store()
     update_store(st, leagues, now)
