@@ -794,7 +794,7 @@ def analyze(lam_h, lam_a, rho=0.0, half=None, joint=True):
     r = {
         "p1": S(lambda i, j: i > j), "px": S(lambda i, j: i == j), "p2": S(lambda i, j: i < j),
         "o15": S(lambda i, j: i + j >= 2), "o25": S(lambda i, j: i + j >= 3),
-        "o35": S(lambda i, j: i + j >= 4), "o45": S(lambda i, j: i + j >= 5),
+        "o35": S(lambda i, j: i + j >= 4), "o45": S(lambda i, j: i + j >= 5), "o55": S(lambda i, j: i + j >= 6),
         "btts": S(lambda i, j: i >= 1 and j >= 1),
         "h05": S(lambda i, j: i >= 1), "a05": S(lambda i, j: j >= 1),
         "h15": S(lambda i, j: i >= 2), "a15": S(lambda i, j: j >= 2),
@@ -955,7 +955,7 @@ def sim_stats(nb):
 # ------------------------------------------------------------ gol raporu (kontrol listesi)
 GOAL_MARKETS = [
     ("iy05", "İY 0.5 Üst"), ("iy15", "İY 1.5 Üst"), ("iykg", "İY KG Var"),
-    ("o15", "1.5 Üst"), ("o25", "2.5 Üst"), ("o35", "3.5 Üst"), ("o45", "4.5 Üst"),
+    ("o15", "1.5 Üst"), ("o25", "2.5 Üst"), ("o35", "3.5 Üst"), ("o45", "4.5 Üst"), ("o55", "5.5 Üst"),
     ("btts", "KG Var"), ("u25", "2.5 Alt"),
 ]
 TEAM_MARKETS = [("h05", "Ev 0.5 Üst"), ("a05", "Dep 0.5 Üst"), ("h15", "Ev 1.5 Üst"), ("a15", "Dep 1.5 Üst"),
@@ -969,8 +969,10 @@ MAIN_EXCLUDE = {"o15", "iy05", "h05", "a05"}   # oranı çok düşük; günün �
 TIER_NAME = {2: "GÜÇLÜ", 1: "ORTA", 0: "ZAYIF"}
 RP_MIN_CHECKS = 5
 MAIN_MIN_P = 0.55        # günün önerisi için en düşük model olasılığı
+FEST_P45 = 0.33          # gol şöleni listesi: 4.5 Üst ihtimali (ligde ortalama ~%19)
+FEST_P55 = 0.18          # gol şöleni listesi: 5.5 Üst ihtimali (ligde ortalama ~%9)
 ALT_MIN_P = 0.40         # ikinci öneri için en düşük model olasılığı
-CLASH = {"o25": {"u25"}, "o35": {"u25"}, "o45": {"u25"}, "u25": {"o25", "o35", "o45"},
+CLASH = {"o25": {"u25"}, "o35": {"u25"}, "o45": {"u25"}, "o55": {"u25"}, "u25": {"o25", "o35", "o45", "o55"},
          "ms1": {"ms2"}, "ms2": {"ms1"}}
 TRUST = None             # bahis türü + seviye bazında geçmiş başarı (main() içinde doldurulur)
 TRUST_EVAL = None
@@ -993,6 +995,8 @@ def gev(key, gf, ga, gf1, ga1):
         return gf + ga >= 4
     if key == "o45":
         return gf + ga >= 5
+    if key == "o55":
+        return gf + ga >= 6
     if key == "u25":
         return gf + ga <= 2
     if key == "btts":
@@ -1226,7 +1230,7 @@ def rapor_eval(ctx, m, r, nb, hn, an):
             ph, pa = ppg(h10), ppg(a10)
             diff = ph - pa if key == "ms1" else pa - ph
             add(diff >= 0.5, f"Son 10 maç puan ortalaması: {hn} {ph:.1f}, {an} {pa:.1f}")
-        elif key in ("o15", "o25", "o35", "o45", "u25") and ctx["avg"]:
+        elif key in ("o15", "o25", "o35", "o45", "o55", "u25") and ctx["avg"]:
             parts = [rows_mean(h10, 1), rows_mean(a10, 2), rows_mean(a10, 1), rows_mean(h10, 2)]
             if None not in parts:
                 exp = (parts[0] + parts[1]) / 2 + (parts[2] + parts[3]) / 2
@@ -1258,7 +1262,7 @@ def rapor_eval(ctx, m, r, nb, hn, an):
         if ax:
             hxf, hxa, axf, axa = xmean(h10, 7), xmean(h10, 8), xmean(a10, 7), xmean(a10, 8)
             if None not in (hxf, hxa, axf, axa):
-                if key in ("o25", "o35", "o45", "u25"):
+                if key in ("o25", "o35", "o45", "o55", "u25"):
                     ex = (hxf + axa) / 2 + (axf + hxa) / 2
                     ok = ex <= ax - 0.25 if key == "u25" else ex >= ax + 0.25
                     add(ok, f"Şutlara göre beklenen toplam gol {ex:.1f} (lig {ax:.1f})")
@@ -1308,7 +1312,7 @@ def rapor_eval(ctx, m, r, nb, hn, an):
                     note(v is not None and v >= gb["early"] + 0.08,
                         f"İlk 30 dakikada gol olan maç: {hn} {hs_['early'][0]}/{hs_['early'][1]}, "
                         f"{an} {as_['early'][0]}/{as_['early'][1]} (lig %{gb['early'] * 100:.0f})")
-                elif key in ("o25", "o35", "o45", "u25") and gb["open"]:
+                elif key in ("o25", "o35", "o45", "o55", "u25") and gb["open"]:
                     v = cmb("open")
                     if v is not None and hs_["open"][1] + as_["open"][1] >= 12:
                         ok = v <= gb["open"] - 0.08 if key == "u25" else v >= gb["open"] + 0.08
@@ -1829,7 +1833,7 @@ def finish_league(info, now, pool_eval, pool_all):
 
 
 # ------------------------------------------------------------ kayıt ve karne
-PRED_KEYS = ["p1", "px", "p2", "o15", "o25", "o35", "o45", "btts", "iy05", "iy15", "iykg", "p21", "p12",
+PRED_KEYS = ["p1", "px", "p2", "o15", "o25", "o35", "o45", "o55", "btts", "iy05", "iy15", "iykg", "p21", "p12",
              "h05", "a05", "h15", "a15", "ih05", "ia05"]
 
 
@@ -1900,8 +1904,8 @@ def outcome(key, res):
         return hg > ag
     if key == "ms2":
         return hg < ag
-    if key in ("o15", "o25", "o35", "o45"):
-        return hg + ag > {"o15": 1.5, "o25": 2.5, "o35": 3.5, "o45": 4.5}[key]
+    if key in ("o15", "o25", "o35", "o45", "o55"):
+        return hg + ag > {"o15": 1.5, "o25": 2.5, "o35": 3.5, "o45": 4.5, "o55": 5.5}[key]
     if key == "btts":
         return hg > 0 and ag > 0
     if h1 is None:
@@ -3196,7 +3200,7 @@ def rapor_bt_html(leagues):
 def rapor_tab(leagues, now):
     cards = [(c, L["name"]) for L in leagues for c in L["cards"] if c.get("rapor")]
     d0, _ = day_window(now)
-    out = ("<h2>Gol raporu</h2><p class='note'>Her maçta 8 gol bahsi ve MS 1 / MS 2 için 8 maddelik kontrol "
+    out = ("<h2>Gol raporu</h2><p class='note'>Her maçta gol bahisleri, takım golleri ve MS 1 / MS 2 için kontrol "
            "listesi: model, iki takımın son 10 maçı, ev sahibinin evdeki ve deplasmanın dışarıdaki son 5 maçı, benzer "
            "maçlar, aralarındaki maçlar ve gol ortalamaları (MS için puan ortalaması). Bir madde, ligin genel oranının belirgin üstündeyse ✓ alır. "
            "<b>Güçlü</b>: maddelerin en az %80'i ✓. <b>Orta</b>: en az %60'ı. Bir maça dokununca detayı açılır.</p>")
@@ -3211,7 +3215,8 @@ def rapor_tab(leagues, now):
             f"<select id='tf-a' onchange='rpFilter()'>{opt_a}</select><span>–</span>"
             f"<select id='tf-b' onchange='rpFilter()'>{opt_b}</select>"
             "<button onclick='tfNext(3)'>Sonraki 3 saat</button><button onclick='tfAll()'>Tümü</button></div>")
-    chips = "<button data-k='main' class='on' onclick=\"rpShow('main')\">Günün önerileri</button>" + "".join(
+    chips = ("<button data-k='main' class='on' onclick=\"rpShow('main')\">Günün önerileri</button>"
+             "<button data-k='fest' onclick=\"rpShow('fest')\">Gol şöleni</button>") + "".join(
         f"<button data-k='{k}' onclick=\"rpShow('{k}')\">{l}</button>" for k, l in RP_MARKETS) + \
         "<button data-k='done' onclick=\"rpShow('done')\">Başlayan / Biten</button>"
     out += f"<div class='rpchips'>{chips}</div>"
@@ -3223,6 +3228,22 @@ def rapor_tab(leagues, now):
             f"en az %{MAIN_MIN_P * 100:.0f} ihtimal vermeli; ayrıca o bahis türü geçmişte gerçekten işe yaramış olmalı "
             "(1.5 Üst ve İY 0.5 Üst hariç). Her maçta varsa 2. öneri de yazılır. <b class='cnt'></b></p>"
             f"{body}<p class='empty none'>Seçilen saat aralığında başlamamış önerili maç yok.</p></div>")
+    # Gol şöleni: 4.5 / 5.5 Üst ihtimali olağandışı yüksek maçlar (günün önerisi eşiğine takılsalar da kaçmasın)
+    fest = []
+    for c, ln in cards:
+        rm = c["rapor"]["m"]
+        if c["score"] or c["state"] != "pre" or "o45" not in rm:
+            continue
+        o5 = rm.get("o55")
+        if (o5 and (o5["tier"] >= 1 or o5["p"] >= FEST_P55)) or rm["o45"]["tier"] >= 1 or rm["o45"]["p"] >= FEST_P45:
+            k = "o55" if o5 and (o5["tier"] >= rm["o45"]["tier"] and o5["p"] >= FEST_P55) else "o45"
+            fest.append((rm["o45"]["p"], c, ln, k))
+    fest.sort(key=lambda x: -x[0])
+    fitems = "".join(rp_item(c, k, ln, full=False) for _, c, ln, k in fest)
+    out += ("<div class='rps' id='rps-fest'><p class='note'>4.5 Üst ihtimali en az %" f"{FEST_P45 * 100:.0f}" " ya da 5.5 Üst "
+            "ihtimali en az %" f"{FEST_P55 * 100:.0f}" " olan, ya da bu bahislerde kriterlerin çoğu tutan maçlar (bu bahisler "
+            "ligde ortalama %19 ve %9 tutar). Oranları yüksek, riskleri de yüksektir. <b class='cnt'></b></p>"
+            f"{fitems}<p class='empty none'>Seçilen saat aralığında gol şöleni adayı yok.</p></div>")
     for key, label in RP_MARKETS:
         lst = [(c, ln) for c, ln in cards if key in c["rapor"]["m"] and not c["score"] and c["state"] == "pre"]
         lst.sort(key=lambda x: order(x[0], key))
@@ -3243,6 +3264,7 @@ T1_ROWS = [  # (etiket, olasılık anahtarı, üst/var adı, alt/yok adı, rapor
     ("2.5 Ü/A", "o25", "2.5 Üst", "2.5 Alt", "o25", "u25"),
     ("3.5 Ü/A", "o35", "3.5 Üst", "3.5 Alt", "o35", None),
     ("4.5 Ü/A", "o45", "4.5 Üst", "4.5 Alt", "o45", None),
+    ("5.5 Ü/A", "o55", "5.5 Üst", "5.5 Alt", "o55", None),
     ("KG", "btts", "KG Var", "KG Yok", "btts", None),
     ("İY 0.5 Ü/A", "iy05", "İY 0.5 Üst", "İY 0.5 Alt", "iy05", None),
     ("İY 1.5 Ü/A", "iy15", "İY 1.5 Üst", "İY 1.5 Alt", "iy15", None),
@@ -3513,7 +3535,7 @@ BET_MARKETS = (
     + [("Diğer", "diger", "Diğer (sonucu ben gireceğim)")]
 )
 BET_LABEL = {c: l for _, c, l in BET_MARKETS}
-BET_TO_RAPOR = {"ms1": "ms1", "ms2": "ms2", "o15": "o15", "o25": "o25", "o35": "o35", "o45": "o45", "u25": "u25",
+BET_TO_RAPOR = {"ms1": "ms1", "ms2": "ms2", "o15": "o15", "o25": "o25", "o35": "o35", "o45": "o45", "o55": "o55", "u25": "u25",
                 "kgv": "btts", "iyo05": "iy05", "iyo15": "iy15", "iykgv": "iykg",
                 "tev05": "h05", "tdp05": "a05", "tev15": "h15", "tdp15": "a15", "tiev05": "ih05", "tidp05": "ia05"}
 
@@ -3634,10 +3656,10 @@ def coupon_state(kp, macs):
     return st_, rs, odds
 
 
-BET_PMAP = {"ms1": "p1", "msx": "px", "ms2": "p2", "o15": "o15", "o25": "o25", "o35": "o35", "o45": "o45",
+BET_PMAP = {"ms1": "p1", "msx": "px", "ms2": "p2", "o15": "o15", "o25": "o25", "o35": "o35", "o45": "o45", "o55": "o55",
             "kgv": "btts", "iyo05": "iy05", "iyo15": "iy15", "iykgv": "iykg",
             "tev05": "h05", "tdp05": "a05", "tev15": "h15", "tdp15": "a15", "tiev05": "ih05", "tidp05": "ia05"}
-BET_PNEG = {"u15": "o15", "u25": "o25", "u35": "o35", "u45": "o45", "kgy": "btts", "iyu05": "iy05",
+BET_PNEG = {"u15": "o15", "u25": "o25", "u35": "o35", "u45": "o45", "u55": "o55", "kgy": "btts", "iyu05": "iy05",
             "iyu15": "iy15", "iykgy": "iykg"}
 
 
@@ -3836,9 +3858,9 @@ function settle(code, s){
   return null;
 }
 function pois(k,l){let p=Math.exp(-l);for(let i=1;i<=k;i++)p*=l/i;return p;}
-const PMAP={ms1:'p1',msx:'px',ms2:'p2',o15:'o15',o25:'o25',o35:'o35',o45:'o45',kgv:'btts',iyo05:'iy05',iyo15:'iy15',iykgv:'iykg',
+const PMAP={ms1:'p1',msx:'px',ms2:'p2',o15:'o15',o25:'o25',o35:'o35',o45:'o45',o55:'o55',kgv:'btts',iyo05:'iy05',iyo15:'iy15',iykgv:'iykg',
             tev05:'h05',tdp05:'a05',tev15:'h15',tdp15:'a15',tiev05:'ih05',tidp05:'ia05'};
-const PNEG={u15:'o15',u25:'o25',u35:'o35',u45:'o45',kgy:'btts',iyu05:'iy05',iyu15:'iy15',iykgy:'iykg'};
+const PNEG={u15:'o15',u25:'o25',u35:'o35',u45:'o45',u55:'o55',kgy:'btts',iyu05:'iy05',iyu15:'iy15',iykgy:'iykg'};
 // Modelin maç öncesi olasılığı: biliniyorsa modelin kendi değeri, yoksa gol beklentilerinden (ilk yarı / ikinci yarı) hesap
 function modelP(code, md){
   if(!md || !code || code==='diger') return null;
@@ -4388,6 +4410,38 @@ function tempo(m, L, t){
   return o;
 }
 
+// Takımın gol dakikaları: t ile end arasında maç başı attığı / yediği gol (son maçlarından)
+function winRates(rows, t, end){
+  if(!rows || rows.length<5) return null;
+  let f=0, a=0; for(const r of rows){ const x=aft(r[5],t,end); f+=x.h; a+=x.a; }
+  return {f:f/rows.length, a:a/rows.length, n:rows.length};
+}
+// Ligde bu dakika aralığında maç başı gol (tüm maçlar)
+function lgWin(m, t, end){
+  const G = MODEL.lg && MODEL.lg[m.slug]; if(!G || !G.g || G.g.length<40) return null;
+  let s=0; for(const g of G.g) s+=aft(g,t,end).n; return s/G.g.length;
+}
+// Gol dakikası kanıtı: iki takımın bu aralıktaki gol atma + rakibin yeme hızı, lig ortalamasına göre
+function minuteEv(m, t, end){
+  const tl = m.tl || [[],[]], h = winRates(tl[0],t,end), a = winRates(tl[1],t,end), lg = lgWin(m,t,end);
+  if(!h || !a) return null;
+  const eh = (h.f + a.a)/2, ea = (a.f + h.a)/2, tot = eh+ea;
+  return {eh, ea, tot, lg, ratio: lg ? tot/Math.max(lg,0.02) : null, p: 1-Math.exp(-tot), h, a};
+}
+// Baskı: topla oynama, şut, isabetli şut, korner ve son dakikalardaki şut payı
+function pressure(L, T){
+  const s = L.stats, sh = (x,y)=> (x==null||y==null||x+y===0) ? 0.5 : x/(x+y);
+  const pos = s.h.pos!=null ? s.h.pos/100 : 0.5;
+  let shots = sh(s.h.sh, s.a.sh);
+  if(T && T.recent && T.recent.sh>=3) shots = 0.5*shots + 0.5*sh(T.recent.shH, T.recent.shA);
+  const idx = 0.15*pos + 0.30*shots + 0.40*sh(s.h.sot, s.a.sot) + 0.15*sh(s.h.cor, s.a.cor);
+  const sot = [s.h.sot||0, s.a.sot||0], rec = T && T.recent ? [T.recent.shH, T.recent.shA] : [0,0];
+  let push = null;
+  if(idx>=0.62 && (sot[0]>=2 || rec[0]>=4)) push = 0;
+  else if(idx<=0.38 && (sot[1]>=2 || rec[1]>=4)) push = 1;
+  return {idx:[idx,1-idx], push, hot: push!==null || (T && T.lab==='yüksek'), cold: push===null && T && T.lab==='düşük'};
+}
+
 // Bir zaman dilimi için (maç sonu: end=999, ilk yarı: end=45) kanıtların birleşimi
 function scopeEval(m, L, t, end, rem){
   const d = L.hg-L.ag, lamM = Math.max(rem[0]+rem[1], 1e-6);
@@ -4412,6 +4466,9 @@ function scopeEval(m, L, t, end, rem){
     const kk = fh+'-'+fa; o.scores[kk] = (o.scores[kk]||0)+p;
   }
   o.nextH = o.more1*sh; o.nextA = o.more1*(1-sh);
+  o.ME = minuteEv(m, t, end);
+  o.ME15 = minuteEv(m, t, Math.min(t+15, end));
+  o.PR = pressure(L, T);
   return o;
 }
 
@@ -4435,25 +4492,32 @@ function livePicks(m, L, o){
   const genAny = (TM[0]&&TM[1]&&TM[0].gen.n>=5&&TM[1].gen.n>=5) ? (TM[0].gen.any+TM[1].gen.any)/2 : null;
   const span = iy ? t+'. dakika ile devre arası' : t+'. dakikadan sonra';
   const out = [];
+  const ME = o.ME, PR = o.PR;
+  const meTxt = ME ? nm[0]+' bu aralıkta maç başı '+ME.h.f.toFixed(2)+' atıp '+ME.h.a.toFixed(2)+' yiyor, '+nm[1]+' '+ME.a.f.toFixed(2)+' atıp '+ME.a.a.toFixed(2)+' yiyor → beklenen '+ME.tot.toFixed(2)+' gol'+(ME.lg!=null?' (lig '+ME.lg.toFixed(2)+')':'') : '';
+  const prTxt = PR.push!==null ? nm[PR.push]+' yükleniyor (baskı payı %'+Math.round(PR.idx[PR.push]*100)+')' : ('belirgin yüklenen taraf yok'+(T?', tempo '+T.lab:''));
   { // bir gol daha
-    const c = [ck('Model', pm1>=0.6, when+'gol ihtimali '+P(pm1))];
+    const c = [];
+    if(ME && ME.ratio!=null) c.push(ck('Gol dakikaları', ME.ratio>=1.15, span+': '+meTxt));
+    c.push(ck('Baskı', PR.hot, prTxt));
+    c.push(ck('Model', pm1>=0.6, when+'gol ihtimali '+P(pm1)));
     if(S) c.push(ck('Ligde benzer maçlar', S.more1>=0.6, S.lab+': '+S.n+' maçta '+when+'gol olma oranı '+P(S.more1)));
-    if(genAny!=null) c.push(ck('İki takımın maçları', genAny>=0.6, span+' gol olan maç oranı '+P(genAny)));
-    if(T) c.push(ck('Tempo', T.r>=1, 'tempo '+T.lab));
     if(tr!=null && ok3(tr)) c.push(ck(nm[tr]+' tepkisi', TM[tr].scored>=0.5, TM[tr].lab+' '+TM[tr].n+' maçta '+when+'gol atma oranı '+P(TM[tr].scored)));
-    out.push({t:pre+(cur+0.5)+' Üst', sub:iy?'ilk yarıda bir gol daha':'bir gol daha', p:o.more1, c});
+    out.push({t:pre+(cur+0.5)+' Üst', sub:(iy?'ilk yarıda':'maçta')+' bir gol daha (iki takımdan biri atar)', p:o.more1, c});
   }
   { // iki gol daha
-    const c = [ck('Model', pm2>=0.55, when+'iki gol daha ihtimali '+P(pm2))];
+    const c = [];
+    if(ME && ME.ratio!=null) c.push(ck('Gol dakikaları', ME.ratio>=1.35, span+': '+meTxt));
+    c.push(ck('Baskı', PR.hot && (!T || T.r>=1.1), prTxt));
+    c.push(ck('Model', pm2>=0.55, when+'iki gol daha ihtimali '+P(pm2)));
     if(S) c.push(ck('Ligde benzer maçlar', S.more2>=0.55, S.n+' maçta '+when+'2+ gol oranı '+P(S.more2)));
-    if(T) c.push(ck('Tempo', T.r>=1.15, 'tempo '+T.lab));
     out.push({t:pre+(cur+1.5)+' Üst', sub:iy?'ilk yarıda iki gol daha':'iki gol daha', p:o.more2, c});
   }
   if(t >= (iy ? 20 : 55)){ // bu skorla biter
-    const c = [ck('Model', pm1<=0.4, when+'gol olmama ihtimali '+P(1-pm1))];
+    const c = [];
+    if(ME && ME.ratio!=null) c.push(ck('Gol dakikaları', ME.ratio<=0.85, span+': '+meTxt));
+    c.push(ck('Baskı', !PR.hot, prTxt));
+    c.push(ck('Model', pm1<=0.4, when+'gol olmama ihtimali '+P(1-pm1)));
     if(S) c.push(ck('Ligde benzer maçlar', S.more1<=0.4, S.lab+': '+S.n+' maçta '+when+'golsüz geçme oranı '+P(1-S.more1)));
-    if(genAny!=null) c.push(ck('İki takımın maçları', genAny<=0.45, span+' golsüz geçen maç oranı '+P(1-genAny)));
-    if(T) c.push(ck('Tempo', T.r<=0.9, 'tempo '+T.lab));
     if(tr!=null && ok3(tr)) c.push(ck(nm[tr]+' tepkisi', TM[tr].scored<0.35, TM[tr].lab+' '+TM[tr].n+' maçta '+when+'gol atma oranı sadece '+P(TM[tr].scored)));
     out.push({t:pre+(cur+0.5)+' Alt', sub:iy?'ilk yarı bu skorla biter':'bu skorla biter', p:1-o.more1, c});
   }
@@ -4465,14 +4529,14 @@ function livePicks(m, L, o){
       if(ok3(i)) c.push(ck(nm[i]+' tepkisi', TM[i].scored>=0.5 && TM[i].gf>=TM[i].ga, TM[i].lab+' maç başı '+TM[i].gf.toFixed(1)+' attı, '+TM[i].ga.toFixed(1)+' yedi'));
       const so = [L.stats.h.sot, L.stats.a.sot];
       if(so[0]!=null && so[1]!=null) c.push(ck('Baskı', so[i]>so[1-i], 'isabetli şut '+so[i]+'-'+so[1-i]));
-      out.push({t:'Sıradaki gol: '+nm[i], sub:'', p, c});
+      out.push({t:'Sıradaki gol: '+nm[i], sub:'bilgi: taraf bahsi', p, c, info:true});
     }
     if(!(L.hg>0&&L.ag>0) && cur>0){ // KG Var
       const z = L.hg===0 ? 0 : 1, pz = 1-Math.exp(-(z?o.la:o.lh)), pmz = 1-Math.exp(-o.rem[z]);
       const c = [ck('Model', pmz>=0.55, nm[z]+' için gol ihtimali '+P(pmz))];
       if(S) c.push(ck('Ligde benzer maçlar', (z?S.scA:S.scH)>=0.5, 'bu tarafın gol attığı maç oranı '+P(z?S.scA:S.scH)));
       if(ok3(z)) c.push(ck(nm[z]+' tepkisi', TM[z].scored>=0.55, TM[z].lab+' gol atma oranı '+P(TM[z].scored)));
-      out.push({t:'KG Var', sub:nm[z]+' de gol atar', p:pz, c});
+      out.push({t:'KG Var', sub:nm[z]+' de gol atar (bilgi: taraf bahsi)', p:pz, c, info:true});
     }
   }
   if(d!==0 && t >= (iy ? 20 : 30)){ // önde olan kazanır / devreyi önde kapatır
@@ -4492,7 +4556,7 @@ function livePicks(m, L, o){
   for(const x of out){
     const v = x.c.filter(y=>y.ok!=null);
     x.ok = v.filter(y=>y.ok).length; x.n = v.length; x.ratio = x.n ? x.ok/x.n : 0;
-    x.level = (x.c[0].ok && x.p>=0.65 && x.ratio>=0.8 && x.n>=3) ? 'Güçlü' : ((x.c[0].ok && x.p>=0.58 && x.ratio>=0.6 && x.n>=2) ? 'Orta' : null);
+    x.level = x.info ? null : (x.c[0].ok && x.p>=0.65 && x.ratio>=0.8 && x.n>=3) ? 'Güçlü' : ((x.c[0].ok && x.p>=0.58 && x.ratio>=0.6 && x.n>=2) ? 'Orta' : null);
     x.iy = iy;
   }
   return out.filter(x=>x.p<=0.93).sort((a,b)=>(b.level==='Güçlü')-(a.level==='Güçlü') || (!!b.level)-(!!a.level) || b.ratio-a.ratio || b.p-a.p);
@@ -4530,7 +4594,7 @@ async function getLiveData(){
 // Canlı alarm: kanıtları birbirini tutan bir canlı bahis (ilk yarı ya da maç sonu) çıktığında
 function alarmScan(m, L){
   const o = liveEval(m, L);
-  const best = o.iyPicks.concat(o.picks).filter(x=>x.level).sort((a,b)=>(b.level==='Güçlü')-(a.level==='Güçlü') || b.ratio-a.ratio || b.p-a.p)[0];
+  const best = (o.iy ? o.iyPicks : o.picks).filter(x=>x.level).sort((a,b)=>(b.level==='Güçlü')-(a.level==='Güçlü') || b.ratio-a.ratio || b.p-a.p)[0];
   if(!best) return null;
   const reasons = [];
   if(best.iy) reasons.push('İlk yarı');
@@ -4589,9 +4653,21 @@ function liveCard(m, L){
 
   // 1) Ne oynanır: ilk yarı ve maç sonu ayrı
   out += '<div class="sec">Ne oynanır?</div>';
-  if(iy) out += verdict(o.iyPicks, 'İlk yarı · devreye ~'+Math.max(45-o.t,1)+' dk');
-  else out += '<div class="vt">İlk yarı</div><p class="note">'+(o.ht?'Devre arası':'İlk yarı bitti')+'; ilk yarı bahisleri kapandı.</p>';
-  out += verdict(o.picks, 'Maç sonu');
+  if(iy){
+    out += verdict(o.iyPicks, 'İlk yarı · devreye ~'+Math.max(45-o.t,1)+' dk');
+    out += '<details><summary>Maç sonu seçenekleri (ikinci yarıda öne çıkar)</summary>'+verdict(o.picks, 'Maç sonu')+'</details>';
+  } else {
+    out += verdict(o.picks, 'Maç sonu'+(o.ht?' · ikinci yarı başlıyor':' · kalan ~'+Math.max(93-o.t,1)+' dk'));
+  }
+  // Gol dakikaları (öncelik) ve baskı
+  const sc_ = iy || o, ME = sc_.ME, M15 = sc_.ME15, PR = sc_.PR;
+  out += '<div class="sec">Gol dakikaları ('+(iy?o.t+'. dk – devre arası':o.t+'. dk – maç sonu')+')</div>';
+  if(ME){
+    out += '<div class="row"><b>'+esc(m.h)+'</b> bu aralıkta maç başı '+ME.h.f.toFixed(2)+' gol atıyor, '+ME.h.a.toFixed(2)+' yiyor · <b>'+esc(m.a)+'</b> '+ME.a.f.toFixed(2)+' atıyor, '+ME.a.a.toFixed(2)+' yiyor (son '+Math.min(ME.h.n,ME.a.n)+' maç).</div>';
+    out += '<div class="row">Bu iki takımın dakikalarına göre bu aralıkta beklenen gol <b>'+ME.tot.toFixed(2)+'</b>'+(ME.lg!=null?' (lig ortalaması '+ME.lg.toFixed(2)+')':'')+' → gol ihtimali <b>'+P(ME.p)+'</b>.'+
+           (M15 && o.t+15 < (iy?45:93) ? ' Sonraki 15 dakikada: <b>'+P(M15.p)+'</b>'+(M15.lg!=null?' (lig '+P(1-Math.exp(-M15.lg))+')':'')+'.' : '')+'</div>';
+  } else out += '<p class="note">Takımların gol dakikası verisi yok.</p>';
+  out += '<div class="row">Baskı: '+(PR.push!==null ? '<b>'+esc(PR.push?m.a:m.h)+' yükleniyor</b> (topla oynama, şut, isabetli şut ve korner payı %'+Math.round(PR.idx[PR.push]*100)+')' : 'belirgin yüklenen taraf yok (ev sahibi payı %'+Math.round(PR.idx[0]*100)+')')+'.</div>';
   out += '<details><summary>Tüm seçenekler ve kanıtları</summary>'+
          (iy ? '<div class="vt">İlk yarı</div>'+o.iyPicks.map(pickHtml).join('') : '')+
          '<div class="vt">Maç sonu</div>'+o.picks.map(pickHtml).join('')+'</details>';
@@ -4704,7 +4780,7 @@ async function alarmUpdate(){
   const t = new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Istanbul'});
   let h = '<div class="alarm"><div class="ah"><span><span class="live">CANLI</span> <b>Alarm</b></span><span class="note">'+
           live.length+' canlı maç tarandı · '+t+'</span></div>';
-  if(!al.length) h += '<p class="note" style="margin:6px 0 0">Şu an kanıtları birbirini tutan bir canlı bahis yok. Model, ligdeki benzer maçlar, takımların geçmiş tepkisi ve tempo aynı yönü gösterdiğinde burada belirir.</p>';
+  if(!al.length) h += '<p class="note" style="margin:6px 0 0">Şu an kanıtları birbirini tutan bir canlı bahis yok. Gol dakikaları, baskı, model ve ligdeki benzer maçlar aynı yönü gösterdiğinde burada belirir (ilk yarıda ilk yarı, ikinci yarıda maç sonu bahisleri).</p>';
   for(const a of al.slice(0,5)){
     const min = a.o.ht ? 'Devre' : (a.L.disp||'');
     h += '<a class="arow '+a.level+'" href="canli.html?v='+Date.now()+'#m'+a.m.id+'">'+
@@ -4815,7 +4891,7 @@ def write_analiz(leagues, now):
 
 ANALIZ_JS = r"""
 let AN = {m:{}, trust:{}};
-const RAPOR_OF = {ms1:'ms1',ms2:'ms2',o15:'o15',o25:'o25',o35:'o35',o45:'o45',u25:'u25',kgv:'btts',iyo05:'iy05',iyo15:'iy15',iykgv:'iykg',
+const RAPOR_OF = {ms1:'ms1',ms2:'ms2',o15:'o15',o25:'o25',o35:'o35',o45:'o45',o55:'o55',u25:'u25',kgv:'btts',iyo05:'iy05',iyo15:'iy15',iykgv:'iykg',
                   tev05:'h05',tdp05:'a05',tev15:'h15',tdp15:'a15',tiev05:'ih05',tidp05:'ia05'};
 const TIER = {2:'Güçlü',1:'Orta',0:'Zayıf'};
 function snapOf(l){ return (l.m && AN.m[l.m]) || l.snap || null; }
@@ -5030,7 +5106,7 @@ def why_text(key, ok, e, s, sot_avg):
     hi = sot is not None and sot >= sot_avg * 1.25
     lo = sot is not None and sot <= sot_avg * 0.75
     sot_t = f"{sot:.0f} isabetli şut (lig ort. {sot_avg:.0f})" if sot is not None else ""
-    if key in ("o15", "o25", "o35", "o45"):
+    if key in ("o15", "o25", "o35", "o45", "o55"):
         need = int(key[1]) + 1
         head = f"{tg} gol çıktı ({sc}{iy})"
         if ok:
@@ -5121,6 +5197,14 @@ def karne_rows(st, leagues):
     return rows
 
 
+KARNE_GROUP = {"ms1": "ms", "ms2": "ms"}     # MS 1 ve MS 2: modelin taraf tercihi tek çatıda
+KARNE_LABEL = {"ms": "Taraf tercihi (MS 1 / MS 2)"}
+
+
+def karne_label(k):
+    return KARNE_LABEL.get(k) or GM_LABEL.get(k, k)
+
+
 def karne_section(rows, sid, on):
     done = [r for r in rows if r["ok"] is not None]
     pend = len(rows) - len(done)
@@ -5143,13 +5227,13 @@ def karne_section(rows, sid, on):
     # bahis türüne göre
     bt = defaultdict(list)
     for r in done:
-        bt[r["key"]].append(r)
+        bt[KARNE_GROUP.get(r["key"], r["key"])].append(r)
     out += ("<div class='sec'>Bahis türüne göre</div><div class='wrap'><table><tr><th>Bahis</th><th class='n'>Önerilen</th>"
             "<th class='n'>Tuttu</th><th class='n'>Oran</th></tr>")
     for k, lst in sorted(bt.items(), key=lambda kv: (-len(kv[1]), kv[0])):
         h = sum(1 for r in lst if r["ok"])
         cls_ = "pos" if h / len(lst) >= 0.65 else ("neg" if h / len(lst) < 0.5 else "")
-        out += (f"<tr><td><a href='#d-{sid}-{k}' onclick=\"openD('d-{sid}-{k}')\">{GM_LABEL.get(k, k)}</a></td><td class='n'>{len(lst)}</td>"
+        out += (f"<tr><td><a href='#d-{sid}-{k}' onclick=\"openD('d-{sid}-{k}')\">{karne_label(k)}</a></td><td class='n'>{len(lst)}</td>"
                 f"<td class='n'>{h}</td><td class='n {cls_}'>{pct(h, len(lst))}</td></tr>")
     out += "</table></div>"
     # lige göre
@@ -5173,7 +5257,7 @@ def karne_section(rows, sid, on):
             "<button onclick=\"flt(this,'y')\">Tutanlar</button><button onclick=\"flt(this,'n')\">Tutmayanlar</button></div>")
     for k, lst in sorted(bt.items(), key=lambda kv: (-len(kv[1]), kv[0])):
         h = sum(1 for r in lst if r["ok"])
-        out += (f"<details class='kd' id='d-{sid}-{k}'><summary><b>{GM_LABEL.get(k, k)}</b> · {len(lst)} öneri · "
+        out += (f"<details class='kd' id='d-{sid}-{k}'><summary><b>{karne_label(k)}</b> · {len(lst)} öneri · "
                 f"{h} tuttu ({pct(h, len(lst))})</summary>")
         for r in lst:
             hg, ag = r["res"][0], r["res"][1]
@@ -5181,7 +5265,8 @@ def karne_section(rows, sid, on):
             mp_ = f" · model %{r['p'] * 100:.0f}" if r["p"] is not None else ""
             no_ = "1. öneri" if r["no"] == 1 else "2. öneri"
             out += (f"<div class='km {'y' if r['ok'] else 'n'}'><div class='kmh'><span>{'✓' if r['ok'] else '✗'} "
-                    f"<b>{E(r['h'])} {hg}-{ag} {E(r['a'])}</b></span><span class='tier t{r['t']}'>{TIER_NAME[r['t']]}</span></div>"
+                    f"<b>{E(r['h'])} {hg}-{ag} {E(r['a'])}</b>{' · ' + GM_LABEL[r['key']] if r['key'] in KARNE_GROUP else ''}</span>"
+                    f"<span class='tier t{r['t']}'>{TIER_NAME[r['t']]}</span></div>"
                     f"<div class='note'>{when:%d.%m %H:%M} · {E(r['lg'])} · {no_}{mp_}</div>"
                     f"<div class='kw'>{E(r.get('why', ''))}</div></div>")
         out += "</details>"
