@@ -2854,6 +2854,9 @@ def accuracy_tab(leagues):
 
 # ------------------------------------------------------------ gol raporu sekmesi
 RP_CSS = """
+.topnav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0 6px}
+.topnav a{display:block;text-align:center;white-space:nowrap;background:var(--card);color:var(--tx);border:1px solid var(--bd);text-decoration:none;font-weight:700;font-size:13px;padding:8px 4px;border-radius:16px}
+.topnav a.lvb{background:#d93025;color:#fff;border-color:#d93025}
 .bars{font-family:monospace;letter-spacing:1px;color:var(--ac)}
 .rpchips{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 10px}
 .rpchips button{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:14px;padding:6px 11px;font-size:12.5px;flex:none}
@@ -4083,15 +4086,12 @@ def write_html(leagues, now, st=None):
     page = (f"<!doctype html><html lang='tr'><head><meta charset='utf-8'>"
             f"<meta name='viewport' content='width=device-width, initial-scale=1'>"
             f"<title>Günün Maçları</title><style>{CSS}{RP_CSS}</style></head><body>"
-            f"<header><div style='display:flex;justify-content:space-between;align-items:center'><h1>Günün Maçları</h1>"
-            f"<span><a href='bahis.html?v={int(now.timestamp())}' style='background:var(--card);color:var(--tx);border:1px solid var(--bd);"
-            f"text-decoration:none;font-weight:700;font-size:13px;padding:5px 11px;border-radius:16px;margin-right:6px'>Kuponlarım</a>"
-            f"<a href='analiz.html?v={int(now.timestamp())}' style='background:var(--card);color:var(--tx);border:1px solid var(--bd);"
-            f"text-decoration:none;font-weight:700;font-size:13px;padding:5px 11px;border-radius:16px;margin-right:6px'>Analiz</a>"
-            f"<a href='karne.html?v={int(now.timestamp())}' style='background:var(--card);color:var(--tx);border:1px solid var(--bd);"
-            f"text-decoration:none;font-weight:700;font-size:13px;padding:5px 11px;border-radius:16px;margin-right:6px'>Karne</a>"
-            f"<a href='canli.html?v={int(now.timestamp())}' style='background:#d93025;color:#fff;text-decoration:none;font-weight:700;"
-            f"font-size:13px;padding:6px 12px;border-radius:16px'>● Canlı</a></span></div><div class='upd'>Güncelleme: {local:%d.%m.%Y %H:%M} · "
+            f"<header><h1>Günün Maçları</h1>"
+            f"<div class='topnav'><a href='bahis.html?v={int(now.timestamp())}'>Kuponlarım</a>"
+            f"<a href='analiz.html?v={int(now.timestamp())}'>Analiz</a>"
+            f"<a href='karne.html?v={int(now.timestamp())}'>Karne</a>"
+            f"<a class='lvb' href='canli.html?v={int(now.timestamp())}'>● Canlı</a></div>"
+            f"<div class='upd'>Güncelleme: {local:%d.%m.%Y %H:%M} · "
             f"Maçlar: {d0:%d.%m %H:%M} - {d1:%d.%m %H:%M} · Model tahmindir, kâr garantisi vermez."
             f"</div></header><div id='alarm' style='padding:0 12px'></div><nav><select id='navsel' onchange='show(this.value)'>{''.join(nav)}</select></nav>{''.join(tabs)}"
             f"<script>{JS}{RP_JS}</script><script>const REPO = {json.dumps(os.environ.get('GITHUB_REPOSITORY', ''))};"
