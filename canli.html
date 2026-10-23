@@ -158,6 +158,13 @@ function parseLive(ev){
           hg:parseInt(h.score||0)||0, ag:parseInt(a.score||0)||0, stats:{h:pick(h), a:pick(a)}, red:red, hist:ev.hist||null};
 }
 
+// Son ~10 dakikada takımın şut sayısı (aktarımın dakika geçmişinden)
+function recentShots(L, i){
+  const H = L.hist; if(!H || H.length<2) return null;
+  const last = H[H.length-1];
+  for(let k=H.length-2;k>=0;k--) if(last[0]-H[k][0]>=10) return {span:Math.round(last[0]-H[k][0]), n:(last[1+i]||0)-(H[k][1+i]||0)};
+  return null;
+}
 // Kalan sürede beklenen gol: maç öncesi model + kırmızı kart + isabetli şut ayarı
 function remaining(m, L){
   const lam = m.lam, l1 = m.lam1 || [lam[0]*0.45, lam[1]*0.45];
@@ -190,6 +197,8 @@ function remaining(m, L){
       const prior = lam[i]/97, obs = SOT_GOAL*sot[i]/tp;
       let f = ((1-w)*prior + w*obs)/prior;
       f = Math.min(1.6, Math.max(0.6, f));
+      const rs = recentShots(L, i);
+      if(rs && rs.span>=8 && rs.n<=1 && f>1){ f = 1; notes.push((i?m.a:m.h)+' son '+rs.span+' dakikada '+rs.n+' şut attı: isabetli şut üstünlüğü kalan süreye yansıtılmadı.'); }
       press[i] = f;
       rem[i] *= f; if(rem1) rem1[i] *= f;
       if(f>=1.15) notes.push((i?m.a:m.h)+' beklenenden fazla isabetli şut çekiyor ('+sot[i]+'): kalan gol beklentisi %'+Math.round((f-1)*100)+' artırıldı.');
@@ -277,7 +286,8 @@ function tempo(m, L, t){
       const span = last[0]-ref[0], v = (r,i)=>r[i]||0;
       const dsh = v(last,1)+v(last,2)-v(ref,1)-v(ref,2);
       o.recent = {span:Math.round(span), sh:dsh, sot:v(last,3)+v(last,4)-v(ref,3)-v(ref,4),
-                  shH:v(last,1)-v(ref,1), shA:v(last,2)-v(ref,2), ratio: dsh/Math.max(base*span/93,0.5)};
+                  shH:v(last,1)-v(ref,1), shA:v(last,2)-v(ref,2), sotH:v(last,3)-v(ref,3), sotA:v(last,4)-v(ref,4),
+                  corH:v(last,5)-v(ref,5), corA:v(last,6)-v(ref,6), ratio: dsh/Math.max(base*span/93,0.5)};
     }
   }
   o.r = o.recent ? 0.6*o.recent.ratio+0.4*o.ratio : o.ratio;
@@ -303,18 +313,37 @@ function minuteEv(m, t, end){
   const eh = (h.f + a.a)/2, ea = (a.f + h.a)/2, tot = eh+ea;
   return {eh, ea, tot, lg, ratio: lg ? tot/Math.max(lg,0.02) : null, p: 1-Math.exp(-tot), h, a};
 }
-// Baskı: topla oynama, şut, isabetli şut, korner ve son dakikalardaki şut payı
+// Baskı: maçın tamamı (topla oynama, şut, isabetli şut, korner) + SON 10-15 DAKİKA (ağır basar).
+// Maç boyu çok şut atıp son dakikalarda şut atamayan takım "baskısı düştü" sayılır ve yükleniyor görünmez.
 function pressure(L, T){
   const s = L.stats, sh = (x,y)=> (x==null||y==null||x+y===0) ? 0.5 : x/(x+y);
   const pos = s.h.pos!=null ? s.h.pos/100 : 0.5;
-  let shots = sh(s.h.sh, s.a.sh);
-  if(T && T.recent && T.recent.sh>=3) shots = 0.5*shots + 0.5*sh(T.recent.shH, T.recent.shA);
-  const idx = 0.15*pos + 0.30*shots + 0.40*sh(s.h.sot, s.a.sot) + 0.15*sh(s.h.cor, s.a.cor);
-  const sot = [s.h.sot||0, s.a.sot||0], rec = T && T.recent ? [T.recent.shH, T.recent.shA] : [0,0];
+  const ov = 0.15*pos + 0.30*sh(s.h.sh, s.a.sh) + 0.40*sh(s.h.sot, s.a.sot) + 0.15*sh(s.h.cor, s.a.cor);
+  const R = T && T.recent && T.recent.span>=8 ? T.recent : null;
+  let idx = ov, act = null, fade = null, quiet = false;
+  if(R){
+    act = [R.shH + R.sotH + 0.5*R.corH, R.shA + R.sotA + 0.5*R.corA];     // son aralıktaki hücum hareketi
+    const tot = act[0] + act[1];
+    quiet = (R.shH + R.shA + R.corH + R.corA) <= 2;
+    idx = 0.35*ov + 0.65*(tot>=2 ? act[0]/tot : 0.5);
+    for(const i of [0,1]){
+      const ovi = i ? 1-ov : ov, shots = i ? R.shA : R.shH;
+      if(ovi >= 0.58 && shots <= 1) fade = i;                              // maç boyu üstündü, son dakikalarda durdu
+    }
+  }
   let push = null;
-  if(idx>=0.62 && (sot[0]>=2 || rec[0]>=4)) push = 0;
-  else if(idx<=0.38 && (sot[1]>=2 || rec[1]>=4)) push = 1;
-  return {idx:[idx,1-idx], push, hot: push!==null || (T && T.lab==='yüksek'), cold: push===null && T && T.lab==='düşük'};
+  const can = i => R ? ((i ? R.shA+R.corA : R.shH+R.corH) >= 3) : ((i ? s.a.sot : s.h.sot)||0) >= 2;
+  if(idx>=0.62 && can(0) && fade!==0) push = 0;
+  else if(idx<=0.38 && can(1) && fade!==1) push = 1;
+  const hot = push!==null || (T && T.lab==='yüksek' && !quiet);
+  return {idx:[idx,1-idx], ov:[ov,1-ov], push, fade, quiet, R, hot, cold: quiet || (T && T.lab==='düşük')};
+}
+function pressureTxt(PR, nm){
+  let t = PR.push!==null ? nm[PR.push]+' yükleniyor (baskı payı %'+Math.round(PR.idx[PR.push]*100)+')' : 'belirgin yüklenen taraf yok';
+  if(PR.fade!==null) t += '; '+nm[PR.fade]+' maç boyu üstündü ama son '+PR.R.span+' dakikada '+(PR.fade?PR.R.shA:PR.R.shH)+' şut: baskısı düştü';
+  if(PR.quiet) t += '; son '+PR.R.span+' dakikada maç durdu (iki takım toplam '+(PR.R.shH+PR.R.shA)+' şut, '+(PR.R.corH+PR.R.corA)+' korner)';
+  if(!PR.R) t += ' (son dakika verisi henüz yok)';
+  return t;
 }
 
 // Bir zaman dilimi için (maç sonu: end=999, ilk yarı: end=45) kanıtların birleşimi
@@ -369,7 +398,7 @@ function livePicks(m, L, o){
   const out = [];
   const ME = o.ME, PR = o.PR;
   const meTxt = ME ? nm[0]+' bu aralıkta maç başı '+ME.h.f.toFixed(2)+' atıp '+ME.h.a.toFixed(2)+' yiyor, '+nm[1]+' '+ME.a.f.toFixed(2)+' atıp '+ME.a.a.toFixed(2)+' yiyor → beklenen '+ME.tot.toFixed(2)+' gol'+(ME.lg!=null?' (lig '+ME.lg.toFixed(2)+')':'') : '';
-  const prTxt = PR.push!==null ? nm[PR.push]+' yükleniyor (baskı payı %'+Math.round(PR.idx[PR.push]*100)+')' : ('belirgin yüklenen taraf yok'+(T?', tempo '+T.lab:''));
+  const prTxt = pressureTxt(PR, nm) + (T ? ', tempo '+T.lab : '');
   { // bir gol daha
     const c = [];
     if(ME && ME.ratio!=null) c.push(ck('Gol dakikaları', ME.ratio>=1.15, span+': '+meTxt));
@@ -390,7 +419,7 @@ function livePicks(m, L, o){
   if(t >= (iy ? 20 : 55)){ // bu skorla biter
     const c = [];
     if(ME && ME.ratio!=null) c.push(ck('Gol dakikaları', ME.ratio<=0.85, span+': '+meTxt));
-    c.push(ck('Baskı', !PR.hot, prTxt));
+    c.push(ck('Baskı', !PR.hot || PR.quiet || PR.fade!==null, prTxt));
     c.push(ck('Model', pm1<=0.4, when+'gol olmama ihtimali '+P(1-pm1)));
     if(S) c.push(ck('Ligde benzer maçlar', S.more1<=0.4, S.lab+': '+S.n+' maçta '+when+'golsüz geçme oranı '+P(1-S.more1)));
     if(tr!=null && ok3(tr)) c.push(ck(nm[tr]+' tepkisi', TM[tr].scored<0.35, TM[tr].lab+' '+TM[tr].n+' maçta '+when+'gol atma oranı sadece '+P(TM[tr].scored)));
@@ -402,8 +431,7 @@ function livePicks(m, L, o){
       const c = [ck('Model', shm*pm1>=0.45, 'sıradaki golde bu takımın payı '+P(shm))];
       if(S) c.push(ck('Ligde benzer maçlar', (i?S.nextA:S.nextH)>=0.45, 'sıradaki golü bu tarafın atma oranı '+P(i?S.nextA:S.nextH)));
       if(ok3(i)) c.push(ck(nm[i]+' tepkisi', TM[i].scored>=0.5 && TM[i].gf>=TM[i].ga, TM[i].lab+' maç başı '+TM[i].gf.toFixed(1)+' attı, '+TM[i].ga.toFixed(1)+' yedi'));
-      const so = [L.stats.h.sot, L.stats.a.sot];
-      if(so[0]!=null && so[1]!=null) c.push(ck('Baskı', so[i]>so[1-i], 'isabetli şut '+so[i]+'-'+so[1-i]));
+      c.push(ck('Baskı', PR.push===i, pressureTxt(PR, nm)));
       out.push({t:'Sıradaki gol: '+nm[i], sub:'bilgi: taraf bahsi', p, c, info:true});
     }
     if(!(L.hg>0&&L.ag>0) && cur>0){ // KG Var
@@ -542,7 +570,9 @@ function liveCard(m, L){
     out += '<div class="row">Bu iki takımın dakikalarına göre bu aralıkta beklenen gol <b>'+ME.tot.toFixed(2)+'</b>'+(ME.lg!=null?' (lig ortalaması '+ME.lg.toFixed(2)+')':'')+' → gol ihtimali <b>'+P(ME.p)+'</b>.'+
            (M15 && o.t+15 < (iy?45:93) ? ' Sonraki 15 dakikada: <b>'+P(M15.p)+'</b>'+(M15.lg!=null?' (lig '+P(1-Math.exp(-M15.lg))+')':'')+'.' : '')+'</div>';
   } else out += '<p class="note">Takımların gol dakikası verisi yok.</p>';
-  out += '<div class="row">Baskı: '+(PR.push!==null ? '<b>'+esc(PR.push?m.a:m.h)+' yükleniyor</b> (topla oynama, şut, isabetli şut ve korner payı %'+Math.round(PR.idx[PR.push]*100)+')' : 'belirgin yüklenen taraf yok (ev sahibi payı %'+Math.round(PR.idx[0]*100)+')')+'.</div>';
+  out += '<div class="row">Baskı: <b>'+esc(pressureTxt(PR, [m.h, m.a]))+'</b>.</div>';
+  if(PR.R) out += '<div class="row">Son '+PR.R.span+' dakika: '+esc(m.h)+' '+PR.R.shH+' şut ('+PR.R.sotH+' isabetli), '+PR.R.corH+' korner · '+
+                  esc(m.a)+' '+PR.R.shA+' şut ('+PR.R.sotA+' isabetli), '+PR.R.corA+' korner. Maçın tamamında baskı payı: '+esc(m.h)+' %'+Math.round(PR.ov[0]*100)+'.</div>';
   out += '<details><summary>Tüm seçenekler ve kanıtları</summary>'+
          (iy ? '<div class="vt">İlk yarı</div>'+o.iyPicks.map(pickHtml).join('') : '')+
          '<div class="vt">Maç sonu</div>'+o.picks.map(pickHtml).join('')+'</details>';
