@@ -638,6 +638,74 @@
      "mp": 0.646
     }
    ]
+  },
+  {
+   "id": "k1792778285547",
+   "t": "2026-10-23T17:58:05.547Z",
+   "tutar": 500,
+   "kaynak": "analiz sayfası",
+   "legs": [
+    {
+     "m": "401900888",
+     "ad": "Al Qadsiah - Al Hilal",
+     "lg": "Suudi Arabistan Pro Lig",
+     "k": "2026-10-23T18:00:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.21,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.6464
+    },
+    {
+     "m": "401875880",
+     "ad": "FC Volendam - Jong Utrecht",
+     "lg": "Hollanda 2. Lig",
+     "k": "2026-10-23T18:00:00+00:00",
+     "b": "tev15",
+     "bl": "Ev 1.5 Üst",
+     "o": 1.28,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.6618
+    },
+    {
+     "m": "401875879",
+     "ad": "Jong AZ - Helmond Spor",
+     "lg": "Hollanda 2. Lig",
+     "k": "2026-10-23T18:00:00+00:00",
+     "b": "tev15",
+     "bl": "Ev 1.5 Üst",
+     "o": 1.41,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.7748
+    },
+    {
+     "m": "401875878",
+     "ad": "NAC Breda - Heracles",
+     "lg": "Hollanda 2. Lig",
+     "k": "2026-10-23T18:00:00+00:00",
+     "b": "tdp15",
+     "bl": "Dep 1.5 Üst",
+     "o": 1.55,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.6307
+    },
+    {
+     "m": "401882836",
+     "ad": "Alavés - Málaga",
+     "lg": "İspanya La Liga",
+     "k": "2026-10-23T19:00:00+00:00",
+     "b": "ms1",
+     "bl": "MS 1",
+     "o": 1.4,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.606
+    }
+   ]
   }
  ]
 }
