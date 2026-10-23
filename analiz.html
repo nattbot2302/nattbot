@@ -156,9 +156,9 @@ function settle(code, s){
   return null;
 }
 function pois(k,l){let p=Math.exp(-l);for(let i=1;i<=k;i++)p*=l/i;return p;}
-const PMAP={ms1:'p1',msx:'px',ms2:'p2',o15:'o15',o25:'o25',o35:'o35',o45:'o45',kgv:'btts',iyo05:'iy05',iyo15:'iy15',iykgv:'iykg',
+const PMAP={ms1:'p1',msx:'px',ms2:'p2',o15:'o15',o25:'o25',o35:'o35',o45:'o45',o55:'o55',kgv:'btts',iyo05:'iy05',iyo15:'iy15',iykgv:'iykg',
             tev05:'h05',tdp05:'a05',tev15:'h15',tdp15:'a15',tiev05:'ih05',tidp05:'ia05'};
-const PNEG={u15:'o15',u25:'o25',u35:'o35',u45:'o45',kgy:'btts',iyu05:'iy05',iyu15:'iy15',iykgy:'iykg'};
+const PNEG={u15:'o15',u25:'o25',u35:'o35',u45:'o45',u55:'o55',kgy:'btts',iyu05:'iy05',iyu15:'iy15',iykgy:'iykg'};
 // Modelin maç öncesi olasılığı: biliniyorsa modelin kendi değeri, yoksa gol beklentilerinden (ilk yarı / ikinci yarı) hesap
 function modelP(code, md){
   if(!md || !code || code==='diger') return null;
@@ -315,7 +315,7 @@ async function init(){
 }
 
 let AN = {m:{}, trust:{}};
-const RAPOR_OF = {ms1:'ms1',ms2:'ms2',o15:'o15',o25:'o25',o35:'o35',o45:'o45',u25:'u25',kgv:'btts',iyo05:'iy05',iyo15:'iy15',iykgv:'iykg',
+const RAPOR_OF = {ms1:'ms1',ms2:'ms2',o15:'o15',o25:'o25',o35:'o35',o45:'o45',o55:'o55',u25:'u25',kgv:'btts',iyo05:'iy05',iyo15:'iy15',iykgv:'iykg',
                   tev05:'h05',tdp05:'a05',tev15:'h15',tdp15:'a15',tiev05:'ih05',tidp05:'ia05'};
 const TIER = {2:'Güçlü',1:'Orta',0:'Zayıf'};
 function snapOf(l){ return (l.m && AN.m[l.m]) || l.snap || null; }

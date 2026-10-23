@@ -285,6 +285,38 @@ function tempo(m, L, t){
   return o;
 }
 
+// Takımın gol dakikaları: t ile end arasında maç başı attığı / yediği gol (son maçlarından)
+function winRates(rows, t, end){
+  if(!rows || rows.length<5) return null;
+  let f=0, a=0; for(const r of rows){ const x=aft(r[5],t,end); f+=x.h; a+=x.a; }
+  return {f:f/rows.length, a:a/rows.length, n:rows.length};
+}
+// Ligde bu dakika aralığında maç başı gol (tüm maçlar)
+function lgWin(m, t, end){
+  const G = MODEL.lg && MODEL.lg[m.slug]; if(!G || !G.g || G.g.length<40) return null;
+  let s=0; for(const g of G.g) s+=aft(g,t,end).n; return s/G.g.length;
+}
+// Gol dakikası kanıtı: iki takımın bu aralıktaki gol atma + rakibin yeme hızı, lig ortalamasına göre
+function minuteEv(m, t, end){
+  const tl = m.tl || [[],[]], h = winRates(tl[0],t,end), a = winRates(tl[1],t,end), lg = lgWin(m,t,end);
+  if(!h || !a) return null;
+  const eh = (h.f + a.a)/2, ea = (a.f + h.a)/2, tot = eh+ea;
+  return {eh, ea, tot, lg, ratio: lg ? tot/Math.max(lg,0.02) : null, p: 1-Math.exp(-tot), h, a};
+}
+// Baskı: topla oynama, şut, isabetli şut, korner ve son dakikalardaki şut payı
+function pressure(L, T){
+  const s = L.stats, sh = (x,y)=> (x==null||y==null||x+y===0) ? 0.5 : x/(x+y);
+  const pos = s.h.pos!=null ? s.h.pos/100 : 0.5;
+  let shots = sh(s.h.sh, s.a.sh);
+  if(T && T.recent && T.recent.sh>=3) shots = 0.5*shots + 0.5*sh(T.recent.shH, T.recent.shA);
+  const idx = 0.15*pos + 0.30*shots + 0.40*sh(s.h.sot, s.a.sot) + 0.15*sh(s.h.cor, s.a.cor);
+  const sot = [s.h.sot||0, s.a.sot||0], rec = T && T.recent ? [T.recent.shH, T.recent.shA] : [0,0];
+  let push = null;
+  if(idx>=0.62 && (sot[0]>=2 || rec[0]>=4)) push = 0;
+  else if(idx<=0.38 && (sot[1]>=2 || rec[1]>=4)) push = 1;
+  return {idx:[idx,1-idx], push, hot: push!==null || (T && T.lab==='yüksek'), cold: push===null && T && T.lab==='düşük'};
+}
+
 // Bir zaman dilimi için (maç sonu: end=999, ilk yarı: end=45) kanıtların birleşimi
 function scopeEval(m, L, t, end, rem){
   const d = L.hg-L.ag, lamM = Math.max(rem[0]+rem[1], 1e-6);
@@ -309,6 +341,9 @@ function scopeEval(m, L, t, end, rem){
     const kk = fh+'-'+fa; o.scores[kk] = (o.scores[kk]||0)+p;
   }
   o.nextH = o.more1*sh; o.nextA = o.more1*(1-sh);
+  o.ME = minuteEv(m, t, end);
+  o.ME15 = minuteEv(m, t, Math.min(t+15, end));
+  o.PR = pressure(L, T);
   return o;
 }
 
@@ -332,25 +367,32 @@ function livePicks(m, L, o){
   const genAny = (TM[0]&&TM[1]&&TM[0].gen.n>=5&&TM[1].gen.n>=5) ? (TM[0].gen.any+TM[1].gen.any)/2 : null;
   const span = iy ? t+'. dakika ile devre arası' : t+'. dakikadan sonra';
   const out = [];
+  const ME = o.ME, PR = o.PR;
+  const meTxt = ME ? nm[0]+' bu aralıkta maç başı '+ME.h.f.toFixed(2)+' atıp '+ME.h.a.toFixed(2)+' yiyor, '+nm[1]+' '+ME.a.f.toFixed(2)+' atıp '+ME.a.a.toFixed(2)+' yiyor → beklenen '+ME.tot.toFixed(2)+' gol'+(ME.lg!=null?' (lig '+ME.lg.toFixed(2)+')':'') : '';
+  const prTxt = PR.push!==null ? nm[PR.push]+' yükleniyor (baskı payı %'+Math.round(PR.idx[PR.push]*100)+')' : ('belirgin yüklenen taraf yok'+(T?', tempo '+T.lab:''));
   { // bir gol daha
-    const c = [ck('Model', pm1>=0.6, when+'gol ihtimali '+P(pm1))];
+    const c = [];
+    if(ME && ME.ratio!=null) c.push(ck('Gol dakikaları', ME.ratio>=1.15, span+': '+meTxt));
+    c.push(ck('Baskı', PR.hot, prTxt));
+    c.push(ck('Model', pm1>=0.6, when+'gol ihtimali '+P(pm1)));
     if(S) c.push(ck('Ligde benzer maçlar', S.more1>=0.6, S.lab+': '+S.n+' maçta '+when+'gol olma oranı '+P(S.more1)));
-    if(genAny!=null) c.push(ck('İki takımın maçları', genAny>=0.6, span+' gol olan maç oranı '+P(genAny)));
-    if(T) c.push(ck('Tempo', T.r>=1, 'tempo '+T.lab));
     if(tr!=null && ok3(tr)) c.push(ck(nm[tr]+' tepkisi', TM[tr].scored>=0.5, TM[tr].lab+' '+TM[tr].n+' maçta '+when+'gol atma oranı '+P(TM[tr].scored)));
-    out.push({t:pre+(cur+0.5)+' Üst', sub:iy?'ilk yarıda bir gol daha':'bir gol daha', p:o.more1, c});
+    out.push({t:pre+(cur+0.5)+' Üst', sub:(iy?'ilk yarıda':'maçta')+' bir gol daha (iki takımdan biri atar)', p:o.more1, c});
   }
   { // iki gol daha
-    const c = [ck('Model', pm2>=0.55, when+'iki gol daha ihtimali '+P(pm2))];
+    const c = [];
+    if(ME && ME.ratio!=null) c.push(ck('Gol dakikaları', ME.ratio>=1.35, span+': '+meTxt));
+    c.push(ck('Baskı', PR.hot && (!T || T.r>=1.1), prTxt));
+    c.push(ck('Model', pm2>=0.55, when+'iki gol daha ihtimali '+P(pm2)));
     if(S) c.push(ck('Ligde benzer maçlar', S.more2>=0.55, S.n+' maçta '+when+'2+ gol oranı '+P(S.more2)));
-    if(T) c.push(ck('Tempo', T.r>=1.15, 'tempo '+T.lab));
     out.push({t:pre+(cur+1.5)+' Üst', sub:iy?'ilk yarıda iki gol daha':'iki gol daha', p:o.more2, c});
   }
   if(t >= (iy ? 20 : 55)){ // bu skorla biter
-    const c = [ck('Model', pm1<=0.4, when+'gol olmama ihtimali '+P(1-pm1))];
+    const c = [];
+    if(ME && ME.ratio!=null) c.push(ck('Gol dakikaları', ME.ratio<=0.85, span+': '+meTxt));
+    c.push(ck('Baskı', !PR.hot, prTxt));
+    c.push(ck('Model', pm1<=0.4, when+'gol olmama ihtimali '+P(1-pm1)));
     if(S) c.push(ck('Ligde benzer maçlar', S.more1<=0.4, S.lab+': '+S.n+' maçta '+when+'golsüz geçme oranı '+P(1-S.more1)));
-    if(genAny!=null) c.push(ck('İki takımın maçları', genAny<=0.45, span+' golsüz geçen maç oranı '+P(1-genAny)));
-    if(T) c.push(ck('Tempo', T.r<=0.9, 'tempo '+T.lab));
     if(tr!=null && ok3(tr)) c.push(ck(nm[tr]+' tepkisi', TM[tr].scored<0.35, TM[tr].lab+' '+TM[tr].n+' maçta '+when+'gol atma oranı sadece '+P(TM[tr].scored)));
     out.push({t:pre+(cur+0.5)+' Alt', sub:iy?'ilk yarı bu skorla biter':'bu skorla biter', p:1-o.more1, c});
   }
@@ -362,14 +404,14 @@ function livePicks(m, L, o){
       if(ok3(i)) c.push(ck(nm[i]+' tepkisi', TM[i].scored>=0.5 && TM[i].gf>=TM[i].ga, TM[i].lab+' maç başı '+TM[i].gf.toFixed(1)+' attı, '+TM[i].ga.toFixed(1)+' yedi'));
       const so = [L.stats.h.sot, L.stats.a.sot];
       if(so[0]!=null && so[1]!=null) c.push(ck('Baskı', so[i]>so[1-i], 'isabetli şut '+so[i]+'-'+so[1-i]));
-      out.push({t:'Sıradaki gol: '+nm[i], sub:'', p, c});
+      out.push({t:'Sıradaki gol: '+nm[i], sub:'bilgi: taraf bahsi', p, c, info:true});
     }
     if(!(L.hg>0&&L.ag>0) && cur>0){ // KG Var
       const z = L.hg===0 ? 0 : 1, pz = 1-Math.exp(-(z?o.la:o.lh)), pmz = 1-Math.exp(-o.rem[z]);
       const c = [ck('Model', pmz>=0.55, nm[z]+' için gol ihtimali '+P(pmz))];
       if(S) c.push(ck('Ligde benzer maçlar', (z?S.scA:S.scH)>=0.5, 'bu tarafın gol attığı maç oranı '+P(z?S.scA:S.scH)));
       if(ok3(z)) c.push(ck(nm[z]+' tepkisi', TM[z].scored>=0.55, TM[z].lab+' gol atma oranı '+P(TM[z].scored)));
-      out.push({t:'KG Var', sub:nm[z]+' de gol atar', p:pz, c});
+      out.push({t:'KG Var', sub:nm[z]+' de gol atar (bilgi: taraf bahsi)', p:pz, c, info:true});
     }
   }
   if(d!==0 && t >= (iy ? 20 : 30)){ // önde olan kazanır / devreyi önde kapatır
@@ -389,7 +431,7 @@ function livePicks(m, L, o){
   for(const x of out){
     const v = x.c.filter(y=>y.ok!=null);
     x.ok = v.filter(y=>y.ok).length; x.n = v.length; x.ratio = x.n ? x.ok/x.n : 0;
-    x.level = (x.c[0].ok && x.p>=0.65 && x.ratio>=0.8 && x.n>=3) ? 'Güçlü' : ((x.c[0].ok && x.p>=0.58 && x.ratio>=0.6 && x.n>=2) ? 'Orta' : null);
+    x.level = x.info ? null : (x.c[0].ok && x.p>=0.65 && x.ratio>=0.8 && x.n>=3) ? 'Güçlü' : ((x.c[0].ok && x.p>=0.58 && x.ratio>=0.6 && x.n>=2) ? 'Orta' : null);
     x.iy = iy;
   }
   return out.filter(x=>x.p<=0.93).sort((a,b)=>(b.level==='Güçlü')-(a.level==='Güçlü') || (!!b.level)-(!!a.level) || b.ratio-a.ratio || b.p-a.p);
@@ -427,7 +469,7 @@ async function getLiveData(){
 // Canlı alarm: kanıtları birbirini tutan bir canlı bahis (ilk yarı ya da maç sonu) çıktığında
 function alarmScan(m, L){
   const o = liveEval(m, L);
-  const best = o.iyPicks.concat(o.picks).filter(x=>x.level).sort((a,b)=>(b.level==='Güçlü')-(a.level==='Güçlü') || b.ratio-a.ratio || b.p-a.p)[0];
+  const best = (o.iy ? o.iyPicks : o.picks).filter(x=>x.level).sort((a,b)=>(b.level==='Güçlü')-(a.level==='Güçlü') || b.ratio-a.ratio || b.p-a.p)[0];
   if(!best) return null;
   const reasons = [];
   if(best.iy) reasons.push('İlk yarı');
@@ -486,9 +528,21 @@ function liveCard(m, L){
 
   // 1) Ne oynanır: ilk yarı ve maç sonu ayrı
   out += '<div class="sec">Ne oynanır?</div>';
-  if(iy) out += verdict(o.iyPicks, 'İlk yarı · devreye ~'+Math.max(45-o.t,1)+' dk');
-  else out += '<div class="vt">İlk yarı</div><p class="note">'+(o.ht?'Devre arası':'İlk yarı bitti')+'; ilk yarı bahisleri kapandı.</p>';
-  out += verdict(o.picks, 'Maç sonu');
+  if(iy){
+    out += verdict(o.iyPicks, 'İlk yarı · devreye ~'+Math.max(45-o.t,1)+' dk');
+    out += '<details><summary>Maç sonu seçenekleri (ikinci yarıda öne çıkar)</summary>'+verdict(o.picks, 'Maç sonu')+'</details>';
+  } else {
+    out += verdict(o.picks, 'Maç sonu'+(o.ht?' · ikinci yarı başlıyor':' · kalan ~'+Math.max(93-o.t,1)+' dk'));
+  }
+  // Gol dakikaları (öncelik) ve baskı
+  const sc_ = iy || o, ME = sc_.ME, M15 = sc_.ME15, PR = sc_.PR;
+  out += '<div class="sec">Gol dakikaları ('+(iy?o.t+'. dk – devre arası':o.t+'. dk – maç sonu')+')</div>';
+  if(ME){
+    out += '<div class="row"><b>'+esc(m.h)+'</b> bu aralıkta maç başı '+ME.h.f.toFixed(2)+' gol atıyor, '+ME.h.a.toFixed(2)+' yiyor · <b>'+esc(m.a)+'</b> '+ME.a.f.toFixed(2)+' atıyor, '+ME.a.a.toFixed(2)+' yiyor (son '+Math.min(ME.h.n,ME.a.n)+' maç).</div>';
+    out += '<div class="row">Bu iki takımın dakikalarına göre bu aralıkta beklenen gol <b>'+ME.tot.toFixed(2)+'</b>'+(ME.lg!=null?' (lig ortalaması '+ME.lg.toFixed(2)+')':'')+' → gol ihtimali <b>'+P(ME.p)+'</b>.'+
+           (M15 && o.t+15 < (iy?45:93) ? ' Sonraki 15 dakikada: <b>'+P(M15.p)+'</b>'+(M15.lg!=null?' (lig '+P(1-Math.exp(-M15.lg))+')':'')+'.' : '')+'</div>';
+  } else out += '<p class="note">Takımların gol dakikası verisi yok.</p>';
+  out += '<div class="row">Baskı: '+(PR.push!==null ? '<b>'+esc(PR.push?m.a:m.h)+' yükleniyor</b> (topla oynama, şut, isabetli şut ve korner payı %'+Math.round(PR.idx[PR.push]*100)+')' : 'belirgin yüklenen taraf yok (ev sahibi payı %'+Math.round(PR.idx[0]*100)+')')+'.</div>';
   out += '<details><summary>Tüm seçenekler ve kanıtları</summary>'+
          (iy ? '<div class="vt">İlk yarı</div>'+o.iyPicks.map(pickHtml).join('') : '')+
          '<div class="vt">Maç sonu</div>'+o.picks.map(pickHtml).join('')+'</details>';
