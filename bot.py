@@ -48,6 +48,8 @@ LEAGUES = [
     ("jpn.1", "Japonya J1 Lig", False),
     ("chn.1", "Çin Süper Lig", True),
     ("aus.1", "Avustralya A-Lig", False),
+    ("wal.1", "Galler Premier Lig", False),
+    ("irl.1", "İrlanda Premier Lig", True),
 ]
 
 HISTORY_DAYS = 420      # geçmiş veri penceresi
