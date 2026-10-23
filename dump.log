@@ -1,30 +1,125 @@
-  eng.1: aralık 1 gün, 332 istek, 0 hata, 331 maç
-  ger.1: aralık 1 gün, 332 istek, 0 hata, 262 maç
-  ger.2: aralık 1 gün, 332 istek, 0 hata, 263 maç
-  ita.1: aralık 1 gün, 332 istek, 0 hata, 331 maç
-  fra.1: aralık 1 gün, 332 istek, 0 hata, 253 maç
-  esp.1: aralık 1 gün, 332 istek, 0 hata, 341 maç
-  usa.1: aralık 1 gün, 332 istek, 0 hata, 455 maç
-  bra.1: aralık 1 gün, 332 istek, 0 hata, 343 maç
-  swe.1: aralık 1 gün, 332 istek, 0 hata, 194 maç
-  nor.1: aralık 1 gün, 332 istek, 0 hata, 192 maç
-  sco.1: aralık 1 gün, 332 istek, 0 hata, 206 maç
-  den.1: aralık 1 gün, 332 istek, 0 hata, 164 maç
-  fra.2: aralık 1 gün, 332 istek, 0 hata, 257 maç
-  eng.2: aralık 1 gün, 332 istek, 0 hata, 492 maç
-  ned.1: aralık 1 gün, 332 istek, 0 hata, 274 maç
-  eng.3: aralık 1 gün, 332 istek, 0 hata, 495 maç
-  ned.2: aralık 1 gün, 332 istek, 0 hata, 331 maç
-  eng.4: aralık 1 gün, 332 istek, 0 hata, 492 maç
-  aut.1: aralık 1 gün, 332 istek, 0 hata, 167 maç
-  uefa.champions: aralık 1 gün, 332 istek, 0 hata, 162 maç
-  bel.1: aralık 1 gün, 332 istek, 0 hata, 266 maç
-  uefa.europa: aralık 1 gün, 332 istek, 0 hata, 171 maç
-  uefa.europa.conf: aralık 1 gün, 332 istek, 0 hata, 135 maç
-  rus.1: aralık 1 gün, 332 istek, 0 hata, 201 maç
-  gre.1: aralık 1 gün, 332 istek, 0 hata, 209 maç
-  jpn.1: aralık 1 gün, 332 istek, 0 hata, 330 maç
-  ksa.1: aralık 1 gün, 332 istek, 0 hata, 316 maç
-  chn.1: aralık 1 gün, 332 istek, 0 hata, 224 maç
-  aus.1: aralık 1 gün, 332 istek, 0 hata, 139 maç
-{'eng.1': 331, 'esp.1': 341, 'ita.1': 331, 'ger.1': 262, 'fra.1': 253, 'ger.2': 263, 'usa.1': 455, 'bra.1': 343, 'swe.1': 194, 'nor.1': 192, 'den.1': 164, 'sco.1': 206, 'fra.2': 257, 'ned.1': 274, 'ned.2': 331, 'eng.2': 492, 'eng.3': 495, 'eng.4': 492, 'aut.1': 167, 'bel.1': 266, 'uefa.champions': 162, 'uefa.europa': 171, 'uefa.europa.conf': 135, 'rus.1': 201, 'gre.1': 209, 'ksa.1': 316, 'jpn.1': 330, 'chn.1': 224, 'aus.1': 139, '_now': '2026-10-22T18:12:12.504883+00:00'}
+{
+ "wal.1 20261018": [
+  200,
+  0,
+  "Welsh Premier League",
+  []
+ ],
+ "wal.1 20261010": [
+  200,
+  0,
+  "Welsh Premier League",
+  []
+ ],
+ "wal.1 20260920": [
+  200,
+  0,
+  "Welsh Premier League",
+  []
+ ],
+ "wal.1 20260301": [
+  200,
+  0,
+  "Welsh Premier League",
+  []
+ ],
+ "irl.1 20261018": [
+  200,
+  0,
+  "Irish Premier Division",
+  []
+ ],
+ "irl.1 20261010": [
+  200,
+  0,
+  "Irish Premier Division",
+  []
+ ],
+ "irl.1 20260920": [
+  200,
+  0,
+  "Irish Premier Division",
+  []
+ ],
+ "irl.1 20260301": [
+  200,
+  0,
+  "Irish Premier Division",
+  []
+ ],
+ "nir.1 20261018": [
+  200,
+  0,
+  "Northern Irish Premiership",
+  []
+ ],
+ "nir.1 20261010": [
+  200,
+  0,
+  "Northern Irish Premiership",
+  []
+ ],
+ "nir.1 20260920": [
+  200,
+  0,
+  "Northern Irish Premiership",
+  []
+ ],
+ "nir.1 20260301": [
+  200,
+  0,
+  "Northern Irish Premiership",
+  []
+ ],
+ "irl.2 20261018": [
+  400,
+  0,
+  null,
+  []
+ ],
+ "irl.2 20261010": [
+  400,
+  0,
+  null,
+  []
+ ],
+ "irl.2 20260920": [
+  400,
+  0,
+  null,
+  []
+ ],
+ "irl.2 20260301": [
+  400,
+  0,
+  null,
+  []
+ ],
+ "fra.2 20261018": [
+  200,
+  0,
+  "French Ligue 2",
+  []
+ ],
+ "fra.2 20261010": [
+  200,
+  3,
+  "French Ligue 2",
+  [
+   "Red Star FC 93 at Clermont Foot",
+   "Stade de Reims at Nantes"
+  ]
+ ],
+ "fra.2 20260920": [
+  200,
+  0,
+  "French Ligue 2",
+  []
+ ],
+ "fra.2 20260301": [
+  200,
+  0,
+  "French Ligue 2",
+  []
+ ]
+}
