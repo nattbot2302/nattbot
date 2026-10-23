@@ -6027,6 +6027,4268 @@
      }
     }
    ]
+  },
+  {
+   "id": "t1792778252242",
+   "t": "2026-10-23T17:57:32.242Z",
+   "not": "",
+   "legs": [
+    {
+     "m": "401900888",
+     "ad": "Al Qadsiah - Al Hilal",
+     "lg": "Suudi Arabistan Pro Lig",
+     "k": "2026-10-23T18:00:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.21,
+     "snap": {
+      "h": "Al Qadsiah",
+      "a": "Al Hilal",
+      "lg": "Suudi Arabistan Pro Lig",
+      "k": "2026-10-23T18:00:00+00:00",
+      "l": [
+       1.6305,
+       1.699,
+       0.8755,
+       0.8717
+      ],
+      "p": {
+       "p1": 0.3493,
+       "px": 0.2726,
+       "p2": 0.3781,
+       "o15": 0.8668,
+       "o25": 0.6464,
+       "o35": 0.4261,
+       "o45": 0.2428,
+       "o55": 0.1207,
+       "btts": 0.6789,
+       "iy05": 0.8257,
+       "iy15": 0.5212,
+       "iykg": 0.3393,
+       "p21": 0.0207,
+       "p12": 0.026,
+       "h05": 0.8042,
+       "a05": 0.8171,
+       "h15": 0.4849,
+       "a15": 0.5064,
+       "ih05": 0.5833,
+       "ia05": 0.5817
+      },
+      "rp": {
+       "iy05": {
+        "p": 0.8257,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %83 (lig ortalaması %70)"
+         ],
+         [
+          0,
+          "Al Qadsiah son maçları: 8/10 (%80)"
+         ],
+         [
+          0,
+          "Al Hilal son maçları: 7/9 (%78)"
+         ],
+         [
+          1,
+          "Al Qadsiah evdeki son maçları: 5/5 (%100)"
+         ],
+         [
+          0,
+          "Al Hilal dışarıdaki son maçları: 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 40/60 (%67)"
+         ],
+         [
+          1,
+          "Son maçlara göre ilk yarı gol beklentisi 2.0 (lig 1.5)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %55'i ilk yarıda (lig %52)"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk 30 dakikada gol olan maç: Al Qadsiah 7/10, Al Hilal 6/9 (lig %53)"
+         ]
+        ]
+       },
+       "iy15": {
+        "p": 0.5212,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %52 (lig ortalaması %49)"
+         ],
+         [
+          0,
+          "Al Qadsiah son maçları: 5/10 (%50)"
+         ],
+         [
+          1,
+          "Al Hilal son maçları: 6/9 (%67)"
+         ],
+         [
+          1,
+          "Al Qadsiah evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Al Hilal dışarıdaki son maçları: 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 29/60 (%48)"
+         ],
+         [
+          1,
+          "Son maçlara göre ilk yarı gol beklentisi 2.0 (lig 1.5)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %55'i ilk yarıda (lig %52)"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk 30 dakikada gol olan maç: Al Qadsiah 7/10, Al Hilal 6/9 (lig %53)"
+         ]
+        ]
+       },
+       "iykg": {
+        "p": 0.3393,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %34 (lig ortalaması %29)"
+         ],
+         [
+          0,
+          "Al Qadsiah son maçları: 3/10 (%30)"
+         ],
+         [
+          0,
+          "Al Hilal son maçları: 2/9 (%22)"
+         ],
+         [
+          1,
+          "Al Qadsiah evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Al Hilal dışarıdaki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 20/60 (%33)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %55'i ilk yarıda (lig %52)"
+         ],
+         [
+          1,
+          "İlk yarıda gol attığı maç: Al Qadsiah 7/10, Al Hilal 6/9"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk 30 dakikada gol olan maç: Al Qadsiah 7/10, Al Hilal 6/9 (lig %53)"
+         ]
+        ]
+       },
+       "o15": {
+        "p": 0.8668,
+        "t": 0,
+        "ok": 4,
+        "n": 7,
+        "c": [
+         [
+          1,
+          "Model: %87 (lig ortalaması %75)"
+         ],
+         [
+          0,
+          "Al Qadsiah son maçları: 8/10 (%80)"
+         ],
+         [
+          1,
+          "Al Hilal son maçları: 8/9 (%89)"
+         ],
+         [
+          0,
+          "Al Qadsiah evdeki son maçları: 4/5 (%80)"
+         ],
+         [
+          1,
+          "Al Hilal dışarıdaki son maçları: 4/4 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 44/60 (%73)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.5 (lig 2.9)"
+         ]
+        ],
+        "i": []
+       },
+       "o25": {
+        "p": 0.6464,
+        "t": 1,
+        "ok": 6,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %65 (lig ortalaması %55)"
+         ],
+         [
+          0,
+          "Al Qadsiah son maçları: 6/10 (%60)"
+         ],
+         [
+          1,
+          "Al Hilal son maçları: 6/9 (%67)"
+         ],
+         [
+          1,
+          "Al Qadsiah evdeki son maçları: 4/5 (%80)"
+         ],
+         [
+          1,
+          "Al Hilal dışarıdaki son maçları: 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 31/60 (%52)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.5 (lig 2.9)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.5 (lig 3.1)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Al Qadsiah 6/10, Al Hilal 6/9 (lig %62)"
+         ]
+        ]
+       },
+       "o35": {
+        "p": 0.4261,
+        "t": 0,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %43 (lig ortalaması %37)"
+         ],
+         [
+          1,
+          "Al Qadsiah son maçları: 5/10 (%50)"
+         ],
+         [
+          0,
+          "Al Hilal son maçları: 4/9 (%44)"
+         ],
+         [
+          1,
+          "Al Qadsiah evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          1,
+          "Al Hilal dışarıdaki son maçları: 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 22/60 (%37)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.5 (lig 2.9)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.5 (lig 3.1)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Al Qadsiah 6/10, Al Hilal 6/9 (lig %62)"
+         ]
+        ]
+       },
+       "o45": {
+        "p": 0.2428,
+        "t": 0,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %24 (lig ortalaması %23)"
+         ],
+         [
+          0,
+          "Al Qadsiah son maçları: 3/10 (%30)"
+         ],
+         [
+          1,
+          "Al Hilal son maçları: 4/9 (%44)"
+         ],
+         [
+          1,
+          "Al Qadsiah evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          1,
+          "Al Hilal dışarıdaki son maçları: 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 14/60 (%23)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.5 (lig 2.9)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.5 (lig 3.1)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Al Qadsiah 6/10, Al Hilal 6/9 (lig %62)"
+         ]
+        ]
+       },
+       "o55": {
+        "p": 0.1207,
+        "t": 0,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %12 (lig ortalaması %8)"
+         ],
+         [
+          0,
+          "Al Qadsiah son maçları: 1/10 (%10)"
+         ],
+         [
+          1,
+          "Al Hilal son maçları: 3/9 (%33)"
+         ],
+         [
+          1,
+          "Al Qadsiah evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          1,
+          "Al Hilal dışarıdaki son maçları: 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 4/60 (%7)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.5 (lig 2.9)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.5 (lig 3.1)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Al Qadsiah 6/10, Al Hilal 6/9 (lig %62)"
+         ]
+        ]
+       },
+       "btts": {
+        "p": 0.6789,
+        "t": 1,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %68 (lig ortalaması %52)"
+         ],
+         [
+          0,
+          "Al Qadsiah son maçları: 5/10 (%50)"
+         ],
+         [
+          0,
+          "Al Hilal son maçları: 3/9 (%33)"
+         ],
+         [
+          1,
+          "Al Qadsiah evdeki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Al Hilal dışarıdaki son maçları: 1/4 (%25)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 35/60 (%58)"
+         ],
+         [
+          1,
+          "Gol attığı maç: Al Qadsiah 9/10, Al Hilal 8/9"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen gol: Al Qadsiah 1.7, Al Hilal 1.7 (takım ort. 1.6)"
+         ]
+        ],
+        "i": []
+       },
+       "u25": {
+        "p": 0.3536,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %35 (lig ortalaması %45)"
+         ],
+         [
+          0,
+          "Al Qadsiah son maçları: 4/10 (%40)"
+         ],
+         [
+          0,
+          "Al Hilal son maçları: 3/9 (%33)"
+         ],
+         [
+          0,
+          "Al Qadsiah evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Al Hilal dışarıdaki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 29/60 (%48)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 3.5 (lig 2.9)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.5 (lig 3.1)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Al Qadsiah 6/10, Al Hilal 6/9 (lig %62)"
+         ]
+        ]
+       },
+       "h05": {
+        "p": 0.8042,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %80 (lig ortalaması %68)"
+         ],
+         [
+          1,
+          "Al Qadsiah son maçları: gol attığı maç 9/10 (%90)"
+         ],
+         [
+          0,
+          "Al Hilal son maçları: gol yediği maç 4/9 (%44)"
+         ],
+         [
+          1,
+          "Al Qadsiah evdeki son maçları: gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Al Hilal dışarıdaki son maçları: gol yediği maç 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 41/60 (%68)"
+         ],
+         [
+          0,
+          "Son maçlara göre Al Qadsiah gol beklentisi 1.6 (Al Qadsiah maç başı 2.4 attı, Al Hilal 0.8 yedi; lig takım ort. 1.4)"
+         ],
+         [
+          1,
+          "Şutlara göre Al Qadsiah beklenen gol 1.7 (takım ort. 1.6)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.8171,
+        "t": 1,
+        "ok": 6,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %82 (lig ortalaması %72)"
+         ],
+         [
+          0,
+          "Al Qadsiah son maçları: gol yediği maç 6/10 (%60)"
+         ],
+         [
+          1,
+          "Al Hilal son maçları: gol attığı maç 8/9 (%89)"
+         ],
+         [
+          1,
+          "Al Qadsiah evdeki son maçları: gol yediği maç 5/5 (%100)"
+         ],
+         [
+          1,
+          "Al Hilal dışarıdaki son maçları: gol attığı maç 4/4 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 45/60 (%75)"
+         ],
+         [
+          1,
+          "Son maçlara göre Al Hilal gol beklentisi 1.9 (Al Hilal maç başı 3.0 attı, Al Qadsiah 0.9 yedi; lig takım ort. 1.4)"
+         ],
+         [
+          1,
+          "Şutlara göre Al Hilal beklenen gol 1.7 (takım ort. 1.6)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.4849,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %48 (lig ortalaması %43)"
+         ],
+         [
+          1,
+          "Al Qadsiah son maçları: 2+ gol attığı maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "Al Hilal son maçları: 2+ gol yediği maç 3/9 (%33)"
+         ],
+         [
+          1,
+          "Al Qadsiah evdeki son maçları: 2+ gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Al Hilal dışarıdaki son maçları: 2+ gol yediği maç 0/4 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 26/60 (%43)"
+         ],
+         [
+          0,
+          "Son maçlara göre Al Qadsiah gol beklentisi 1.6 (Al Qadsiah maç başı 2.4 attı, Al Hilal 0.8 yedi; lig takım ort. 1.4)"
+         ],
+         [
+          0,
+          "Şutlara göre Al Qadsiah beklenen gol 1.7 (takım ort. 1.6)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.5064,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %51 (lig ortalaması %41)"
+         ],
+         [
+          0,
+          "Al Qadsiah son maçları: 2+ gol yediği maç 2/10 (%20)"
+         ],
+         [
+          1,
+          "Al Hilal son maçları: 2+ gol attığı maç 7/9 (%78)"
+         ],
+         [
+          0,
+          "Al Qadsiah evdeki son maçları: 2+ gol yediği maç 2/5 (%40)"
+         ],
+         [
+          1,
+          "Al Hilal dışarıdaki son maçları: 2+ gol attığı maç 4/4 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 27/60 (%45)"
+         ],
+         [
+          1,
+          "Son maçlara göre Al Hilal gol beklentisi 1.9 (Al Hilal maç başı 3.0 attı, Al Qadsiah 0.9 yedi; lig takım ort. 1.4)"
+         ],
+         [
+          0,
+          "Şutlara göre Al Hilal beklenen gol 1.7 (takım ort. 1.6)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.5833,
+        "t": 0,
+        "ok": 3,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %58 (lig ortalaması %55)"
+         ],
+         [
+          1,
+          "Al Qadsiah son maçları: ilk yarıda gol attığı maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "Al Hilal son maçları: ilk yarıda gol yediği maç 3/9 (%33)"
+         ],
+         [
+          1,
+          "Al Qadsiah evdeki son maçları: ilk yarıda gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Al Hilal dışarıdaki son maçları: ilk yarıda gol yediği maç 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 33/60 (%55)"
+         ],
+         [
+          1,
+          "Son maçlara göre Al Qadsiah ilk yarı gol beklentisi 0.9 (Al Qadsiah maç başı 1.3 attı, Al Hilal 0.4 yedi; lig takım ort. 0.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.5817,
+        "t": 1,
+        "ok": 5,
+        "n": 7,
+        "c": [
+         [
+          1,
+          "Model: %58 (lig ortalaması %44)"
+         ],
+         [
+          0,
+          "Al Qadsiah son maçları: ilk yarıda gol yediği maç 4/10 (%40)"
+         ],
+         [
+          1,
+          "Al Hilal son maçları: ilk yarıda gol attığı maç 6/9 (%67)"
+         ],
+         [
+          1,
+          "Al Qadsiah evdeki son maçları: ilk yarıda gol yediği maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Al Hilal dışarıdaki son maçları: ilk yarıda gol attığı maç 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 27/60 (%45)"
+         ],
+         [
+          1,
+          "Son maçlara göre Al Hilal ilk yarı gol beklentisi 1.1 (Al Hilal maç başı 1.8 attı, Al Qadsiah 0.4 yedi; lig takım ort. 0.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ms1": {
+        "p": 0.3493,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %35 (lig ortalaması %38)"
+         ],
+         [
+          1,
+          "Al Qadsiah son maçları: 10 maçta 8 kazandı (%80)"
+         ],
+         [
+          0,
+          "Al Hilal son maçları: 9 maçta 1 kaybetti (%11)"
+         ],
+         [
+          1,
+          "Al Qadsiah evdeki son maçları: 5 maçta 3 kazandı (%60)"
+         ],
+         [
+          0,
+          "Al Hilal dışarıdaki son maçları: 4 maçta 0 kaybetti (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 20/60 (%33)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Al Qadsiah 2.5, Al Hilal 2.7"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Al Qadsiah +1.2, Al Hilal +1.2"
+         ]
+        ],
+        "i": []
+       },
+       "ms2": {
+        "p": 0.3781,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %38 (lig ortalaması %33)"
+         ],
+         [
+          0,
+          "Al Qadsiah son maçları: 10 maçta 1 kaybetti (%10)"
+         ],
+         [
+          1,
+          "Al Hilal son maçları: 9 maçta 8 kazandı (%89)"
+         ],
+         [
+          0,
+          "Al Qadsiah evdeki son maçları: 5 maçta 1 kaybetti (%20)"
+         ],
+         [
+          1,
+          "Al Hilal dışarıdaki son maçları: 4 maçta 4 kazandı (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 19/60 (%32)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Al Qadsiah 2.5, Al Hilal 2.7"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Al Qadsiah +1.2, Al Hilal +1.2"
+         ]
+        ],
+        "i": []
+       }
+      },
+      "low": false,
+      "tsc": {
+       "h": {
+        "n": 10,
+        "s": 9,
+        "c": 6,
+        "s2": 8,
+        "c2": 2,
+        "n1": 10,
+        "s1": 7,
+        "c1": 4,
+        "s12": 4,
+        "c12": 0
+       },
+       "a": {
+        "n": 9,
+        "s": 8,
+        "c": 4,
+        "s2": 7,
+        "c2": 3,
+        "n1": 9,
+        "s1": 6,
+        "c1": 3,
+        "s12": 5,
+        "c12": 1
+       }
+      },
+      "tc": {
+       "h": "1. sıra (zirve yarışında) · son 5: GGGBG · son 10 maçta maç başı 2.4 attı, 0.9 yedi · form eğrisi ▃▇▆▅▁█▃▄ dengeli · son maçından beri 3 gün: rotasyon riski",
+       "a": "2. sıra (zirve yarışında) · son 5: GGGMG · son 10 maçta maç başı 3.0 attı, 0.8 yedi · şutlarına göre şanslı gidiyor · form eğrisi ▇▆█▆▁█▄▂ düşüşte"
+      }
+     }
+    },
+    {
+     "m": "401875880",
+     "ad": "FC Volendam - Jong Utrecht",
+     "lg": "Hollanda 2. Lig",
+     "k": "2026-10-23T18:00:00+00:00",
+     "b": "tev15",
+     "bl": "Ev 1.5 Üst",
+     "o": 1.28,
+     "snap": {
+      "h": "FC Volendam",
+      "a": "Jong Utrecht",
+      "lg": "Hollanda 2. Lig",
+      "k": "2026-10-23T18:00:00+00:00",
+      "l": [
+       2.2684,
+       1.3898,
+       1.0675,
+       0.6725
+      ],
+      "p": {
+       "p1": 0.5808,
+       "px": 0.1823,
+       "p2": 0.2368,
+       "o15": 0.8718,
+       "o25": 0.7074,
+       "o35": 0.497,
+       "o45": 0.3046,
+       "o55": 0.1639,
+       "btts": 0.665,
+       "iy05": 0.8244,
+       "iy15": 0.519,
+       "iykg": 0.3212,
+       "p21": 0.0394,
+       "p12": 0.0191,
+       "h05": 0.8965,
+       "a05": 0.7509,
+       "h15": 0.6618,
+       "a15": 0.4046,
+       "ih05": 0.6561,
+       "ia05": 0.4896
+      },
+      "rp": {
+       "iy05": {
+        "p": 0.8244,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %82 (lig ortalaması %82)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: 8/10 (%80)"
+         ],
+         [
+          0,
+          "Jong Utrecht son maçları: 9/10 (%90)"
+         ],
+         [
+          0,
+          "FC Volendam evdeki son maçları: 4/5 (%80)"
+         ],
+         [
+          1,
+          "Jong Utrecht dışarıdaki son maçları: 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 47/59 (%80)"
+         ],
+         [
+          1,
+          "Son maçlara göre ilk yarı gol beklentisi 1.8 (lig 1.6)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %48'i ilk yarıda (lig %46)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: FC Volendam 6/11, Jong Utrecht 9/11 (lig %63)"
+         ]
+        ]
+       },
+       "iy15": {
+        "p": 0.519,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %52 (lig ortalaması %49)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: 3/10 (%30)"
+         ],
+         [
+          1,
+          "Jong Utrecht son maçları: 6/10 (%60)"
+         ],
+         [
+          0,
+          "FC Volendam evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          1,
+          "Jong Utrecht dışarıdaki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 26/59 (%44)"
+         ],
+         [
+          1,
+          "Son maçlara göre ilk yarı gol beklentisi 1.8 (lig 1.6)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %48'i ilk yarıda (lig %46)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: FC Volendam 6/11, Jong Utrecht 9/11 (lig %63)"
+         ]
+        ]
+       },
+       "iykg": {
+        "p": 0.3212,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %32 (lig ortalaması %35)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: 2/10 (%20)"
+         ],
+         [
+          0,
+          "Jong Utrecht son maçları: 4/10 (%40)"
+         ],
+         [
+          0,
+          "FC Volendam evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          1,
+          "Jong Utrecht dışarıdaki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 20/59 (%34)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %48'i ilk yarıda (lig %46)"
+         ],
+         [
+          1,
+          "İlk yarıda gol attığı maç: FC Volendam 5/10, Jong Utrecht 7/10"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: FC Volendam 6/11, Jong Utrecht 9/11 (lig %63)"
+         ]
+        ]
+       },
+       "o15": {
+        "p": 0.8718,
+        "t": 0,
+        "ok": 3,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %87 (lig ortalaması %85)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: 8/10 (%80)"
+         ],
+         [
+          0,
+          "Jong Utrecht son maçları: 9/10 (%90)"
+         ],
+         [
+          1,
+          "FC Volendam evdeki son maçları: 5/5 (%100)"
+         ],
+         [
+          1,
+          "Jong Utrecht dışarıdaki son maçları: 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 48/60 (%80)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.8 (lig 3.5)"
+         ]
+        ],
+        "i": []
+       },
+       "o25": {
+        "p": 0.7074,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %71 (lig ortalaması %66)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: 5/10 (%50)"
+         ],
+         [
+          1,
+          "Jong Utrecht son maçları: 9/10 (%90)"
+         ],
+         [
+          0,
+          "FC Volendam evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          1,
+          "Jong Utrecht dışarıdaki son maçları: 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 39/60 (%65)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.8 (lig 3.5)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.5 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: FC Volendam 6/11, Jong Utrecht 10/10 (lig %68)"
+         ]
+        ]
+       },
+       "o35": {
+        "p": 0.497,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %50 (lig ortalaması %44)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: 4/10 (%40)"
+         ],
+         [
+          0,
+          "Jong Utrecht son maçları: 5/10 (%50)"
+         ],
+         [
+          0,
+          "FC Volendam evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Jong Utrecht dışarıdaki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 23/60 (%38)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.8 (lig 3.5)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.5 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: FC Volendam 6/11, Jong Utrecht 10/10 (lig %68)"
+         ]
+        ]
+       },
+       "o45": {
+        "p": 0.3046,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %30 (lig ortalaması %26)"
+         ],
+         [
+          1,
+          "FC Volendam son maçları: 4/10 (%40)"
+         ],
+         [
+          0,
+          "Jong Utrecht son maçları: 3/10 (%30)"
+         ],
+         [
+          1,
+          "FC Volendam evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Jong Utrecht dışarıdaki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 13/60 (%22)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.8 (lig 3.5)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.5 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: FC Volendam 6/11, Jong Utrecht 10/10 (lig %68)"
+         ]
+        ]
+       },
+       "o55": {
+        "p": 0.1639,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %16 (lig ortalaması %14)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: 2/10 (%20)"
+         ],
+         [
+          0,
+          "Jong Utrecht son maçları: 2/10 (%20)"
+         ],
+         [
+          0,
+          "FC Volendam evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Jong Utrecht dışarıdaki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 7/60 (%12)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.8 (lig 3.5)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.5 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: FC Volendam 6/11, Jong Utrecht 10/10 (lig %68)"
+         ]
+        ]
+       },
+       "btts": {
+        "p": 0.665,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %67 (lig ortalaması %67)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: 5/10 (%50)"
+         ],
+         [
+          1,
+          "Jong Utrecht son maçları: 9/10 (%90)"
+         ],
+         [
+          0,
+          "FC Volendam evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          1,
+          "Jong Utrecht dışarıdaki son maçları: 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 40/60 (%67)"
+         ],
+         [
+          1,
+          "Gol attığı maç: FC Volendam 8/10, Jong Utrecht 9/10"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen gol: FC Volendam 1.8, Jong Utrecht 1.6 (takım ort. 1.7)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Geriye düşünce gol attığı maç: FC Volendam 3/5, Jong Utrecht 5/5 (lig %68)"
+         ]
+        ]
+       },
+       "u25": {
+        "p": 0.2926,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %29 (lig ortalaması %34)"
+         ],
+         [
+          1,
+          "FC Volendam son maçları: 5/10 (%50)"
+         ],
+         [
+          0,
+          "Jong Utrecht son maçları: 1/10 (%10)"
+         ],
+         [
+          0,
+          "FC Volendam evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Jong Utrecht dışarıdaki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 21/60 (%35)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 3.8 (lig 3.5)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.5 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: FC Volendam 6/11, Jong Utrecht 10/10 (lig %68)"
+         ]
+        ]
+       },
+       "h05": {
+        "p": 0.8965,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %90 (lig ortalaması %86)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: gol attığı maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "Jong Utrecht son maçları: gol yediği maç 9/10 (%90)"
+         ],
+         [
+          1,
+          "FC Volendam evdeki son maçları: gol attığı maç 5/5 (%100)"
+         ],
+         [
+          1,
+          "Jong Utrecht dışarıdaki son maçları: gol yediği maç 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 53/60 (%88)"
+         ],
+         [
+          1,
+          "Son maçlara göre FC Volendam gol beklentisi 2.2 (FC Volendam maç başı 2.1 attı, Jong Utrecht 2.3 yedi; lig takım ort. 1.7)"
+         ],
+         [
+          0,
+          "Şutlara göre FC Volendam beklenen gol 1.8 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.7509,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %75 (lig ortalaması %79)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: gol yediği maç 7/10 (%70)"
+         ],
+         [
+          1,
+          "Jong Utrecht son maçları: gol attığı maç 9/10 (%90)"
+         ],
+         [
+          0,
+          "FC Volendam evdeki son maçları: gol yediği maç 2/5 (%40)"
+         ],
+         [
+          1,
+          "Jong Utrecht dışarıdaki son maçları: gol attığı maç 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 45/60 (%75)"
+         ],
+         [
+          0,
+          "Son maçlara göre Jong Utrecht gol beklentisi 1.6 (Jong Utrecht maç başı 1.6 attı, FC Volendam 1.5 yedi; lig takım ort. 1.7)"
+         ],
+         [
+          0,
+          "Şutlara göre Jong Utrecht beklenen gol 1.6 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.6618,
+        "t": 1,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %66 (lig ortalaması %57)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: 2+ gol attığı maç 6/10 (%60)"
+         ],
+         [
+          1,
+          "Jong Utrecht son maçları: 2+ gol yediği maç 8/10 (%80)"
+         ],
+         [
+          1,
+          "FC Volendam evdeki son maçları: 2+ gol attığı maç 5/5 (%100)"
+         ],
+         [
+          1,
+          "Jong Utrecht dışarıdaki son maçları: 2+ gol yediği maç 5/5 (%100)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 40/60 (%67)"
+         ],
+         [
+          0,
+          "Son maçlara göre FC Volendam gol beklentisi 2.2 (FC Volendam maç başı 2.1 attı, Jong Utrecht 2.3 yedi; lig takım ort. 1.7)"
+         ],
+         [
+          0,
+          "Şutlara göre FC Volendam beklenen gol 1.8 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.4046,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %40 (lig ortalaması %40)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: 2+ gol yediği maç 3/10 (%30)"
+         ],
+         [
+          0,
+          "Jong Utrecht son maçları: 2+ gol attığı maç 2/10 (%20)"
+         ],
+         [
+          0,
+          "FC Volendam evdeki son maçları: 2+ gol yediği maç 1/5 (%20)"
+         ],
+         [
+          0,
+          "Jong Utrecht dışarıdaki son maçları: 2+ gol attığı maç 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 15/60 (%25)"
+         ],
+         [
+          0,
+          "Son maçlara göre Jong Utrecht gol beklentisi 1.6 (Jong Utrecht maç başı 1.6 attı, FC Volendam 1.5 yedi; lig takım ort. 1.7)"
+         ],
+         [
+          0,
+          "Şutlara göre Jong Utrecht beklenen gol 1.6 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.6561,
+        "t": 0,
+        "ok": 3,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %66 (lig ortalaması %66)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: ilk yarıda gol attığı maç 5/10 (%50)"
+         ],
+         [
+          0,
+          "Jong Utrecht son maçları: ilk yarıda gol yediği maç 6/10 (%60)"
+         ],
+         [
+          1,
+          "FC Volendam evdeki son maçları: ilk yarıda gol attığı maç 4/5 (%80)"
+         ],
+         [
+          1,
+          "Jong Utrecht dışarıdaki son maçları: ilk yarıda gol yediği maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 39/59 (%66)"
+         ],
+         [
+          1,
+          "Son maçlara göre FC Volendam ilk yarı gol beklentisi 1.1 (FC Volendam maç başı 0.9 attı, Jong Utrecht 1.2 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.4896,
+        "t": 0,
+        "ok": 2,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %49 (lig ortalaması %50)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: ilk yarıda gol yediği maç 5/10 (%50)"
+         ],
+         [
+          1,
+          "Jong Utrecht son maçları: ilk yarıda gol attığı maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "FC Volendam evdeki son maçları: ilk yarıda gol yediği maç 2/5 (%40)"
+         ],
+         [
+          1,
+          "Jong Utrecht dışarıdaki son maçları: ilk yarıda gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 28/59 (%47)"
+         ],
+         [
+          0,
+          "Son maçlara göre Jong Utrecht ilk yarı gol beklentisi 0.8 (Jong Utrecht maç başı 0.9 attı, FC Volendam 0.6 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
+       "ms1": {
+        "p": 0.5808,
+        "t": 0,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %58 (lig ortalaması %54)"
+         ],
+         [
+          0,
+          "FC Volendam son maçları: 10 maçta 5 kazandı (%50)"
+         ],
+         [
+          1,
+          "Jong Utrecht son maçları: 10 maçta 7 kaybetti (%70)"
+         ],
+         [
+          1,
+          "FC Volendam evdeki son maçları: 5 maçta 5 kazandı (%100)"
+         ],
+         [
+          1,
+          "Jong Utrecht dışarıdaki son maçları: 5 maçta 4 kaybetti (%80)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 41/60 (%68)"
+         ],
+         [
+          1,
+          "Son 10 maç puan ortalaması: FC Volendam 1.6, Jong Utrecht 0.7"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): FC Volendam -0.3, Jong Utrecht -0.7"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "FC Volendam öne geçince kazandı 5/6; Jong Utrecht geriye düşünce puan aldı 0/5 (lig %71 / %29)"
+         ]
+        ]
+       },
+       "ms2": {
+        "p": 0.2368,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %24 (lig ortalaması %28)"
+         ],
+         [
+          1,
+          "FC Volendam son maçları: 10 maçta 4 kaybetti (%40)"
+         ],
+         [
+          0,
+          "Jong Utrecht son maçları: 10 maçta 2 kazandı (%20)"
+         ],
+         [
+          0,
+          "FC Volendam evdeki son maçları: 5 maçta 0 kaybetti (%0)"
+         ],
+         [
+          0,
+          "Jong Utrecht dışarıdaki son maçları: 5 maçta 1 kazandı (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 8/60 (%13)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: FC Volendam 1.6, Jong Utrecht 0.7"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): FC Volendam -0.3, Jong Utrecht -0.7"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Jong Utrecht öne geçince kazandı 2/5; FC Volendam geriye düşünce puan aldı 0/5 (lig %71 / %29)"
+         ]
+        ]
+       }
+      },
+      "low": false,
+      "tsc": {
+       "h": {
+        "n": 10,
+        "s": 8,
+        "c": 7,
+        "s2": 6,
+        "c2": 3,
+        "n1": 10,
+        "s1": 5,
+        "c1": 5,
+        "s12": 2,
+        "c12": 1
+       },
+       "a": {
+        "n": 10,
+        "s": 9,
+        "c": 9,
+        "s2": 2,
+        "c2": 8,
+        "n1": 10,
+        "s1": 7,
+        "c1": 6,
+        "s12": 1,
+        "c12": 3
+       }
+      },
+      "tc": {
+       "h": "8. sıra (orta sıralarda) · son 5: BGMGM · son 10 maçta maç başı 2.1 attı, 1.5 yedi · şutlarına göre şanslı gidiyor · form eğrisi █▃▇▁▃▃▅▃ dengeli",
+       "a": "20. sıra (düşme hattında) · son 5: MMMGG · son 10 maçta maç başı 1.6 attı, 2.3 yedi · form eğrisi ▅▇▃▆█▁▄▁ dengeli"
+      }
+     }
+    },
+    {
+     "m": "401875879",
+     "ad": "Jong AZ - Helmond Spor",
+     "lg": "Hollanda 2. Lig",
+     "k": "2026-10-23T18:00:00+00:00",
+     "b": "tev15",
+     "bl": "Ev 1.5 Üst",
+     "o": 1.41,
+     "snap": {
+      "h": "Jong AZ",
+      "a": "Helmond Spor",
+      "lg": "Hollanda 2. Lig",
+      "k": "2026-10-23T18:00:00+00:00",
+      "l": [
+       2.8361,
+       1.3753,
+       1.3959,
+       0.6783
+      ],
+      "p": {
+       "p1": 0.6831,
+       "px": 0.149,
+       "p2": 0.1678,
+       "o15": 0.9169,
+       "o25": 0.7911,
+       "o35": 0.6064,
+       "o45": 0.412,
+       "o55": 0.2482,
+       "btts": 0.6976,
+       "iy05": 0.8743,
+       "iy15": 0.6135,
+       "iykg": 0.3705,
+       "p21": 0.0419,
+       "p12": 0.0159,
+       "h05": 0.9413,
+       "a05": 0.7472,
+       "h15": 0.7748,
+       "a15": 0.3996,
+       "ih05": 0.7522,
+       "ia05": 0.4925
+      },
+      "rp": {
+       "iy05": {
+        "p": 0.8743,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %87 (lig ortalaması %82)"
+         ],
+         [
+          0,
+          "Jong AZ son maçları: 9/10 (%90)"
+         ],
+         [
+          0,
+          "Helmond Spor son maçları: 9/10 (%90)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Helmond Spor dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 50/59 (%85)"
+         ],
+         [
+          1,
+          "Son maçlara göre ilk yarı gol beklentisi 2.0 (lig 1.6)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %49'i ilk yarıda (lig %46)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Jong AZ 6/11, Helmond Spor 8/11 (lig %63)"
+         ]
+        ]
+       },
+       "iy15": {
+        "p": 0.6135,
+        "t": 1,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %61 (lig ortalaması %49)"
+         ],
+         [
+          1,
+          "Jong AZ son maçları: 6/10 (%60)"
+         ],
+         [
+          1,
+          "Helmond Spor son maçları: 7/10 (%70)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          1,
+          "Helmond Spor dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 30/59 (%51)"
+         ],
+         [
+          1,
+          "Son maçlara göre ilk yarı gol beklentisi 2.0 (lig 1.6)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %49'i ilk yarıda (lig %46)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Jong AZ 6/11, Helmond Spor 8/11 (lig %63)"
+         ]
+        ]
+       },
+       "iykg": {
+        "p": 0.3705,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %37 (lig ortalaması %35)"
+         ],
+         [
+          1,
+          "Jong AZ son maçları: 5/10 (%50)"
+         ],
+         [
+          1,
+          "Helmond Spor son maçları: 6/10 (%60)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          1,
+          "Helmond Spor dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 21/59 (%36)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %49'i ilk yarıda (lig %46)"
+         ],
+         [
+          1,
+          "İlk yarıda gol attığı maç: Jong AZ 6/10, Helmond Spor 8/10"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Jong AZ 6/11, Helmond Spor 8/11 (lig %63)"
+         ]
+        ]
+       },
+       "o15": {
+        "p": 0.9169,
+        "t": 0,
+        "ok": 3,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %92 (lig ortalaması %85)"
+         ],
+         [
+          0,
+          "Jong AZ son maçları: 9/10 (%90)"
+         ],
+         [
+          1,
+          "Helmond Spor son maçları: 10/10 (%100)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          1,
+          "Helmond Spor dışarıdaki son maçları: 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 51/60 (%85)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.1 (lig 3.5)"
+         ]
+        ],
+        "i": []
+       },
+       "o25": {
+        "p": 0.7911,
+        "t": 1,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %79 (lig ortalaması %66)"
+         ],
+         [
+          1,
+          "Jong AZ son maçları: 8/10 (%80)"
+         ],
+         [
+          0,
+          "Helmond Spor son maçları: 7/10 (%70)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          1,
+          "Helmond Spor dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 42/60 (%70)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.1 (lig 3.5)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Jong AZ 8/11, Helmond Spor 7/11 (lig %68)"
+         ]
+        ]
+       },
+       "o35": {
+        "p": 0.6064,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %61 (lig ortalaması %44)"
+         ],
+         [
+          1,
+          "Jong AZ son maçları: 6/10 (%60)"
+         ],
+         [
+          0,
+          "Helmond Spor son maçları: 5/10 (%50)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Helmond Spor dışarıdaki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 27/60 (%45)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.1 (lig 3.5)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Jong AZ 8/11, Helmond Spor 7/11 (lig %68)"
+         ]
+        ]
+       },
+       "o45": {
+        "p": 0.412,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %41 (lig ortalaması %26)"
+         ],
+         [
+          1,
+          "Jong AZ son maçları: 5/10 (%50)"
+         ],
+         [
+          0,
+          "Helmond Spor son maçları: 2/10 (%20)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Helmond Spor dışarıdaki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 18/60 (%30)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.1 (lig 3.5)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Jong AZ 8/11, Helmond Spor 7/11 (lig %68)"
+         ]
+        ]
+       },
+       "o55": {
+        "p": 0.2482,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %25 (lig ortalaması %14)"
+         ],
+         [
+          1,
+          "Jong AZ son maçları: 3/10 (%30)"
+         ],
+         [
+          0,
+          "Helmond Spor son maçları: 1/10 (%10)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Helmond Spor dışarıdaki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 9/60 (%15)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.1 (lig 3.5)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Jong AZ 8/11, Helmond Spor 7/11 (lig %68)"
+         ]
+        ]
+       },
+       "btts": {
+        "p": 0.6976,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %70 (lig ortalaması %67)"
+         ],
+         [
+          1,
+          "Jong AZ son maçları: 9/10 (%90)"
+         ],
+         [
+          1,
+          "Helmond Spor son maçları: 8/10 (%80)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          1,
+          "Helmond Spor dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 42/60 (%70)"
+         ],
+         [
+          1,
+          "Gol attığı maç: Jong AZ 9/10, Helmond Spor 8/10"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen gol: Jong AZ 2.3, Helmond Spor 1.6 (takım ort. 1.7)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Geriye düşünce gol attığı maç: Jong AZ 5/7, Helmond Spor 4/6 (lig %68)"
+         ]
+        ]
+       },
+       "u25": {
+        "p": 0.2089,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %21 (lig ortalaması %34)"
+         ],
+         [
+          0,
+          "Jong AZ son maçları: 2/10 (%20)"
+         ],
+         [
+          0,
+          "Helmond Spor son maçları: 3/10 (%30)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Helmond Spor dışarıdaki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 18/60 (%30)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 4.1 (lig 3.5)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Jong AZ 8/11, Helmond Spor 7/11 (lig %68)"
+         ]
+        ]
+       },
+       "h05": {
+        "p": 0.9413,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %94 (lig ortalaması %86)"
+         ],
+         [
+          0,
+          "Jong AZ son maçları: gol attığı maç 9/10 (%90)"
+         ],
+         [
+          1,
+          "Helmond Spor son maçları: gol yediği maç 10/10 (%100)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: gol attığı maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Helmond Spor dışarıdaki son maçları: gol yediği maç 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 55/60 (%92)"
+         ],
+         [
+          1,
+          "Son maçlara göre Jong AZ gol beklentisi 2.3 (Jong AZ maç başı 2.6 attı, Helmond Spor 2.0 yedi; lig takım ort. 1.7)"
+         ],
+         [
+          1,
+          "Şutlara göre Jong AZ beklenen gol 2.3 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.7472,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %75 (lig ortalaması %79)"
+         ],
+         [
+          1,
+          "Jong AZ son maçları: gol yediği maç 10/10 (%100)"
+         ],
+         [
+          0,
+          "Helmond Spor son maçları: gol attığı maç 8/10 (%80)"
+         ],
+         [
+          1,
+          "Jong AZ evdeki son maçları: gol yediği maç 5/5 (%100)"
+         ],
+         [
+          0,
+          "Helmond Spor dışarıdaki son maçları: gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 47/60 (%78)"
+         ],
+         [
+          0,
+          "Son maçlara göre Helmond Spor gol beklentisi 1.8 (Helmond Spor maç başı 1.5 attı, Jong AZ 2.1 yedi; lig takım ort. 1.7)"
+         ],
+         [
+          0,
+          "Şutlara göre Helmond Spor beklenen gol 1.6 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.7748,
+        "t": 1,
+        "ok": 6,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %77 (lig ortalaması %57)"
+         ],
+         [
+          0,
+          "Jong AZ son maçları: 2+ gol attığı maç 6/10 (%60)"
+         ],
+         [
+          1,
+          "Helmond Spor son maçları: 2+ gol yediği maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: 2+ gol attığı maç 2/5 (%40)"
+         ],
+         [
+          1,
+          "Helmond Spor dışarıdaki son maçları: 2+ gol yediği maç 5/5 (%100)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 43/60 (%72)"
+         ],
+         [
+          1,
+          "Son maçlara göre Jong AZ gol beklentisi 2.3 (Jong AZ maç başı 2.6 attı, Helmond Spor 2.0 yedi; lig takım ort. 1.7)"
+         ],
+         [
+          1,
+          "Şutlara göre Jong AZ beklenen gol 2.3 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.3996,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %40 (lig ortalaması %40)"
+         ],
+         [
+          1,
+          "Jong AZ son maçları: 2+ gol yediği maç 6/10 (%60)"
+         ],
+         [
+          0,
+          "Helmond Spor son maçları: 2+ gol attığı maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: 2+ gol yediği maç 1/5 (%20)"
+         ],
+         [
+          0,
+          "Helmond Spor dışarıdaki son maçları: 2+ gol attığı maç 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 18/60 (%30)"
+         ],
+         [
+          0,
+          "Son maçlara göre Helmond Spor gol beklentisi 1.8 (Helmond Spor maç başı 1.5 attı, Jong AZ 2.1 yedi; lig takım ort. 1.7)"
+         ],
+         [
+          0,
+          "Şutlara göre Helmond Spor beklenen gol 1.6 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.7522,
+        "t": 0,
+        "ok": 3,
+        "n": 7,
+        "c": [
+         [
+          1,
+          "Model: %75 (lig ortalaması %66)"
+         ],
+         [
+          0,
+          "Jong AZ son maçları: ilk yarıda gol attığı maç 6/10 (%60)"
+         ],
+         [
+          0,
+          "Helmond Spor son maçları: ilk yarıda gol yediği maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: ilk yarıda gol attığı maç 2/5 (%40)"
+         ],
+         [
+          1,
+          "Helmond Spor dışarıdaki son maçları: ilk yarıda gol yediği maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 42/59 (%71)"
+         ],
+         [
+          1,
+          "Son maçlara göre Jong AZ ilk yarı gol beklentisi 1.1 (Jong AZ maç başı 1.1 attı, Helmond Spor 1.1 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.4925,
+        "t": 0,
+        "ok": 3,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %49 (lig ortalaması %50)"
+         ],
+         [
+          1,
+          "Jong AZ son maçları: ilk yarıda gol yediği maç 8/10 (%80)"
+         ],
+         [
+          1,
+          "Helmond Spor son maçları: ilk yarıda gol attığı maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: ilk yarıda gol yediği maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Helmond Spor dışarıdaki son maçları: ilk yarıda gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 29/59 (%49)"
+         ],
+         [
+          0,
+          "Son maçlara göre Helmond Spor ilk yarı gol beklentisi 0.9 (Helmond Spor maç başı 0.9 attı, Jong AZ 0.9 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
+       "ms1": {
+        "p": 0.6831,
+        "t": 1,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %68 (lig ortalaması %54)"
+         ],
+         [
+          0,
+          "Jong AZ son maçları: 10 maçta 4 kazandı (%40)"
+         ],
+         [
+          0,
+          "Helmond Spor son maçları: 10 maçta 6 kaybetti (%60)"
+         ],
+         [
+          0,
+          "Jong AZ evdeki son maçları: 5 maçta 2 kazandı (%40)"
+         ],
+         [
+          1,
+          "Helmond Spor dışarıdaki son maçları: 5 maçta 5 kaybetti (%100)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 42/60 (%70)"
+         ],
+         [
+          1,
+          "Son 10 maç puan ortalaması: Jong AZ 1.4, Helmond Spor 0.8"
+         ],
+         [
+          1,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Jong AZ +0.5, Helmond Spor -0.9"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "Jong AZ öne geçince kazandı 3/4; Helmond Spor geriye düşünce puan aldı 1/6 (lig %71 / %29)"
+         ]
+        ]
+       },
+       "ms2": {
+        "p": 0.1678,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %17 (lig ortalaması %28)"
+         ],
+         [
+          1,
+          "Jong AZ son maçları: 10 maçta 4 kaybetti (%40)"
+         ],
+         [
+          0,
+          "Helmond Spor son maçları: 10 maçta 2 kazandı (%20)"
+         ],
+         [
+          1,
+          "Jong AZ evdeki son maçları: 5 maçta 3 kaybetti (%60)"
+         ],
+         [
+          0,
+          "Helmond Spor dışarıdaki son maçları: 5 maçta 0 kazandı (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 9/60 (%15)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Jong AZ 1.4, Helmond Spor 0.8"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Jong AZ +0.5, Helmond Spor -0.9"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Helmond Spor öne geçince kazandı 2/5; Jong AZ geriye düşünce puan aldı 2/7 (lig %71 / %29)"
+         ]
+        ]
+       }
+      },
+      "low": false,
+      "tsc": {
+       "h": {
+        "n": 10,
+        "s": 9,
+        "c": 10,
+        "s2": 6,
+        "c2": 6,
+        "n1": 10,
+        "s1": 6,
+        "c1": 8,
+        "s12": 4,
+        "c12": 1
+       },
+       "a": {
+        "n": 10,
+        "s": 8,
+        "c": 10,
+        "s2": 4,
+        "c2": 8,
+        "n1": 10,
+        "s1": 8,
+        "c1": 7,
+        "s12": 1,
+        "c12": 4
+       }
+      },
+      "tc": {
+       "h": "11. sıra (orta sıralarda) · son 5: BMGBM · son 10 maçta maç başı 2.6 attı, 2.1 yedi · şutlarına göre şanslı gidiyor · form eğrisi ▁▂█▄▂▇▂▅ dengeli",
+       "a": "19. sıra (düşme hattında) · son 5: MMBMM · son 10 maçta maç başı 1.5 attı, 2.0 yedi · form eğrisi ▁▃█▃▆▁▆▁ dengeli"
+      }
+     }
+    },
+    {
+     "m": "401875878",
+     "ad": "NAC Breda - Heracles",
+     "lg": "Hollanda 2. Lig",
+     "k": "2026-10-23T18:00:00+00:00",
+     "b": "tdp15",
+     "bl": "Dep 1.5 Üst",
+     "o": 1.55,
+     "snap": {
+      "h": "NAC Breda",
+      "a": "Heracles",
+      "lg": "Hollanda 2. Lig",
+      "k": "2026-10-23T18:00:00+00:00",
+      "l": [
+       1.7653,
+       2.1406,
+       0.805,
+       0.9489
+      ],
+      "p": {
+       "p1": 0.3315,
+       "px": 0.1913,
+       "p2": 0.4772,
+       "o15": 0.8937,
+       "o25": 0.7478,
+       "o35": 0.5479,
+       "o45": 0.3527,
+       "o55": 0.2003,
+       "btts": 0.7238,
+       "iy05": 0.8269,
+       "iy15": 0.5233,
+       "iykg": 0.3388,
+       "p21": 0.0287,
+       "p12": 0.0407,
+       "h05": 0.8289,
+       "a05": 0.8824,
+       "h15": 0.5267,
+       "a15": 0.6307,
+       "ih05": 0.5529,
+       "ia05": 0.6128
+      },
+      "rp": {
+       "iy05": {
+        "p": 0.8269,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %83 (lig ortalaması %82)"
+         ],
+         [
+          1,
+          "NAC Breda son maçları: 10/10 (%100)"
+         ],
+         [
+          0,
+          "Heracles son maçları: 8/10 (%80)"
+         ],
+         [
+          1,
+          "NAC Breda evdeki son maçları: 5/5 (%100)"
+         ],
+         [
+          0,
+          "Heracles dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 46/59 (%78)"
+         ],
+         [
+          1,
+          "Son maçlara göre ilk yarı gol beklentisi 1.9 (lig 1.6)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %46'i ilk yarıda (lig %46)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: NAC Breda 9/11, Heracles 5/11 (lig %63)"
+         ]
+        ]
+       },
+       "iy15": {
+        "p": 0.5233,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %52 (lig ortalaması %49)"
+         ],
+         [
+          0,
+          "NAC Breda son maçları: 4/10 (%40)"
+         ],
+         [
+          1,
+          "Heracles son maçları: 6/10 (%60)"
+         ],
+         [
+          0,
+          "NAC Breda evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          1,
+          "Heracles dışarıdaki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 30/59 (%51)"
+         ],
+         [
+          1,
+          "Son maçlara göre ilk yarı gol beklentisi 1.9 (lig 1.6)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %46'i ilk yarıda (lig %46)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: NAC Breda 9/11, Heracles 5/11 (lig %63)"
+         ]
+        ]
+       },
+       "iykg": {
+        "p": 0.3388,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %34 (lig ortalaması %35)"
+         ],
+         [
+          0,
+          "NAC Breda son maçları: 4/10 (%40)"
+         ],
+         [
+          0,
+          "Heracles son maçları: 3/10 (%30)"
+         ],
+         [
+          0,
+          "NAC Breda evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Heracles dışarıdaki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 21/59 (%36)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %46'i ilk yarıda (lig %46)"
+         ],
+         [
+          1,
+          "İlk yarıda gol attığı maç: NAC Breda 8/10, Heracles 8/10"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: NAC Breda 9/11, Heracles 5/11 (lig %63)"
+         ]
+        ]
+       },
+       "o15": {
+        "p": 0.8937,
+        "t": 0,
+        "ok": 1,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %89 (lig ortalaması %85)"
+         ],
+         [
+          0,
+          "NAC Breda son maçları: 9/10 (%90)"
+         ],
+         [
+          0,
+          "Heracles son maçları: 9/10 (%90)"
+         ],
+         [
+          0,
+          "NAC Breda evdeki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Heracles dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 54/60 (%90)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.0 (lig 3.5)"
+         ]
+        ],
+        "i": []
+       },
+       "o25": {
+        "p": 0.7478,
+        "t": 1,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %75 (lig ortalaması %66)"
+         ],
+         [
+          0,
+          "NAC Breda son maçları: 7/10 (%70)"
+         ],
+         [
+          1,
+          "Heracles son maçları: 8/10 (%80)"
+         ],
+         [
+          0,
+          "NAC Breda evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          1,
+          "Heracles dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 41/60 (%68)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.0 (lig 3.5)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk golden sonra 2+ gol daha gelen maç: NAC Breda 8/11, Heracles 9/11 (lig %68)"
+         ]
+        ]
+       },
+       "o35": {
+        "p": 0.5479,
+        "t": 2,
+        "ok": 7,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %55 (lig ortalaması %44)"
+         ],
+         [
+          1,
+          "NAC Breda son maçları: 6/10 (%60)"
+         ],
+         [
+          1,
+          "Heracles son maçları: 7/10 (%70)"
+         ],
+         [
+          1,
+          "NAC Breda evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          1,
+          "Heracles dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 29/60 (%48)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.0 (lig 3.5)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk golden sonra 2+ gol daha gelen maç: NAC Breda 8/11, Heracles 9/11 (lig %68)"
+         ]
+        ]
+       },
+       "o45": {
+        "p": 0.3527,
+        "t": 2,
+        "ok": 7,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %35 (lig ortalaması %26)"
+         ],
+         [
+          1,
+          "NAC Breda son maçları: 4/10 (%40)"
+         ],
+         [
+          1,
+          "Heracles son maçları: 5/10 (%50)"
+         ],
+         [
+          1,
+          "NAC Breda evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          1,
+          "Heracles dışarıdaki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 15/60 (%25)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.0 (lig 3.5)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk golden sonra 2+ gol daha gelen maç: NAC Breda 8/11, Heracles 9/11 (lig %68)"
+         ]
+        ]
+       },
+       "o55": {
+        "p": 0.2003,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %20 (lig ortalaması %14)"
+         ],
+         [
+          0,
+          "NAC Breda son maçları: 2/10 (%20)"
+         ],
+         [
+          0,
+          "Heracles son maçları: 2/10 (%20)"
+         ],
+         [
+          0,
+          "NAC Breda evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          1,
+          "Heracles dışarıdaki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 10/60 (%17)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.0 (lig 3.5)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk golden sonra 2+ gol daha gelen maç: NAC Breda 8/11, Heracles 9/11 (lig %68)"
+         ]
+        ]
+       },
+       "btts": {
+        "p": 0.7238,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %72 (lig ortalaması %67)"
+         ],
+         [
+          0,
+          "NAC Breda son maçları: 7/10 (%70)"
+         ],
+         [
+          0,
+          "Heracles son maçları: 6/10 (%60)"
+         ],
+         [
+          0,
+          "NAC Breda evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          1,
+          "Heracles dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 42/60 (%70)"
+         ],
+         [
+          1,
+          "Gol attığı maç: NAC Breda 9/10, Heracles 9/10"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen gol: NAC Breda 1.7, Heracles 2.2 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "u25": {
+        "p": 0.2522,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %25 (lig ortalaması %34)"
+         ],
+         [
+          0,
+          "NAC Breda son maçları: 3/10 (%30)"
+         ],
+         [
+          0,
+          "Heracles son maçları: 2/10 (%20)"
+         ],
+         [
+          0,
+          "NAC Breda evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Heracles dışarıdaki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 19/60 (%32)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 4.0 (lig 3.5)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: NAC Breda 8/11, Heracles 9/11 (lig %68)"
+         ]
+        ]
+       },
+       "h05": {
+        "p": 0.8289,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %83 (lig ortalaması %86)"
+         ],
+         [
+          0,
+          "NAC Breda son maçları: gol attığı maç 9/10 (%90)"
+         ],
+         [
+          0,
+          "Heracles son maçları: gol yediği maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "NAC Breda evdeki son maçları: gol attığı maç 4/5 (%80)"
+         ],
+         [
+          1,
+          "Heracles dışarıdaki son maçları: gol yediği maç 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 50/60 (%83)"
+         ],
+         [
+          0,
+          "Son maçlara göre NAC Breda gol beklentisi 1.5 (NAC Breda maç başı 2.0 attı, Heracles 1.0 yedi; lig takım ort. 1.7)"
+         ],
+         [
+          0,
+          "Şutlara göre NAC Breda beklenen gol 1.7 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.8824,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %88 (lig ortalaması %79)"
+         ],
+         [
+          0,
+          "NAC Breda son maçları: gol yediği maç 8/10 (%80)"
+         ],
+         [
+          1,
+          "Heracles son maçları: gol attığı maç 9/10 (%90)"
+         ],
+         [
+          0,
+          "NAC Breda evdeki son maçları: gol yediği maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Heracles dışarıdaki son maçları: gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 50/60 (%83)"
+         ],
+         [
+          1,
+          "Son maçlara göre Heracles gol beklentisi 2.5 (Heracles maç başı 3.2 attı, NAC Breda 1.8 yedi; lig takım ort. 1.7)"
+         ],
+         [
+          1,
+          "Şutlara göre Heracles beklenen gol 2.2 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.5267,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %53 (lig ortalaması %57)"
+         ],
+         [
+          1,
+          "NAC Breda son maçları: 2+ gol attığı maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "Heracles son maçları: 2+ gol yediği maç 3/10 (%30)"
+         ],
+         [
+          0,
+          "NAC Breda evdeki son maçları: 2+ gol attığı maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Heracles dışarıdaki son maçları: 2+ gol yediği maç 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 31/60 (%52)"
+         ],
+         [
+          0,
+          "Son maçlara göre NAC Breda gol beklentisi 1.5 (NAC Breda maç başı 2.0 attı, Heracles 1.0 yedi; lig takım ort. 1.7)"
+         ],
+         [
+          0,
+          "Şutlara göre NAC Breda beklenen gol 1.7 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.6307,
+        "t": 2,
+        "ok": 7,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %63 (lig ortalaması %40)"
+         ],
+         [
+          1,
+          "NAC Breda son maçları: 2+ gol yediği maç 7/10 (%70)"
+         ],
+         [
+          1,
+          "Heracles son maçları: 2+ gol attığı maç 9/10 (%90)"
+         ],
+         [
+          1,
+          "NAC Breda evdeki son maçları: 2+ gol yediği maç 4/5 (%80)"
+         ],
+         [
+          1,
+          "Heracles dışarıdaki son maçları: 2+ gol attığı maç 4/5 (%80)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 30/60 (%50)"
+         ],
+         [
+          1,
+          "Son maçlara göre Heracles gol beklentisi 2.5 (Heracles maç başı 3.2 attı, NAC Breda 1.8 yedi; lig takım ort. 1.7)"
+         ],
+         [
+          0,
+          "Şutlara göre Heracles beklenen gol 2.2 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.5529,
+        "t": 0,
+        "ok": 2,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %55 (lig ortalaması %66)"
+         ],
+         [
+          1,
+          "NAC Breda son maçları: ilk yarıda gol attığı maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "Heracles son maçları: ilk yarıda gol yediği maç 3/10 (%30)"
+         ],
+         [
+          1,
+          "NAC Breda evdeki son maçları: ilk yarıda gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Heracles dışarıdaki son maçları: ilk yarıda gol yediği maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 35/59 (%59)"
+         ],
+         [
+          0,
+          "Son maçlara göre NAC Breda ilk yarı gol beklentisi 0.8 (NAC Breda maç başı 1.1 attı, Heracles 0.4 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.6128,
+        "t": 0,
+        "ok": 4,
+        "n": 7,
+        "c": [
+         [
+          1,
+          "Model: %61 (lig ortalaması %50)"
+         ],
+         [
+          0,
+          "NAC Breda son maçları: ilk yarıda gol yediği maç 6/10 (%60)"
+         ],
+         [
+          1,
+          "Heracles son maçları: ilk yarıda gol attığı maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "NAC Breda evdeki son maçları: ilk yarıda gol yediği maç 2/5 (%40)"
+         ],
+         [
+          1,
+          "Heracles dışarıdaki son maçları: ilk yarıda gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 59 maç: 32/59 (%54)"
+         ],
+         [
+          1,
+          "Son maçlara göre Heracles ilk yarı gol beklentisi 1.1 (Heracles maç başı 1.6 attı, NAC Breda 0.6 yedi; lig takım ort. 0.8)"
+         ]
+        ],
+        "i": []
+       },
+       "ms1": {
+        "p": 0.3315,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %33 (lig ortalaması %54)"
+         ],
+         [
+          0,
+          "NAC Breda son maçları: 10 maçta 5 kazandı (%50)"
+         ],
+         [
+          0,
+          "Heracles son maçları: 10 maçta 1 kaybetti (%10)"
+         ],
+         [
+          0,
+          "NAC Breda evdeki son maçları: 5 maçta 3 kazandı (%60)"
+         ],
+         [
+          0,
+          "Heracles dışarıdaki son maçları: 5 maçta 1 kaybetti (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 25/60 (%42)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: NAC Breda 1.7, Heracles 2.5"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): NAC Breda +0.8, Heracles +2.0"
+         ]
+        ],
+        "i": []
+       },
+       "ms2": {
+        "p": 0.4772,
+        "t": 2,
+        "ok": 7,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %48 (lig ortalaması %28)"
+         ],
+         [
+          0,
+          "NAC Breda son maçları: 10 maçta 3 kaybetti (%30)"
+         ],
+         [
+          1,
+          "Heracles son maçları: 10 maçta 8 kazandı (%80)"
+         ],
+         [
+          1,
+          "NAC Breda evdeki son maçları: 5 maçta 2 kaybetti (%40)"
+         ],
+         [
+          1,
+          "Heracles dışarıdaki son maçları: 5 maçta 3 kazandı (%60)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 21/60 (%35)"
+         ],
+         [
+          1,
+          "Son 10 maç puan ortalaması: NAC Breda 1.7, Heracles 2.5"
+         ],
+         [
+          1,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): NAC Breda +0.8, Heracles +2.0"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Heracles öne geçince kazandı 8/9; NAC Breda geriye düşünce puan aldı 3/6 (lig %71 / %29)"
+         ]
+        ]
+       }
+      },
+      "low": false,
+      "tsc": {
+       "h": {
+        "n": 10,
+        "s": 9,
+        "c": 8,
+        "s2": 8,
+        "c2": 7,
+        "n1": 10,
+        "s1": 8,
+        "c1": 6,
+        "s12": 3,
+        "c12": 0
+       },
+       "a": {
+        "n": 10,
+        "s": 9,
+        "c": 7,
+        "s2": 9,
+        "c2": 3,
+        "n1": 10,
+        "s1": 8,
+        "c1": 3,
+        "s12": 5,
+        "c12": 1
+       }
+      },
+      "tc": {
+       "h": "5. sıra (üst sıralarda) · son 5: GGBGG · son 10 maçta maç başı 2.0 attı, 1.8 yedi · form eğrisi ▁▅▃█▆▄▆▇ yükselişte",
+       "a": "1. sıra (zirve yarışında) · son 5: GGBGM · son 10 maçta maç başı 3.2 attı, 1.0 yedi · form eğrisi ▂▂▁▂▃▅▆█ yükselişte"
+      }
+     }
+    },
+    {
+     "m": "401882836",
+     "ad": "Alavés - Málaga",
+     "lg": "İspanya La Liga",
+     "k": "2026-10-23T19:00:00+00:00",
+     "b": "ms1",
+     "bl": "MS 1",
+     "o": 1.4,
+     "snap": {
+      "h": "Alavés",
+      "a": "Málaga",
+      "lg": "İspanya La Liga",
+      "k": "2026-10-23T19:00:00+00:00",
+      "l": [
+       2.119,
+       1.0393,
+       0.9728,
+       0.3558
+      ],
+      "p": {
+       "p1": 0.606,
+       "px": 0.2321,
+       "p2": 0.1619,
+       "o15": 0.8383,
+       "o25": 0.6113,
+       "o35": 0.3882,
+       "o45": 0.212,
+       "o55": 0.1007,
+       "btts": 0.5836,
+       "iy05": 0.7351,
+       "iy15": 0.3832,
+       "iykg": 0.1862,
+       "p21": 0.0232,
+       "p12": 0.0186,
+       "h05": 0.8798,
+       "a05": 0.6463,
+       "h15": 0.6252,
+       "a15": 0.2787,
+       "ih05": 0.6219,
+       "ia05": 0.2994
+      },
+      "rp": {
+       "iy05": {
+        "p": 0.7351,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %74 (lig ortalaması %66)"
+         ],
+         [
+          0,
+          "Alavés son maçları: 4/9 (%44)"
+         ],
+         [
+          0,
+          "Málaga son maçları: 6/9 (%67)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 40/60 (%67)"
+         ],
+         [
+          0,
+          "Son maçlara göre ilk yarı gol beklentisi 1.1 (lig 1.3)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %40'i ilk yarıda (lig %43)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Alavés 2/9, Málaga 5/9 (lig %55)"
+         ]
+        ]
+       },
+       "iy15": {
+        "p": 0.3832,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %38 (lig ortalaması %46)"
+         ],
+         [
+          0,
+          "Alavés son maçları: 3/9 (%33)"
+         ],
+         [
+          0,
+          "Málaga son maçları: 4/9 (%44)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 25/60 (%42)"
+         ],
+         [
+          0,
+          "Son maçlara göre ilk yarı gol beklentisi 1.1 (lig 1.3)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %40'i ilk yarıda (lig %43)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Alavés 2/9, Málaga 5/9 (lig %55)"
+         ]
+        ]
+       },
+       "iykg": {
+        "p": 0.1862,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %19 (lig ortalaması %21)"
+         ],
+         [
+          0,
+          "Alavés son maçları: 2/9 (%22)"
+         ],
+         [
+          0,
+          "Málaga son maçları: 2/9 (%22)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: 0/4 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 10/60 (%17)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %40'i ilk yarıda (lig %43)"
+         ],
+         [
+          0,
+          "İlk yarıda gol attığı maç: Alavés 4/9, Málaga 2/9"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Alavés 2/9, Málaga 5/9 (lig %55)"
+         ]
+        ]
+       },
+       "o15": {
+        "p": 0.8383,
+        "t": 0,
+        "ok": 0,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %84 (lig ortalaması %76)"
+         ],
+         [
+          0,
+          "Alavés son maçları: 6/9 (%67)"
+         ],
+         [
+          0,
+          "Málaga son maçları: 7/9 (%78)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 46/60 (%77)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.6 (lig 3.1)"
+         ]
+        ],
+        "i": []
+       },
+       "o25": {
+        "p": 0.6113,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %61 (lig ortalaması %56)"
+         ],
+         [
+          0,
+          "Alavés son maçları: 5/9 (%56)"
+         ],
+         [
+          0,
+          "Málaga son maçları: 3/9 (%33)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 33/60 (%55)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.6 (lig 3.1)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.0 (lig 3.2)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Alavés 5/8, Málaga 3/8 (lig %62)"
+         ]
+        ]
+       },
+       "o35": {
+        "p": 0.3882,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %39 (lig ortalaması %39)"
+         ],
+         [
+          0,
+          "Alavés son maçları: 1/9 (%11)"
+         ],
+         [
+          0,
+          "Málaga son maçları: 3/9 (%33)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 23/60 (%38)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.6 (lig 3.1)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.0 (lig 3.2)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Alavés 5/8, Málaga 3/8 (lig %62)"
+         ]
+        ]
+       },
+       "o45": {
+        "p": 0.212,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %21 (lig ortalaması %25)"
+         ],
+         [
+          0,
+          "Alavés son maçları: 1/9 (%11)"
+         ],
+         [
+          0,
+          "Málaga son maçları: 1/9 (%11)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: 0/4 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 14/60 (%23)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.6 (lig 3.1)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.0 (lig 3.2)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Alavés 5/8, Málaga 3/8 (lig %62)"
+         ]
+        ]
+       },
+       "o55": {
+        "p": 0.1007,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %10 (lig ortalaması %10)"
+         ],
+         [
+          0,
+          "Alavés son maçları: 1/9 (%11)"
+         ],
+         [
+          0,
+          "Málaga son maçları: 1/9 (%11)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: 0/4 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 5/60 (%8)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.6 (lig 3.1)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.0 (lig 3.2)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Alavés 5/8, Málaga 3/8 (lig %62)"
+         ]
+        ]
+       },
+       "btts": {
+        "p": 0.5836,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %58 (lig ortalaması %60)"
+         ],
+         [
+          0,
+          "Alavés son maçları: 5/9 (%56)"
+         ],
+         [
+          0,
+          "Málaga son maçları: 5/9 (%56)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 36/60 (%60)"
+         ],
+         [
+          0,
+          "Gol attığı maç: Alavés 7/9, Málaga 5/9"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen gol: Alavés 1.8, Málaga 1.2 (takım ort. 1.6)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Geriye düşünce gol attığı maç: Alavés 3/4, Málaga 4/7 (lig %65)"
+         ]
+        ]
+       },
+       "u25": {
+        "p": 0.3887,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %39 (lig ortalaması %44)"
+         ],
+         [
+          0,
+          "Alavés son maçları: 4/9 (%44)"
+         ],
+         [
+          1,
+          "Málaga son maçları: 6/9 (%67)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          1,
+          "Málaga dışarıdaki son maçları: 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 27/60 (%45)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 2.6 (lig 3.1)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.0 (lig 3.2)"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk golden sonra 2+ gol daha gelen maç: Alavés 5/8, Málaga 3/8 (lig %62)"
+         ]
+        ]
+       },
+       "h05": {
+        "p": 0.8798,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %88 (lig ortalaması %81)"
+         ],
+         [
+          0,
+          "Alavés son maçları: gol attığı maç 7/9 (%78)"
+         ],
+         [
+          0,
+          "Málaga son maçları: gol yediği maç 8/9 (%89)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: gol attığı maç 4/5 (%80)"
+         ],
+         [
+          1,
+          "Málaga dışarıdaki son maçları: gol yediği maç 4/4 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 52/60 (%87)"
+         ],
+         [
+          0,
+          "Son maçlara göre Alavés gol beklentisi 1.7 (Alavés maç başı 1.4 attı, Málaga 2.0 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          1,
+          "Şutlara göre Alavés beklenen gol 1.8 (takım ort. 1.6)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.6463,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %65 (lig ortalaması %70)"
+         ],
+         [
+          0,
+          "Alavés son maçları: gol yediği maç 6/9 (%67)"
+         ],
+         [
+          0,
+          "Málaga son maçları: gol attığı maç 5/9 (%56)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: gol yediği maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: gol attığı maç 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 39/60 (%65)"
+         ],
+         [
+          0,
+          "Son maçlara göre Málaga gol beklentisi 0.9 (Málaga maç başı 0.7 attı, Alavés 1.1 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          0,
+          "Şutlara göre Málaga beklenen gol 1.2 (takım ort. 1.6)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.6252,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %63 (lig ortalaması %46)"
+         ],
+         [
+          0,
+          "Alavés son maçları: 2+ gol attığı maç 2/9 (%22)"
+         ],
+         [
+          0,
+          "Málaga son maçları: 2+ gol yediği maç 4/9 (%44)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: 2+ gol attığı maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: 2+ gol yediği maç 2/4 (%50)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 32/60 (%53)"
+         ],
+         [
+          0,
+          "Son maçlara göre Alavés gol beklentisi 1.7 (Alavés maç başı 1.4 attı, Málaga 2.0 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          0,
+          "Şutlara göre Alavés beklenen gol 1.8 (takım ort. 1.6)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.2787,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %28 (lig ortalaması %37)"
+         ],
+         [
+          0,
+          "Alavés son maçları: 2+ gol yediği maç 4/9 (%44)"
+         ],
+         [
+          0,
+          "Málaga son maçları: 2+ gol attığı maç 1/9 (%11)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: 2+ gol yediği maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: 2+ gol attığı maç 0/4 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 17/60 (%28)"
+         ],
+         [
+          0,
+          "Son maçlara göre Málaga gol beklentisi 0.9 (Málaga maç başı 0.7 attı, Alavés 1.1 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          0,
+          "Şutlara göre Málaga beklenen gol 1.2 (takım ort. 1.6)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.6219,
+        "t": 1,
+        "ok": 5,
+        "n": 7,
+        "c": [
+         [
+          1,
+          "Model: %62 (lig ortalaması %47)"
+         ],
+         [
+          0,
+          "Alavés son maçları: ilk yarıda gol attığı maç 4/9 (%44)"
+         ],
+         [
+          1,
+          "Málaga son maçları: ilk yarıda gol yediği maç 6/9 (%67)"
+         ],
+         [
+          1,
+          "Alavés evdeki son maçları: ilk yarıda gol attığı maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: ilk yarıda gol yediği maç 2/4 (%50)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 32/60 (%53)"
+         ],
+         [
+          1,
+          "Son maçlara göre Alavés ilk yarı gol beklentisi 0.8 (Alavés maç başı 0.6 attı, Málaga 1.1 yedi; lig takım ort. 0.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.2994,
+        "t": 0,
+        "ok": 0,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %30 (lig ortalaması %40)"
+         ],
+         [
+          0,
+          "Alavés son maçları: ilk yarıda gol yediği maç 2/9 (%22)"
+         ],
+         [
+          0,
+          "Málaga son maçları: ilk yarıda gol attığı maç 2/9 (%22)"
+         ],
+         [
+          0,
+          "Alavés evdeki son maçları: ilk yarıda gol yediği maç 1/5 (%20)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: ilk yarıda gol attığı maç 0/4 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 18/60 (%30)"
+         ],
+         [
+          0,
+          "Son maçlara göre Málaga ilk yarı gol beklentisi 0.2 (Málaga maç başı 0.2 attı, Alavés 0.2 yedi; lig takım ort. 0.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ms1": {
+        "p": 0.606,
+        "t": 2,
+        "ok": 7,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %61 (lig ortalaması %44)"
+         ],
+         [
+          0,
+          "Alavés son maçları: 9 maçta 3 kazandı (%33)"
+         ],
+         [
+          1,
+          "Málaga son maçları: 9 maçta 5 kaybetti (%56)"
+         ],
+         [
+          1,
+          "Alavés evdeki son maçları: 5 maçta 3 kazandı (%60)"
+         ],
+         [
+          1,
+          "Málaga dışarıdaki son maçları: 4 maçta 3 kaybetti (%75)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 34/60 (%57)"
+         ],
+         [
+          1,
+          "Son 10 maç puan ortalaması: Alavés 1.2, Málaga 0.4"
+         ],
+         [
+          1,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Alavés +0.1, Málaga -1.0"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Alavés öne geçince kazandı 3/4; Málaga geriye düşünce puan aldı 3/7 (lig %68 / %32)"
+         ]
+        ]
+       },
+       "ms2": {
+        "p": 0.1619,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %16 (lig ortalaması %28)"
+         ],
+         [
+          1,
+          "Alavés son maçları: 9 maçta 4 kaybetti (%44)"
+         ],
+         [
+          0,
+          "Málaga son maçları: 9 maçta 0 kazandı (%0)"
+         ],
+         [
+          1,
+          "Alavés evdeki son maçları: 5 maçta 2 kaybetti (%40)"
+         ],
+         [
+          0,
+          "Málaga dışarıdaki son maçları: 4 maçta 0 kazandı (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 9/60 (%15)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Alavés 1.2, Málaga 0.4"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Alavés +0.1, Málaga -1.0"
+         ]
+        ],
+        "i": []
+       }
+      },
+      "low": false,
+      "tsc": {
+       "h": {
+        "n": 9,
+        "s": 7,
+        "c": 6,
+        "s2": 2,
+        "c2": 4,
+        "n1": 9,
+        "s1": 4,
+        "c1": 2,
+        "s12": 1,
+        "c12": 0
+       },
+       "a": {
+        "n": 9,
+        "s": 5,
+        "c": 8,
+        "s2": 1,
+        "c2": 4,
+        "n1": 9,
+        "s1": 2,
+        "c1": 6,
+        "s12": 0,
+        "c12": 3
+       }
+      },
+      "tc": {
+       "h": "7. sıra (orta sıralarda) · son 5: MMBMM · son 10 maçta maç başı 1.4 attı, 1.1 yedi · form eğrisi ▅▂▆▇▁▁▂█ düşüşte",
+       "a": "20. sıra (düşme hattında) · son 5: MBMMB · son 10 maçta maç başı 0.7 attı, 2.0 yedi · form eğrisi ▄▂▆▄▁▃█▁ dengeli"
+      }
+     }
+    }
+   ]
   }
  ]
 }
