@@ -2365,6 +2365,7 @@ def main():
     write_bet_html()
     write_analiz(leagues, now)
     write_analiz_html()
+    write_karne(st, leagues, now)
     send_mail(st, leagues, now)
     save_store(st)
 
@@ -4087,6 +4088,8 @@ def write_html(leagues, now, st=None):
             f"text-decoration:none;font-weight:700;font-size:13px;padding:5px 11px;border-radius:16px;margin-right:6px'>Kuponlarım</a>"
             f"<a href='analiz.html?v={int(now.timestamp())}' style='background:var(--card);color:var(--tx);border:1px solid var(--bd);"
             f"text-decoration:none;font-weight:700;font-size:13px;padding:5px 11px;border-radius:16px;margin-right:6px'>Analiz</a>"
+            f"<a href='karne.html?v={int(now.timestamp())}' style='background:var(--card);color:var(--tx);border:1px solid var(--bd);"
+            f"text-decoration:none;font-weight:700;font-size:13px;padding:5px 11px;border-radius:16px;margin-right:6px'>Karne</a>"
             f"<a href='canli.html?v={int(now.timestamp())}' style='background:#d93025;color:#fff;text-decoration:none;font-weight:700;"
             f"font-size:13px;padding:6px 12px;border-radius:16px'>● Canlı</a></span></div><div class='upd'>Güncelleme: {local:%d.%m.%Y %H:%M} · "
             f"Maçlar: {d0:%d.%m %H:%M} - {d1:%d.%m %H:%M} · Model tahmindir, kâr garantisi vermez."
@@ -4998,6 +5001,244 @@ def write_analiz_html():
             "<div class='row2'><input id='tk' class='in' type='password' placeholder='github_pat_…'><button class='btn' onclick='saveTok()'>Kaydet</button></div></details>"
             f"</div><script>{js}</script></body></html>")
     with open("analiz.html", "w", encoding="utf-8") as f:
+        f.write(page)
+
+
+# ------------------------------------------------------------ ÖNERİ KARNESİ (karne.html)
+def pick_prob(key, p):
+    if not p:
+        return None
+    if key == "u25":
+        return 1 - p["o25"] if p.get("o25") is not None else None
+    if key == "ms1":
+        return p.get("p1")
+    if key == "ms2":
+        return p.get("p2")
+    return p.get(key)
+
+
+def why_text(key, ok, e, s, sot_avg):
+    """Önerinin neden tuttuğu / tutmadığı: sonuç + maçın şut tablosu (tek cümle)."""
+    hg, ag, h1, a1 = e["res"]
+    H, A = e["h"], e["a"]
+    sc = f"{hg}-{ag}"
+    tg = hg + ag
+    iy = f", İY {h1}-{a1}" if h1 is not None else ""
+    hs = s.get("hsot") if s else None
+    as_ = s.get("asot") if s else None
+    sot = hs + as_ if hs is not None and as_ is not None else None
+    hi = sot is not None and sot >= sot_avg * 1.25
+    lo = sot is not None and sot <= sot_avg * 0.75
+    sot_t = f"{sot:.0f} isabetli şut (lig ort. {sot_avg:.0f})" if sot is not None else ""
+    if key in ("o15", "o25", "o35", "o45"):
+        need = int(key[1]) + 1
+        head = f"{tg} gol çıktı ({sc}{iy})"
+        if ok:
+            tail = (f"; {sot_t} ile beklenen gollü maç geldi" if hi or (sot is not None and not lo)
+                    else (f"; sadece {sot_t} olmasına rağmen goller geldi, biraz şanslı tuttu" if lo else ""))
+        else:
+            tail = (f", {need} gol gerekiyordu; {sot_t} vardı, pozisyon çok ama gol gelmedi (şanssızlık)" if hi
+                    else (f", {need} gol gerekiyordu; {sot_t} ile maç beklenenden kapalı geçti, model yanıldı" if lo
+                          else f", {need} gol gerekiyordu" + (f"; {sot_t}" if sot_t else "")))
+        return head + tail + "."
+    if key == "u25":
+        head = f"{tg} gol çıktı ({sc}{iy})"
+        if ok:
+            tail = (f"; {sot_t} ile maç beklendiği gibi kapalı geçti" if lo or (sot is not None and not hi)
+                    else f"; {sot_t} vardı, pozisyona rağmen az gol çıktı (şanslı tuttu)" if hi else "")
+        else:
+            tail = (f"; {sot_t} ile maç beklenenden açık geçti, model yanıldı" if hi or (sot is not None and not lo)
+                    else f"; sadece {sot_t} olmasına rağmen goller geldi (şanssızlık)" if lo else "")
+        return head + tail + "."
+    if key == "btts":
+        if ok:
+            return f"İki takım da gol attı ({sc}{iy})."
+        z = [(n, x) for n, g, x in ((H, hg, hs), (A, ag, as_)) if g == 0]
+        n, x = z[0] if z else (H, hs)
+        return (f"{n} gol atamadı ({sc})" + (f"; sadece {x:.0f} isabetli şutu vardı" if x is not None and x <= 2
+                                             else f"; {x:.0f} isabetli şutuna rağmen gol çıkmadı" if x is not None else "") + ".")
+    if key in ("iy05", "iy15", "iykg"):
+        if h1 is None:
+            return f"Maç {sc} bitti; ilk yarı skoru bulunamadı."
+        if key == "iykg":
+            return (f"İlk yarıda iki takım da gol attı (İY {h1}-{a1})." if ok
+                    else f"İlk yarı {h1}-{a1} bitti; " + ("iki takım da" if h1 + a1 == 0 else (A if h1 else H)) +
+                    " ilk yarıda gol atamadı" + (f", goller ikinci yarıda geldi (MS {sc})" if tg > h1 + a1 else "") + ".")
+        need = 1 if key == "iy05" else 2
+        return (f"İlk yarıda {h1 + a1} gol çıktı (İY {h1}-{a1}, MS {sc})." if ok
+                else f"İlk yarıda {h1 + a1} gol çıktı (İY {h1}-{a1}), {need} gerekiyordu"
+                     + (f"; goller ikinci yarıda geldi (MS {sc})" if tg - h1 - a1 >= 1 else "") + ".")
+    if key in TEAM_KEY:
+        side, n_, half = TEAM_KEY[key]
+        nm = H if side == "h" else A
+        g = (h1 if side == "h" else a1) if half else (hg if side == "h" else ag)
+        x = hs if side == "h" else as_
+        when = "ilk yarıda " if half else ""
+        if g is None:
+            return f"Maç {sc} bitti; ilk yarı skoru bulunamadı."
+        if ok:
+            return f"{nm} {when}{g} gol attı ({'İY ' + str(h1) + '-' + str(a1) + ', ' if half else ''}MS {sc})."
+        return (f"{nm} {when}{g} gol attı, {n_} gerekiyordu ({'İY ' + str(h1) + '-' + str(a1) + ', ' if half else ''}MS {sc})"
+                + (f"; maç boyunca {x:.0f} isabetli şutu vardı" if x is not None and not half else "") + ".")
+    if key in ("ms1", "ms2"):
+        me, op = (H, A) if key == "ms1" else (A, H)
+        ms_, os_ = (hs, as_) if key == "ms1" else (as_, hs)
+        shot = f"isabetli şut {ms_:.0f}-{os_:.0f}" if ms_ is not None and os_ is not None else ""
+        if ok:
+            return f"{me} kazandı ({sc}{iy})" + (f"; {shot} ile üstünlük de onundaydı" if shot and ms_ > os_ else
+                                                  f"; {shot}, rakip daha çok şut çekse de kazandı" if shot else "") + "."
+        res_ = "berabere bitti" if hg == ag else f"{op} kazandı"
+        return (f"Maç {res_} ({sc}{iy})" + (f"; {me} {shot} ile üstündü ama sonuca çeviremedi" if shot and ms_ > os_ else
+                                             f"; {shot}, {me} beklenen üstünlüğü kuramadı" if shot else "") + ".")
+    return f"Maç {sc} bitti."
+
+
+def karne_rows(st, leagues):
+    stx, sot_lg = {}, {}
+    for L in leagues:
+        vals = []
+        for m in L.get("allm", []):
+            if m.get("done"):
+                stx[m["id"]] = m.get("st")
+                if m.get("st"):
+                    vals.append(m["st"]["hsot"] + m["st"]["asot"])
+        if vals:
+            sot_lg[L["name"]] = sum(vals) / len(vals)
+    rows = []
+    for mid, e in st.get("preds", {}).items():
+        for no, fld in ((1, "rp"), (2, "rp2")):
+            rp = e.get(fld)
+            if not rp or not rp.get("c"):
+                continue
+            key = rp["c"]
+            ok = outcome(key, e["res"]) if e.get("res") else None
+            r = {"no": no, "id": mid, "d": e["d"], "k": e["k"], "lg": e["lg"], "h": e["h"], "a": e["a"], "key": key,
+                 "t": rp.get("t", 0), "p": pick_prob(key, e.get("p")), "res": e.get("res"), "ok": ok}
+            if ok is not None:
+                r["why"] = why_text(key, ok, e, stx.get(mid), sot_lg.get(e["lg"], 8.5))
+            rows.append(r)
+    rows.sort(key=lambda r: r["k"], reverse=True)
+    return rows
+
+
+def karne_section(rows, sid, on):
+    done = [r for r in rows if r["ok"] is not None]
+    pend = len(rows) - len(done)
+    if not rows:
+        return f"<div class='kz{' on' if on else ''}' id='kz-{sid}'><p class='empty'>Henüz kayıtlı öneri yok.</p></div>"
+    w = sum(1 for r in done if r["ok"])
+
+    def pct(a, b):
+        return f"%{a / b * 100:.0f}" if b else "-"
+    g = {2: [0, 0], 1: [0, 0]}
+    for r in done:
+        if r["t"] in g:
+            g[r["t"]][0] += r["ok"]
+            g[r["t"]][1] += 1
+    out = (f"<div class='kz{' on' if on else ''}' id='kz-{sid}'>"
+           f"<div class='grid'><div class='b {'hi' if done and w / len(done) >= 0.6 else 'lo'}'>Tuttu<br><b>{w}/{len(done)}</b>"
+           f"<small>{pct(w, len(done))}{f' · {pend} bekliyor' if pend else ''}</small></div>"
+           f"<div class='b lo'>Güçlü<br><b>{g[2][0]}/{g[2][1]}</b><small>{pct(*g[2])}</small></div>"
+           f"<div class='b lo'>Orta<br><b>{g[1][0]}/{g[1][1]}</b><small>{pct(*g[1])}</small></div></div>")
+    # bahis türüne göre
+    bt = defaultdict(list)
+    for r in done:
+        bt[r["key"]].append(r)
+    out += ("<div class='sec'>Bahis türüne göre</div><div class='wrap'><table><tr><th>Bahis</th><th class='n'>Önerilen</th>"
+            "<th class='n'>Tuttu</th><th class='n'>Oran</th></tr>")
+    for k, lst in sorted(bt.items(), key=lambda kv: (-len(kv[1]), kv[0])):
+        h = sum(1 for r in lst if r["ok"])
+        cls_ = "pos" if h / len(lst) >= 0.65 else ("neg" if h / len(lst) < 0.5 else "")
+        out += (f"<tr><td><a href='#d-{sid}-{k}' onclick=\"openD('d-{sid}-{k}')\">{GM_LABEL.get(k, k)}</a></td><td class='n'>{len(lst)}</td>"
+                f"<td class='n'>{h}</td><td class='n {cls_}'>{pct(h, len(lst))}</td></tr>")
+    out += "</table></div>"
+    # lige göre
+    lg = defaultdict(list)
+    for r in done:
+        lg[r["lg"]].append(r)
+    lrows = sorted(lg.items(), key=lambda kv: (-(sum(r['ok'] for r in kv[1]) / len(kv[1])) if len(kv[1]) >= 3 else 1, -len(kv[1])))
+    best = next(((n, l) for n, l in lrows if len(l) >= 3), None)
+    out += "<div class='sec'>Lige göre</div>"
+    if best:
+        hb = sum(r["ok"] for r in best[1])
+        out += f"<p class='note'>En çok tutturulan lig (en az 3 öneri): <b>{E(best[0])}</b> · {hb}/{len(best[1])} ({pct(hb, len(best[1]))})</p>"
+    out += ("<div class='wrap'><table><tr><th>Lig</th><th class='n'>Önerilen</th><th class='n'>Tuttu</th><th class='n'>Oran</th></tr>")
+    for n, lst in lrows:
+        h = sum(1 for r in lst if r["ok"])
+        cls_ = "pos" if h / len(lst) >= 0.65 and len(lst) >= 3 else ("neg" if h / len(lst) < 0.5 and len(lst) >= 3 else "")
+        out += f"<tr><td>{E(n)}</td><td class='n'>{len(lst)}</td><td class='n'>{h}</td><td class='n {cls_}'>{pct(h, len(lst))}</td></tr>"
+    out += "</table></div><p class='note'>3'ten az öneri olan liglerin oranı şans eseri yüksek ya da düşük olabilir.</p>"
+    # maç maç detay
+    out += ("<div class='sec'>Maç maç</div><div class='flt'><button class='on' onclick=\"flt(this,'')\">Hepsi</button>"
+            "<button onclick=\"flt(this,'y')\">Tutanlar</button><button onclick=\"flt(this,'n')\">Tutmayanlar</button></div>")
+    for k, lst in sorted(bt.items(), key=lambda kv: (-len(kv[1]), kv[0])):
+        h = sum(1 for r in lst if r["ok"])
+        out += (f"<details class='kd' id='d-{sid}-{k}'><summary><b>{GM_LABEL.get(k, k)}</b> · {len(lst)} öneri · "
+                f"{h} tuttu ({pct(h, len(lst))})</summary>")
+        for r in lst:
+            hg, ag = r["res"][0], r["res"][1]
+            when = dt.datetime.fromisoformat(r["k"]).astimezone(TR)
+            mp_ = f" · model %{r['p'] * 100:.0f}" if r["p"] is not None else ""
+            no_ = "1. öneri" if r["no"] == 1 else "2. öneri"
+            out += (f"<div class='km {'y' if r['ok'] else 'n'}'><div class='kmh'><span>{'✓' if r['ok'] else '✗'} "
+                    f"<b>{E(r['h'])} {hg}-{ag} {E(r['a'])}</b></span><span class='tier t{r['t']}'>{TIER_NAME[r['t']]}</span></div>"
+                    f"<div class='note'>{when:%d.%m %H:%M} · {E(r['lg'])} · {no_}{mp_}</div>"
+                    f"<div class='kw'>{E(r.get('why', ''))}</div></div>")
+        out += "</details>"
+    pending = [r for r in rows if r["ok"] is None]
+    if pending:
+        out += f"<details class='kd'><summary><b>Sonuç bekleyenler</b> · {len(pending)}</summary>"
+        for r in pending:
+            when = dt.datetime.fromisoformat(r["k"]).astimezone(TR)
+            out += (f"<div class='km'><div class='kmh'><span>⏳ <b>{E(r['h'])} - {E(r['a'])}</b></span>"
+                    f"<span class='tier t{r['t']}'>{TIER_NAME[r['t']]}</span></div><div class='note'>{when:%d.%m %H:%M} · "
+                    f"{E(r['lg'])} · {GM_LABEL.get(r['key'], r['key'])}</div></div>")
+        out += "</details>"
+    return out + "</div>"
+
+
+KARNE_CSS = """
+.kchips{display:flex;gap:6px;margin:8px 0}.kchips button,.flt button{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:16px;padding:6px 12px;font-size:13px}
+.kchips button.on,.flt button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.kz{display:none}.kz.on{display:block}
+.flt{display:flex;gap:6px;margin:6px 0 10px}
+.kd{border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin:6px 0;background:var(--card)}
+.kd summary{cursor:pointer;font-size:14px}
+.km{border-top:1px solid var(--bd);padding:8px 0}.km:first-of-type{border-top:0}
+.kmh{display:flex;justify-content:space-between;gap:8px;font-size:14px}
+.km.y .kmh span:first-child{color:var(--ac)}.km.n .kmh span:first-child b{color:var(--tx)}.km.n .kmh span:first-child{color:var(--neg)}
+.kw{font-size:13px;margin-top:3px;line-height:1.45}
+.hidey .km.y,.hiden .km.n{display:none}
+.kz table a{color:var(--ac);text-decoration:none;font-weight:600}
+"""
+
+KARNE_JS = """
+function kz(id,b){document.querySelectorAll('.kz').forEach(x=>x.classList.toggle('on',x.id==='kz-'+id));
+  document.querySelectorAll('.kchips button').forEach(x=>x.classList.toggle('on',x===b));}
+function flt(b,v){const z=b.closest('.kz'); z.classList.remove('hidey','hiden'); if(v==='y') z.classList.add('hiden'); if(v==='n') z.classList.add('hidey');
+  b.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));}
+function openD(id){const d=document.getElementById(id); if(d) d.open=true;}
+"""
+
+
+def write_karne(st, leagues, now):
+    rows = karne_rows(st, leagues)
+    first = min((r["d"] for r in rows), default=None)
+    r1 = [r for r in rows if r["no"] == 1]
+    r2 = [r for r in rows if r["no"] == 2]
+    since = f", {dt.date.fromisoformat(first):%d.%m.%Y} tarihinden bu yana" if first else ""
+    page = (f"<!doctype html><html lang='tr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>"
+            f"<title>Öneri Karnesi</title><style>{CSS}{RP_CSS}{KARNE_CSS}</style></head><body>"
+            f"<header><div class='top' style='display:flex;justify-content:space-between;align-items:center'><h1>Öneri Karnesi</h1>"
+            f"<a class='back' href='index.html' style='color:var(--ac);text-decoration:none;font-weight:600'>← Günün maçları</a></div>"
+            f"<p class='note'>Gol Raporu'nda 'Günün önerileri' olarak çıkan bahislerin gerçek sonuçları{since}. Öneriler maç başlamadan kaydedilir, "
+            f"sonradan değiştirilmez. Açıklama, maçın skoru ve şut tablosuna göre neden tuttuğunu / tutmadığını söyler; kadro, "
+            f"sakatlık gibi sebepleri bilemez. Güncelleme: {now.astimezone(TR):%d.%m.%Y %H:%M}</p>"
+            f"<div class='kchips'><button class='on' onclick=\"kz('1',this)\">1. öneriler</button>"
+            f"<button onclick=\"kz('2',this)\">2. öneriler</button><button onclick=\"kz('all',this)\">Hepsi</button></div></header>"
+            f"<div style='padding:0 12px 24px'>{karne_section(r1, '1', True)}{karne_section(r2, '2', False)}"
+            f"{karne_section(rows, 'all', False)}</div><script>{KARNE_JS}</script></body></html>")
+    with open("karne.html", "w", encoding="utf-8") as f:
         f.write(page)
 
 
