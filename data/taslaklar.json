@@ -10289,6 +10289,870 @@
      }
     }
    ]
+  },
+  {
+   "id": "t1792852854553",
+   "t": "2026-10-24T14:40:54.553Z",
+   "not": "",
+   "legs": [
+    {
+     "m": "401882831",
+     "ad": "Racing - Espanyol",
+     "lg": "İspanya La Liga",
+     "k": "2026-10-24T14:15:00+00:00",
+     "b": "iyo05",
+     "bl": "İY 0.5 Üst",
+     "o": 1.56,
+     "snap": {
+      "h": "Racing",
+      "a": "Espanyol",
+      "lg": "İspanya La Liga",
+      "k": "2026-10-24T14:15:00+00:00",
+      "l": [
+       1.798,
+       1.5402,
+       0.9508,
+       0.7849
+      ],
+      "p": {
+       "p1": 0.4228,
+       "px": 0.2623,
+       "p2": 0.315,
+       "o15": 0.8637,
+       "o25": 0.6482,
+       "o35": 0.4281,
+       "o45": 0.2444,
+       "o55": 0.1217,
+       "btts": 0.6732,
+       "iy05": 0.8237,
+       "iy15": 0.5177,
+       "iykg": 0.3337,
+       "p21": 0.0245,
+       "p12": 0.0227,
+       "h05": 0.8344,
+       "a05": 0.7857,
+       "h15": 0.5366,
+       "a15": 0.4555,
+       "ih05": 0.6135,
+       "ia05": 0.5438
+      },
+      "rp": {
+       "iy05": {
+        "p": 0.8237,
+        "t": 2,
+        "ok": 7,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %82 (lig ortalaması %67)"
+         ],
+         [
+          1,
+          "Racing son maçları: 8/9 (%89)"
+         ],
+         [
+          1,
+          "Espanyol son maçları: 7/9 (%78)"
+         ],
+         [
+          1,
+          "Racing evdeki son maçları: 4/4 (%100)"
+         ],
+         [
+          1,
+          "Espanyol dışarıdaki son maçları: 4/4 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 40/60 (%67)"
+         ],
+         [
+          1,
+          "Son maçlara göre ilk yarı gol beklentisi 2.0 (lig 1.3)"
+         ],
+         [
+          1,
+          "İki takımın son maçlarında gollerin %59'i ilk yarıda (lig %43)"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk 30 dakikada gol olan maç: Racing 7/9, Espanyol 7/9 (lig %54)"
+         ]
+        ]
+       },
+       "iy15": {
+        "p": 0.5177,
+        "t": 0,
+        "ok": 6,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %52 (lig ortalaması %46)"
+         ],
+         [
+          1,
+          "Racing son maçları: 7/9 (%78)"
+         ],
+         [
+          1,
+          "Espanyol son maçları: 6/9 (%67)"
+         ],
+         [
+          1,
+          "Racing evdeki son maçları: 4/4 (%100)"
+         ],
+         [
+          1,
+          "Espanyol dışarıdaki son maçları: 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 26/60 (%43)"
+         ],
+         [
+          1,
+          "Son maçlara göre ilk yarı gol beklentisi 2.0 (lig 1.3)"
+         ],
+         [
+          1,
+          "İki takımın son maçlarında gollerin %59'i ilk yarıda (lig %43)"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk 30 dakikada gol olan maç: Racing 7/9, Espanyol 7/9 (lig %54)"
+         ]
+        ]
+       },
+       "iykg": {
+        "p": 0.3337,
+        "t": 1,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %33 (lig ortalaması %21)"
+         ],
+         [
+          1,
+          "Racing son maçları: 5/9 (%56)"
+         ],
+         [
+          0,
+          "Espanyol son maçları: 2/9 (%22)"
+         ],
+         [
+          1,
+          "Racing evdeki son maçları: 3/4 (%75)"
+         ],
+         [
+          0,
+          "Espanyol dışarıdaki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 11/60 (%18)"
+         ],
+         [
+          1,
+          "İki takımın son maçlarında gollerin %59'i ilk yarıda (lig %43)"
+         ],
+         [
+          1,
+          "İlk yarıda gol attığı maç: Racing 6/9, Espanyol 5/9"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk 30 dakikada gol olan maç: Racing 7/9, Espanyol 7/9 (lig %54)"
+         ]
+        ]
+       },
+       "o15": {
+        "p": 0.8637,
+        "t": 2,
+        "ok": 6,
+        "n": 7,
+        "c": [
+         [
+          1,
+          "Model: %86 (lig ortalaması %77)"
+         ],
+         [
+          1,
+          "Racing son maçları: 8/9 (%89)"
+         ],
+         [
+          1,
+          "Espanyol son maçları: 8/9 (%89)"
+         ],
+         [
+          1,
+          "Racing evdeki son maçları: 4/4 (%100)"
+         ],
+         [
+          1,
+          "Espanyol dışarıdaki son maçları: 4/4 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 46/60 (%77)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.4 (lig 3.1)"
+         ]
+        ],
+        "i": []
+       },
+       "o25": {
+        "p": 0.6482,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %65 (lig ortalaması %56)"
+         ],
+         [
+          1,
+          "Racing son maçları: 7/9 (%78)"
+         ],
+         [
+          0,
+          "Espanyol son maçları: 5/9 (%56)"
+         ],
+         [
+          1,
+          "Racing evdeki son maçları: 4/4 (%100)"
+         ],
+         [
+          0,
+          "Espanyol dışarıdaki son maçları: 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 32/60 (%53)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.4 (lig 3.1)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.3 (lig 3.2)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Racing 7/9, Espanyol 5/9 (lig %61)"
+         ]
+        ]
+       },
+       "o35": {
+        "p": 0.4281,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %43 (lig ortalaması %39)"
+         ],
+         [
+          1,
+          "Racing son maçları: 6/9 (%67)"
+         ],
+         [
+          0,
+          "Espanyol son maçları: 1/9 (%11)"
+         ],
+         [
+          1,
+          "Racing evdeki son maçları: 3/4 (%75)"
+         ],
+         [
+          0,
+          "Espanyol dışarıdaki son maçları: 0/4 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 21/60 (%35)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.4 (lig 3.1)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.3 (lig 3.2)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Racing 7/9, Espanyol 5/9 (lig %61)"
+         ]
+        ]
+       },
+       "o45": {
+        "p": 0.2444,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %24 (lig ortalaması %24)"
+         ],
+         [
+          1,
+          "Racing son maçları: 4/9 (%44)"
+         ],
+         [
+          0,
+          "Espanyol son maçları: 0/9 (%0)"
+         ],
+         [
+          0,
+          "Racing evdeki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Espanyol dışarıdaki son maçları: 0/4 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 14/60 (%23)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.4 (lig 3.1)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.3 (lig 3.2)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Racing 7/9, Espanyol 5/9 (lig %61)"
+         ]
+        ]
+       },
+       "o55": {
+        "p": 0.1217,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %12 (lig ortalaması %10)"
+         ],
+         [
+          0,
+          "Racing son maçları: 1/9 (%11)"
+         ],
+         [
+          0,
+          "Espanyol son maçları: 0/9 (%0)"
+         ],
+         [
+          0,
+          "Racing evdeki son maçları: 0/4 (%0)"
+         ],
+         [
+          0,
+          "Espanyol dışarıdaki son maçları: 0/4 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 5/60 (%8)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 3.4 (lig 3.1)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.3 (lig 3.2)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Racing 7/9, Espanyol 5/9 (lig %61)"
+         ]
+        ]
+       },
+       "btts": {
+        "p": 0.6732,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %67 (lig ortalaması %60)"
+         ],
+         [
+          0,
+          "Racing son maçları: 6/9 (%67)"
+         ],
+         [
+          0,
+          "Espanyol son maçları: 6/9 (%67)"
+         ],
+         [
+          1,
+          "Racing evdeki son maçları: 4/4 (%100)"
+         ],
+         [
+          1,
+          "Espanyol dışarıdaki son maçları: 3/4 (%75)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 41/60 (%68)"
+         ],
+         [
+          0,
+          "Gol attığı maç: Racing 6/9, Espanyol 8/9"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen gol: Racing 1.6, Espanyol 1.7 (takım ort. 1.6)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Geriye düşünce gol attığı maç: Racing 3/6, Espanyol 5/6 (lig %66)"
+         ]
+        ]
+       },
+       "u25": {
+        "p": 0.3518,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %35 (lig ortalaması %44)"
+         ],
+         [
+          0,
+          "Racing son maçları: 2/9 (%22)"
+         ],
+         [
+          0,
+          "Espanyol son maçları: 4/9 (%44)"
+         ],
+         [
+          0,
+          "Racing evdeki son maçları: 0/4 (%0)"
+         ],
+         [
+          0,
+          "Espanyol dışarıdaki son maçları: 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 28/60 (%47)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 3.4 (lig 3.1)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.3 (lig 3.2)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Racing 7/9, Espanyol 5/9 (lig %61)"
+         ]
+        ]
+       },
+       "h05": {
+        "p": 0.8344,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %83 (lig ortalaması %81)"
+         ],
+         [
+          0,
+          "Racing son maçları: gol attığı maç 6/9 (%67)"
+         ],
+         [
+          0,
+          "Espanyol son maçları: gol yediği maç 7/9 (%78)"
+         ],
+         [
+          1,
+          "Racing evdeki son maçları: gol attığı maç 4/4 (%100)"
+         ],
+         [
+          0,
+          "Espanyol dışarıdaki son maçları: gol yediği maç 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 51/60 (%85)"
+         ],
+         [
+          0,
+          "Son maçlara göre Racing gol beklentisi 1.4 (Racing maç başı 1.4 attı, Espanyol 1.3 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          0,
+          "Şutlara göre Racing beklenen gol 1.6 (takım ort. 1.6)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.7857,
+        "t": 1,
+        "ok": 6,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %79 (lig ortalaması %70)"
+         ],
+         [
+          1,
+          "Racing son maçları: gol yediği maç 9/9 (%100)"
+         ],
+         [
+          1,
+          "Espanyol son maçları: gol attığı maç 8/9 (%89)"
+         ],
+         [
+          1,
+          "Racing evdeki son maçları: gol yediği maç 4/4 (%100)"
+         ],
+         [
+          1,
+          "Espanyol dışarıdaki son maçları: gol attığı maç 4/4 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 44/60 (%73)"
+         ],
+         [
+          1,
+          "Son maçlara göre Espanyol gol beklentisi 2.0 (Espanyol maç başı 1.2 attı, Racing 2.8 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          0,
+          "Şutlara göre Espanyol beklenen gol 1.7 (takım ort. 1.6)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.5366,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %54 (lig ortalaması %46)"
+         ],
+         [
+          1,
+          "Racing son maçları: 2+ gol attığı maç 6/9 (%67)"
+         ],
+         [
+          0,
+          "Espanyol son maçları: 2+ gol yediği maç 4/9 (%44)"
+         ],
+         [
+          1,
+          "Racing evdeki son maçları: 2+ gol attığı maç 4/4 (%100)"
+         ],
+         [
+          0,
+          "Espanyol dışarıdaki son maçları: 2+ gol yediği maç 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 27/60 (%45)"
+         ],
+         [
+          0,
+          "Son maçlara göre Racing gol beklentisi 1.4 (Racing maç başı 1.4 attı, Espanyol 1.3 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          0,
+          "Şutlara göre Racing beklenen gol 1.6 (takım ort. 1.6)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.4555,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %46 (lig ortalaması %37)"
+         ],
+         [
+          1,
+          "Racing son maçları: 2+ gol yediği maç 7/9 (%78)"
+         ],
+         [
+          0,
+          "Espanyol son maçları: 2+ gol attığı maç 2/9 (%22)"
+         ],
+         [
+          1,
+          "Racing evdeki son maçları: 2+ gol yediği maç 3/4 (%75)"
+         ],
+         [
+          0,
+          "Espanyol dışarıdaki son maçları: 2+ gol attığı maç 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 21/60 (%35)"
+         ],
+         [
+          1,
+          "Son maçlara göre Espanyol gol beklentisi 2.0 (Espanyol maç başı 1.2 attı, Racing 2.8 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          0,
+          "Şutlara göre Espanyol beklenen gol 1.7 (takım ort. 1.6)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.6135,
+        "t": 0,
+        "ok": 4,
+        "n": 7,
+        "c": [
+         [
+          1,
+          "Model: %61 (lig ortalaması %47)"
+         ],
+         [
+          1,
+          "Racing son maçları: ilk yarıda gol attığı maç 6/9 (%67)"
+         ],
+         [
+          0,
+          "Espanyol son maçları: ilk yarıda gol yediği maç 4/9 (%44)"
+         ],
+         [
+          1,
+          "Racing evdeki son maçları: ilk yarıda gol attığı maç 4/4 (%100)"
+         ],
+         [
+          0,
+          "Espanyol dışarıdaki son maçları: ilk yarıda gol yediği maç 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 26/60 (%43)"
+         ],
+         [
+          1,
+          "Son maçlara göre Racing ilk yarı gol beklentisi 0.9 (Racing maç başı 1.1 attı, Espanyol 0.7 yedi; lig takım ort. 0.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.5438,
+        "t": 2,
+        "ok": 6,
+        "n": 7,
+        "c": [
+         [
+          1,
+          "Model: %54 (lig ortalaması %41)"
+         ],
+         [
+          1,
+          "Racing son maçları: ilk yarıda gol yediği maç 7/9 (%78)"
+         ],
+         [
+          1,
+          "Espanyol son maçları: ilk yarıda gol attığı maç 5/9 (%56)"
+         ],
+         [
+          1,
+          "Racing evdeki son maçları: ilk yarıda gol yediği maç 3/4 (%75)"
+         ],
+         [
+          1,
+          "Espanyol dışarıdaki son maçları: ilk yarıda gol attığı maç 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 25/60 (%42)"
+         ],
+         [
+          1,
+          "Son maçlara göre Espanyol ilk yarı gol beklentisi 1.1 (Espanyol maç başı 0.8 attı, Racing 1.4 yedi; lig takım ort. 0.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ms1": {
+        "p": 0.4228,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %42 (lig ortalaması %43)"
+         ],
+         [
+          0,
+          "Racing son maçları: 9 maçta 2 kazandı (%22)"
+         ],
+         [
+          1,
+          "Espanyol son maçları: 9 maçta 5 kaybetti (%56)"
+         ],
+         [
+          0,
+          "Racing evdeki son maçları: 4 maçta 2 kazandı (%50)"
+         ],
+         [
+          0,
+          "Espanyol dışarıdaki son maçları: 4 maçta 2 kaybetti (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 25/60 (%42)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Racing 0.9, Espanyol 0.9"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Racing -0.7, Espanyol -0.5"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Racing öne geçince kazandı 1/3; Espanyol geriye düşünce puan aldı 1/6 (lig %67 / %33)"
+         ]
+        ]
+       },
+       "ms2": {
+        "p": 0.315,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %31 (lig ortalaması %28)"
+         ],
+         [
+          1,
+          "Racing son maçları: 9 maçta 5 kaybetti (%56)"
+         ],
+         [
+          0,
+          "Espanyol son maçları: 9 maçta 2 kazandı (%22)"
+         ],
+         [
+          0,
+          "Racing evdeki son maçları: 4 maçta 0 kaybetti (%0)"
+         ],
+         [
+          0,
+          "Espanyol dışarıdaki son maçları: 4 maçta 1 kazandı (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 14/60 (%23)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Racing 0.9, Espanyol 0.9"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Racing -0.7, Espanyol -0.5"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Espanyol öne geçince kazandı 2/3; Racing geriye düşünce puan aldı 2/6 (lig %67 / %33)"
+         ]
+        ]
+       }
+      },
+      "low": false,
+      "tsc": {
+       "h": {
+        "n": 9,
+        "s": 6,
+        "c": 9,
+        "s2": 6,
+        "c2": 7,
+        "n1": 9,
+        "s1": 6,
+        "c1": 7,
+        "s12": 3,
+        "c12": 4
+       },
+       "a": {
+        "n": 9,
+        "s": 8,
+        "c": 7,
+        "s2": 2,
+        "c2": 4,
+        "n1": 9,
+        "s1": 5,
+        "c1": 4,
+        "s12": 2,
+        "c12": 2
+       }
+      },
+      "tc": {
+       "h": "17. sıra (orta sıralarda) · son 5: MBMMG · son 10 maçta maç başı 1.4 attı, 2.8 yedi · form eğrisi ▆▄▂▂▄▁█▁ dengeli",
+       "a": "16. sıra (orta sıralarda) · son 5: MBMMG · son 10 maçta maç başı 1.2 attı, 1.3 yedi · form eğrisi ▂▁▅▇█▂▃▃ dengeli"
+      }
+     }
+    }
+   ]
   }
  ]
 }
