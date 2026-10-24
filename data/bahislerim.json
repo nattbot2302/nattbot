@@ -726,6 +726,26 @@
      "mp": 0.8237
     }
    ]
+  },
+  {
+   "id": "k1792853094554",
+   "t": "2026-10-24T14:44:54.554Z",
+   "tutar": 250,
+   "kaynak": "analiz sayfası",
+   "legs": [
+    {
+     "m": "401884757",
+     "ad": "Mainz - Bremen",
+     "lg": "Almanya Bundesliga",
+     "k": "2026-10-24T13:30:00+00:00",
+     "b": "o45",
+     "bl": "4.5 Üst",
+     "o": 1.77,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.392
+    }
+   ]
   }
  ]
 }
