@@ -11153,6 +11153,671 @@
      }
     }
    ]
+  },
+  {
+   "id": "t1792853078658",
+   "t": "2026-10-24T14:44:38.658Z",
+   "not": "",
+   "legs": [
+    {
+     "m": "401884757",
+     "ad": "Mainz - Bremen",
+     "lg": "Almanya Bundesliga",
+     "k": "2026-10-24T13:30:00+00:00",
+     "b": "o45",
+     "bl": "4.5 Üst",
+     "o": 1.77,
+     "snap": {
+      "h": "Mainz",
+      "a": "Bremen",
+      "lg": "Almanya Bundesliga",
+      "k": "2026-10-24T13:30:00+00:00",
+      "l": [
+       2.5553,
+       1.5527,
+       1.1933,
+       0.5268
+      ],
+      "p": {
+       "p1": 0.5934,
+       "px": 0.1833,
+       "p2": 0.2233,
+       "o15": 0.916,
+       "o25": 0.7772,
+       "o35": 0.5872,
+       "o45": 0.392,
+       "o55": 0.2317,
+       "btts": 0.7271,
+       "iy05": 0.8209,
+       "iy15": 0.5129,
+       "iykg": 0.2853,
+       "p21": 0.0291,
+       "p12": 0.0354,
+       "h05": 0.9223,
+       "a05": 0.7883,
+       "h15": 0.7238,
+       "a15": 0.4596,
+       "ih05": 0.6967,
+       "ia05": 0.4095
+      },
+      "rp": {
+       "iy05": {
+        "p": 0.8209,
+        "t": 0,
+        "ok": 0,
+        "n": 6,
+        "c": [
+         [
+          0,
+          "Model: %82 (lig ortalaması %84)"
+         ],
+         [
+          0,
+          "Mainz son maçları: 5/6 (%83)"
+         ],
+         [
+          0,
+          "Bremen son maçları: 5/6 (%83)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 46/55 (%84)"
+         ],
+         [
+          0,
+          "Son maçlara göre ilk yarı gol beklentisi 1.6 (lig 1.5)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %40'i ilk yarıda (lig %40)"
+         ]
+        ],
+        "i": []
+       },
+       "iy15": {
+        "p": 0.5129,
+        "t": 0,
+        "ok": 1,
+        "n": 6,
+        "c": [
+         [
+          0,
+          "Model: %51 (lig ortalaması %44)"
+         ],
+         [
+          1,
+          "Mainz son maçları: 4/6 (%67)"
+         ],
+         [
+          0,
+          "Bremen son maçları: 2/6 (%33)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 24/55 (%44)"
+         ],
+         [
+          0,
+          "Son maçlara göre ilk yarı gol beklentisi 1.6 (lig 1.5)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %40'i ilk yarıda (lig %40)"
+         ]
+        ],
+        "i": []
+       },
+       "iykg": {
+        "p": 0.2853,
+        "t": 0,
+        "ok": 2,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %29 (lig ortalaması %20)"
+         ],
+         [
+          1,
+          "Mainz son maçları: 2/6 (%33)"
+         ],
+         [
+          0,
+          "Bremen son maçları: 0/6 (%0)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 11/55 (%20)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %40'i ilk yarıda (lig %40)"
+         ],
+         [
+          0,
+          "İlk yarıda gol attığı maç: Mainz 4/6, Bremen 1/6"
+         ]
+        ],
+        "i": []
+       },
+       "o15": {
+        "p": 0.916,
+        "t": 1,
+        "ok": 3,
+        "n": 5,
+        "c": [
+         [
+          1,
+          "Model: %92 (lig ortalaması %82)"
+         ],
+         [
+          0,
+          "Mainz son maçları: 4/6 (%67)"
+         ],
+         [
+          1,
+          "Bremen son maçları: 6/6 (%100)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 45/55 (%82)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.0 (lig 3.7)"
+         ]
+        ],
+        "i": []
+       },
+       "o25": {
+        "p": 0.7772,
+        "t": 2,
+        "ok": 1,
+        "n": 6,
+        "c": [
+         [
+          0,
+          "Model: %78 (lig ortalaması %75)"
+         ],
+         [
+          0,
+          "Mainz son maçları: 4/6 (%67)"
+         ],
+         [
+          0,
+          "Bremen son maçları: 5/6 (%83)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 41/55 (%75)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.0 (lig 3.7)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.9)"
+         ]
+        ],
+        "i": []
+       },
+       "o35": {
+        "p": 0.5872,
+        "t": 0,
+        "ok": 3,
+        "n": 6,
+        "c": [
+         [
+          0,
+          "Model: %59 (lig ortalaması %56)"
+         ],
+         [
+          1,
+          "Mainz son maçları: 4/6 (%67)"
+         ],
+         [
+          1,
+          "Bremen son maçları: 5/6 (%83)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 31/55 (%56)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.0 (lig 3.7)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.9)"
+         ]
+        ],
+        "i": []
+       },
+       "o45": {
+        "p": 0.392,
+        "t": 0,
+        "ok": 2,
+        "n": 6,
+        "c": [
+         [
+          0,
+          "Model: %39 (lig ortalaması %38)"
+         ],
+         [
+          1,
+          "Mainz son maçları: 3/6 (%50)"
+         ],
+         [
+          0,
+          "Bremen son maçları: 2/6 (%33)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 21/55 (%38)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.0 (lig 3.7)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.9)"
+         ]
+        ],
+        "i": []
+       },
+       "o55": {
+        "p": 0.2317,
+        "t": 0,
+        "ok": 2,
+        "n": 6,
+        "c": [
+         [
+          0,
+          "Model: %23 (lig ortalaması %16)"
+         ],
+         [
+          1,
+          "Mainz son maçları: 2/6 (%33)"
+         ],
+         [
+          0,
+          "Bremen son maçları: 0/6 (%0)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 9/55 (%16)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 4.0 (lig 3.7)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.9)"
+         ]
+        ],
+        "i": []
+       },
+       "btts": {
+        "p": 0.7271,
+        "t": 1,
+        "ok": 4,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %73 (lig ortalaması %60)"
+         ],
+         [
+          0,
+          "Mainz son maçları: 3/6 (%50)"
+         ],
+         [
+          1,
+          "Bremen son maçları: 6/6 (%100)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 33/55 (%60)"
+         ],
+         [
+          1,
+          "Gol attığı maç: Mainz 5/6, Bremen 6/6"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen gol: Mainz 2.0, Bremen 1.9 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "u25": {
+        "p": 0.2228,
+        "t": 0,
+        "ok": 0,
+        "n": 6,
+        "c": [
+         [
+          0,
+          "Model: %22 (lig ortalaması %25)"
+         ],
+         [
+          0,
+          "Mainz son maçları: 2/6 (%33)"
+         ],
+         [
+          0,
+          "Bremen son maçları: 1/6 (%17)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 14/55 (%25)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 4.0 (lig 3.7)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.9 (lig 3.9)"
+         ]
+        ],
+        "i": []
+       },
+       "h05": {
+        "p": 0.9223,
+        "t": 0,
+        "ok": 3,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %92 (lig ortalaması %84)"
+         ],
+         [
+          0,
+          "Mainz son maçları: gol attığı maç 5/6 (%83)"
+         ],
+         [
+          1,
+          "Bremen son maçları: gol yediği maç 6/6 (%100)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 46/55 (%84)"
+         ],
+         [
+          1,
+          "Son maçlara göre Mainz gol beklentisi 2.2 (Mainz maç başı 2.3 attı, Bremen 2.0 yedi; lig takım ort. 1.9)"
+         ],
+         [
+          0,
+          "Şutlara göre Mainz beklenen gol 2.0 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.7883,
+        "t": 0,
+        "ok": 2,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %79 (lig ortalaması %69)"
+         ],
+         [
+          0,
+          "Mainz son maçları: gol yediği maç 3/6 (%50)"
+         ],
+         [
+          1,
+          "Bremen son maçları: gol attığı maç 6/6 (%100)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 38/55 (%69)"
+         ],
+         [
+          0,
+          "Son maçlara göre Bremen gol beklentisi 1.8 (Bremen maç başı 2.0 attı, Mainz 1.7 yedi; lig takım ort. 1.9)"
+         ],
+         [
+          0,
+          "Şutlara göre Bremen beklenen gol 1.9 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.7238,
+        "t": 0,
+        "ok": 0,
+        "n": 6,
+        "c": [
+         [
+          0,
+          "Model: %72 (lig ortalaması %67)"
+         ],
+         [
+          0,
+          "Mainz son maçları: 2+ gol attığı maç 3/6 (%50)"
+         ],
+         [
+          0,
+          "Bremen son maçları: 2+ gol yediği maç 4/6 (%67)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 37/55 (%67)"
+         ],
+         [
+          0,
+          "Son maçlara göre Mainz gol beklentisi 2.2 (Mainz maç başı 2.3 attı, Bremen 2.0 yedi; lig takım ort. 1.9)"
+         ],
+         [
+          0,
+          "Şutlara göre Mainz beklenen gol 2.0 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.4596,
+        "t": 0,
+        "ok": 1,
+        "n": 6,
+        "c": [
+         [
+          0,
+          "Model: %46 (lig ortalaması %42)"
+         ],
+         [
+          0,
+          "Mainz son maçları: 2+ gol yediği maç 3/6 (%50)"
+         ],
+         [
+          1,
+          "Bremen son maçları: 2+ gol attığı maç 4/6 (%67)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 23/55 (%42)"
+         ],
+         [
+          0,
+          "Son maçlara göre Bremen gol beklentisi 1.8 (Bremen maç başı 2.0 attı, Mainz 1.7 yedi; lig takım ort. 1.9)"
+         ],
+         [
+          0,
+          "Şutlara göre Bremen beklenen gol 1.9 (takım ort. 1.9)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.6967,
+        "t": 0,
+        "ok": 1,
+        "n": 5,
+        "c": [
+         [
+          0,
+          "Model: %70 (lig ortalaması %62)"
+         ],
+         [
+          0,
+          "Mainz son maçları: ilk yarıda gol attığı maç 4/6 (%67)"
+         ],
+         [
+          0,
+          "Bremen son maçları: ilk yarıda gol yediği maç 4/6 (%67)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 34/55 (%62)"
+         ],
+         [
+          1,
+          "Son maçlara göre Mainz ilk yarı gol beklentisi 1.1 (Mainz maç başı 1.2 attı, Bremen 1.0 yedi; lig takım ort. 0.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.4095,
+        "t": 0,
+        "ok": 0,
+        "n": 5,
+        "c": [
+         [
+          0,
+          "Model: %41 (lig ortalaması %42)"
+         ],
+         [
+          0,
+          "Mainz son maçları: ilk yarıda gol yediği maç 3/6 (%50)"
+         ],
+         [
+          0,
+          "Bremen son maçları: ilk yarıda gol attığı maç 1/6 (%17)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 23/55 (%42)"
+         ],
+         [
+          0,
+          "Son maçlara göre Bremen ilk yarı gol beklentisi 0.5 (Bremen maç başı 0.2 attı, Mainz 0.8 yedi; lig takım ort. 0.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ms1": {
+        "p": 0.5934,
+        "t": 0,
+        "ok": 1,
+        "n": 6,
+        "c": [
+         [
+          1,
+          "Model: %59 (lig ortalaması %51)"
+         ],
+         [
+          0,
+          "Mainz son maçları: 6 maçta 3 kazandı (%50)"
+         ],
+         [
+          0,
+          "Bremen son maçları: 6 maçta 1 kaybetti (%17)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 28/55 (%51)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Mainz 1.7, Bremen 1.5"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Mainz +0.8, Bremen +0.5"
+         ]
+        ],
+        "i": []
+       },
+       "ms2": {
+        "p": 0.2233,
+        "t": 0,
+        "ok": 0,
+        "n": 6,
+        "c": [
+         [
+          0,
+          "Model: %22 (lig ortalaması %29)"
+         ],
+         [
+          0,
+          "Mainz son maçları: 6 maçta 2 kaybetti (%33)"
+         ],
+         [
+          0,
+          "Bremen son maçları: 6 maçta 2 kazandı (%33)"
+         ],
+         [
+          0,
+          "Benzer 55 maç: 16/55 (%29)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Mainz 1.7, Bremen 1.5"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Mainz +0.8, Bremen +0.5"
+         ]
+        ],
+        "i": []
+       }
+      },
+      "low": false,
+      "tsc": {
+       "h": {
+        "n": 6,
+        "s": 5,
+        "c": 3,
+        "s2": 3,
+        "c2": 3,
+        "n1": 6,
+        "s1": 4,
+        "c1": 3,
+        "s12": 3,
+        "c12": 2
+       },
+       "a": {
+        "n": 6,
+        "s": 6,
+        "c": 6,
+        "s2": 4,
+        "c2": 4,
+        "n1": 6,
+        "s1": 1,
+        "c1": 4,
+        "s12": 0,
+        "c12": 2
+       }
+      },
+      "tc": {
+       "h": "5. sıra (orta sıralarda) · son 5: GMGMG · son 10 maçta maç başı 2.3 attı, 1.7 yedi · form eğrisi ▃█▁▄▂▅ düşüşte",
+       "a": "8. sıra (orta sıralarda) · son 5: BBGBG · son 10 maçta maç başı 2.0 attı, 2.0 yedi · form eğrisi ▁▄▄█▃▃ dengeli"
+      }
+     }
+    }
+   ]
   }
  ]
 }
