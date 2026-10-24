@@ -972,6 +972,12 @@ MAIN_MIN_P = 0.55        # günün önerisi için en düşük model olasılığ�
 O25_STRONG = 0.70        # 2.5 Üst: Güçlü için model ihtimali
 O25_MID = 0.65           # 2.5 Üst: Orta için model ihtimali
 O25_NET = 0.60           # 2.5 Üst sayfası: geniş ağ alt sınırı
+# model ihtimaline göre seviye: bahis -> (Orta, Güçlü). Test (son 60 gün, Güçlü): 2.5 Üst %57→%71,
+# KG Var %41→%71, 2.5 Alt %43→%66, Dep 0.5 %83→%86.
+# MS 1/2, Ev İY 0.5 ve ilk yarı bahislerinde kontrol listesi eşit ya da daha iyi olduğu için onlar aynen kalır.
+P_TIER = {"o25": (0.65, 0.70), "btts": (0.68, 0.74), "u25": (0.58, 0.62), "a05": (0.81, 0.86)}
+# 3.5 Üst ve Dep İY 0.5 Üst'te de model ihtimali ortalamaya göre daha iyi seçti, ama çok sayıda düşük
+# isabetli (~%50-57) Güçlü ürettiği için günün önerilerinin toplam isabetini düşürdü; onlar kontrol listesinde kaldı.
 FEST_P45 = 0.33          # gol şöleni listesi: 4.5 Üst ihtimali (ligde ortalama ~%19)
 FEST_P55 = 0.18          # gol şöleni listesi: 5.5 Üst ihtimali (ligde ortalama ~%9)
 ALT_MIN_P = 0.40         # ikinci öneri için en düşük model olasılığı
@@ -1389,10 +1395,11 @@ def rapor_eval(ctx, m, r, nb, hn, an):
         tier = 0
         if tot >= RP_MIN_CHECKS and checks[0][0]:
             tier = 2 if ratio >= 0.8 else (1 if ratio >= 0.6 else 0)
-        if key == "o25":
-            # 2.5 Üst: geri testte (12 hafta, 2.105 maç) madde sayımı model ihtimalinden kötü seçti
-            # (Orta+Güçlü %66, Güçlü %57; model ≥%70: %71). Seviye doğrudan model ihtimalinden gelir.
-            tier = 2 if p >= O25_STRONG else (1 if p >= O25_MID else 0)
+        if key in P_TIER:
+            # Bu bahislerde geri testte madde sayımı model ihtimalinden kötü seçti; seviye doğrudan
+            # model ihtimalinden gelir (eşikler önceki dönemden seçildi, sonraki 60 günde test edildi).
+            mid_, strong_ = P_TIER[key]
+            tier = 2 if p >= strong_ else (1 if p >= mid_ else 0)
         out[key] = {"p": p, "base": base, "checks": checks, "info": infos, "ok": okc, "tot": tot, "tier": tier,
                     "score": ratio + (p - base)}
     if "o25" in out:
@@ -4576,6 +4583,9 @@ function liveEval(m, L){
 }
 
 function ck(lab, ok, txt){ return {lab, ok, txt}; }
+const LIVE_MIN_LEFT = 7;    // devre/maç sonuna bundan az dakika kaldıysa öneri yok
+const LIVE_ALT_LEFT = 12;   // "bu skorla biter" için en az kalan dakika
+const LIVE_MAX_P = 0.82;    // bundan yüksek ihtimal = oran ~1.2 altı, önerilmez
 function livePicks(m, L, o){
   const cur = L.hg+L.ag, t = o.t, S = o.S, T = o.T, d = L.hg-L.ag, TM = o.TM, nm = [m.h, m.a], iy = o.iy;
   const pre = iy ? 'İY ' : '', when = iy ? 'devreye kadar ' : 'maç sonuna kadar ';
@@ -4645,13 +4655,21 @@ function livePicks(m, L, o){
     for(const i of [0,1]) if(ok3(i)) c.push(ck(nm[i]+' tepkisi', TM[i].draw>=0.6, TM[i].lab+' devrenin berabere bitme oranı '+P(TM[i].draw)));
     out.push({t:'İY X', sub:'ilk yarı berabere biter', p:o.px, c});
   }
+  // Zaman ve değer kuralları: süresi dolmak üzere olan ya da ihtimali zaten çok yüksek (oranı ~1.1-1.2,
+  // çoğu sitede kapanmış) bahisler önerilmez; sadece "Tüm seçenekler"de gerekçesiyle görünür.
+  const left = (iy ? 45 : 93) - t;
   for(const x of out){
     const v = x.c.filter(y=>y.ok!=null);
     x.ok = v.filter(y=>y.ok).length; x.n = v.length; x.ratio = x.n ? x.ok/x.n : 0;
-    x.level = x.info ? null : (x.c[0].ok && x.p>=0.65 && x.ratio>=0.8 && x.n>=3) ? 'Güçlü' : ((x.c[0].ok && x.p>=0.58 && x.ratio>=0.6 && x.n>=2) ? 'Orta' : null);
     x.iy = iy;
+    const alt = / Alt$/.test(x.t) || x.t==='İY X';
+    if(left < LIVE_MIN_LEFT) x.block = 'devreye/maç sonuna '+Math.max(Math.round(left),0)+' dk kaldı, bu bahis büyük ihtimalle kapandı';
+    else if(alt && left > (iy ? 25 : 38)) x.block = 'bu skorla biter bahsi için henüz çok erken';
+    else if(alt && left < LIVE_ALT_LEFT) x.block = 'bitime '+Math.round(left)+' dk kaldı: bu skorla biter bahsinin oranı artık çok düşük ya da kapalı';
+    else if(x.p > LIVE_MAX_P) x.block = 'ihtimal %'+Math.round(x.p*100)+': oranı ~'+(1/x.p).toFixed(2)+' olur, oynamaya değmez';
+    x.level = (x.info || x.block) ? null : (x.c[0].ok && x.p>=0.65 && x.ratio>=0.8 && x.n>=3) ? 'Güçlü' : ((x.c[0].ok && x.p>=0.58 && x.ratio>=0.6 && x.n>=2) ? 'Orta' : null);
   }
-  return out.filter(x=>x.p<=0.93).sort((a,b)=>(b.level==='Güçlü')-(a.level==='Güçlü') || (!!b.level)-(!!a.level) || b.ratio-a.ratio || b.p-a.p);
+  return out.filter(x=>x.p<=0.97).sort((a,b)=>(b.level==='Güçlü')-(a.level==='Güçlü') || (!!b.level)-(!!a.level) || b.ratio-a.ratio || b.p-a.p);
 }
 
 async function getLiveData(){
@@ -4709,7 +4727,7 @@ function statRow(label, h, a, suffix){
 function pickHtml(x){
   const lv = x.level ? '<span class="lvl '+(x.level==='Güçlü'?'g':'o')+'">'+x.level.toUpperCase()+'</span> ' : '';
   return '<details class="pk'+(x.iy?' iy':'')+'"><summary>'+lv+'<b>'+esc(x.t)+'</b>'+(x.sub?' <span class="note">'+esc(x.sub)+'</span>':'')+
-    ' · <b>'+P(x.p)+'</b> <span class="note">· '+x.ok+'/'+x.n+' kanıt</span></summary>'+
+    ' · <b>'+P(x.p)+'</b> <span class="note">· '+x.ok+'/'+x.n+' kanıt</span>'+(x.block?'<br><span class="note">⛔ '+esc(x.block)+'</span>':'')+'</summary>'+
     x.c.map(y=>'<div class="ck '+(y.ok?'y':'n')+'">'+(y.ok?'✓':'✗')+' <b>'+esc(y.lab)+':</b> '+esc(y.txt)+'</div>').join('')+'</details>';
 }
 
@@ -4717,7 +4735,9 @@ function verdict(picks, title){
   const strong = picks.filter(x=>x.level);
   let h = '<div class="vt">'+title+'</div>';
   if(strong.length) return h + strong.slice(0,2).map(pickHtml).join('');
-  const b = picks.slice().sort((a,c)=>c.ratio-a.ratio||c.p-a.p)[0];
+  const open_ = picks.filter(x=>!x.block && !x.info);
+  if(!open_.length) return h + '<div class="ban">Bu dilimde oynanabilir bir bahis kalmadı: süre çok az ya da kalan seçeneklerin oranı çok düşük.</div>';
+  const b = open_.slice().sort((a,c)=>c.ratio-a.ratio||c.p-a.p)[0];
   return h + '<div class="ban">Net sinyal yok: kanıtlar birbirini tutmuyor.'+(b?' En yakın: <b>'+esc(b.t)+'</b> '+P(b.p)+' ('+b.ok+'/'+b.n+' kanıt).':'')+'</div>';
 }
 
@@ -4745,7 +4765,10 @@ function liveCard(m, L){
 
   // 1) Ne oynanır: ilk yarı ve maç sonu ayrı
   out += '<div class="sec">Ne oynanır?</div>';
-  if(iy){
+  if(iy && 45-o.t < LIVE_MIN_LEFT){
+    out += '<div class="vt">İlk yarı</div><p class="note">Devreye ~'+Math.max(45-o.t,1)+' dk kaldı; ilk yarı bahisleri kapanmak üzere, öneri verilmez.</p>';
+    out += verdict(o.picks, 'Maç sonu');
+  } else if(iy){
     out += verdict(o.iyPicks, 'İlk yarı · devreye ~'+Math.max(45-o.t,1)+' dk');
     out += '<details><summary>Maç sonu seçenekleri (ikinci yarıda öne çıkar)</summary>'+verdict(o.picks, 'Maç sonu')+'</details>';
   } else {
