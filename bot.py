@@ -969,6 +969,9 @@ MAIN_EXCLUDE = {"o15", "iy05", "h05", "a05"}   # oranı çok düşük; günün �
 TIER_NAME = {2: "GÜÇLÜ", 1: "ORTA", 0: "ZAYIF"}
 RP_MIN_CHECKS = 5
 MAIN_MIN_P = 0.55        # günün önerisi için en düşük model olasılığı
+O25_STRONG = 0.70        # 2.5 Üst: Güçlü için model ihtimali
+O25_MID = 0.65           # 2.5 Üst: Orta için model ihtimali
+O25_NET = 0.60           # 2.5 Üst sayfası: geniş ağ alt sınırı
 FEST_P45 = 0.33          # gol şöleni listesi: 4.5 Üst ihtimali (ligde ortalama ~%19)
 FEST_P55 = 0.18          # gol şöleni listesi: 5.5 Üst ihtimali (ligde ortalama ~%9)
 ALT_MIN_P = 0.40         # ikinci öneri için en düşük model olasılığı
@@ -979,6 +982,8 @@ TRUST_EVAL = None
 GLOBAL_TH = None         # tüm liglerden birleşik takım geçmişi (Avrupa kupaları için)
 FETCHED = {}             # önceden çekilmiş lig verisi (kupalar)
 TEAM_TREND = {}          # takım -> kendi ligindeki form eğrisi
+LAST_RUN = None
+LAST_RAW = None
 PREV_SNAPSHOT = None
 MACS_BY_ID = {}
 TRUST_MIN_N = 25
@@ -1091,7 +1096,10 @@ def rapor_ctx(past, ref):
     xs = [a + b for a, b in xs if a is not None]
     return {"base": base, "avg": sum(tot) / len(tot) if tot else None,
             "avg1": sum(tot1) / len(tot1) if tot1 else None, "pairs": pairs, "th": team_history(past),
-            "avgx": sum(xs) / len(xs) if len(xs) >= 30 else None, "gmb": gm_base(recent)}
+            "avgx": sum(xs) / len(xs) if len(xs) >= 30 else None, "gmb": gm_base(recent),
+            "avgsot": (lambda v: sum(v) / len(v) if len(v) >= 30 else None)(
+                [m["st"]["hsot"] + m["st"]["asot"] for m in recent if m.get("st")]),
+            "conc": (sum((m["hg"] > 0) + (m["ag"] > 0) for m in recent) / (2 * len(recent))) if recent else None}
 
 
 GI_BINS = [(1, 15), (16, 30), (31, 45), (46, 60), (61, 75), (76, 120)]
@@ -1164,6 +1172,49 @@ def gm_base(recent):
 def xmean(rows, i, minn=6):
     v = [x[i] for x in rows if len(x) > i and x[i] is not None]
     return sum(v) / len(v) if len(v) >= minn else None
+
+
+def o25_feats(ctx, m, r, nb, h10, a10, hv, av, h2h):
+    """2.5 Üst için öğrenilen puanlamanın girdileri (eksik olan 0 sayılır)."""
+    base = ctx["base"].get("o25")
+    p = model_p("o25", r)
+    if base is None or p is None:
+        return None
+
+    def rate(rows, minn):
+        k, n = rows_rate("o25", rows, "h")
+        return (k / n - base) if n >= minn else 0.0
+    nk = [m_ev("o25", x) for x in nb]
+    nk = [x for x in nk if x is not None]
+    hk = [m_ev("o25", x) for x in h2h]
+    hk = [x for x in hk if x is not None]
+    f = [p - base, rate(h10, 6), rate(a10, 6), rate(hv, 4), rate(av, 4),
+         (sum(nk) / len(nk) - base) if len(nk) >= 30 else 0.0,
+         (sum(hk) / len(hk) - base) if len(hk) >= 2 else 0.0]
+    parts = [rows_mean(h10, 1), rows_mean(a10, 2), rows_mean(a10, 1), rows_mean(h10, 2)]
+    f.append(((parts[0] + parts[1]) / 2 + (parts[2] + parts[3]) / 2 - ctx["avg"]) if None not in parts and ctx["avg"] else 0.0)
+    ax = ctx.get("avgx")
+    xs = [xmean(h10, 7), xmean(h10, 8), xmean(a10, 7), xmean(a10, 8)]
+    f.append(((xs[0] + xs[3]) / 2 + (xs[2] + xs[1]) / 2 - ax) if ax and None not in xs else 0.0)
+    so = [xmean(h10, 9), xmean(h10, 10), xmean(a10, 9), xmean(a10, 10)]
+    f.append(((so[0] + so[1] + so[2] + so[3]) / 2 - ctx["avgsot"]) / max(ctx["avgsot"], 1) if ctx.get("avgsot") and None not in so else 0.0)
+    if ctx.get("conc") and len(h10) >= 6 and len(a10) >= 6:
+        f.append((sum(1 for x in h10 if x[2] > 0) / len(h10) + sum(1 for x in a10 if x[2] > 0) / len(a10)) / 2 - ctx["conc"])
+    else:
+        f.append(0.0)
+    gb = ctx.get("gmb")
+    hs_, as_ = team_gm(h10), team_gm(a10)
+    if gb and gb.get("open") and hs_ and as_ and hs_["open"][1] + as_["open"][1] >= 8:
+        f.append((hs_["open"][0] + as_["open"][0]) / (hs_["open"][1] + as_["open"][1]) - gb["open"])
+    else:
+        f.append(0.0)
+    f.append(base - 0.55)
+    return [round(x, 4) for x in f]
+
+
+O25_NAMES = ["Model", "Ev sahibi son 10", "Deplasman son 10", "Ev sahibi evde", "Deplasman dışarıda", "Benzer maçlar",
+             "Aralarındaki maçlar", "Son maçlara göre gol", "Şutlara göre gol", "İsabetli şut hacmi",
+             "İki takımın gol yeme sıklığı", "İlk golden sonra açılma", "Ligin gol seviyesi"]
 
 
 def rapor_eval(ctx, m, r, nb, hn, an):
@@ -1338,8 +1389,14 @@ def rapor_eval(ctx, m, r, nb, hn, an):
         tier = 0
         if tot >= RP_MIN_CHECKS and checks[0][0]:
             tier = 2 if ratio >= 0.8 else (1 if ratio >= 0.6 else 0)
+        if key == "o25":
+            # 2.5 Üst: geri testte (12 hafta, 2.105 maç) madde sayımı model ihtimalinden kötü seçti
+            # (Orta+Güçlü %66, Güçlü %57; model ≥%70: %71). Seviye doğrudan model ihtimalinden gelir.
+            tier = 2 if p >= O25_STRONG else (1 if p >= O25_MID else 0)
         out[key] = {"p": p, "base": base, "checks": checks, "info": infos, "ok": okc, "tot": tot, "tier": tier,
                     "score": ratio + (p - base)}
+    if "o25" in out:
+        out["o25"]["f"] = o25_feats(ctx, m, r, nb, h10, a10, hv, av, h2h)
     # Günün önerisi: kriterleri tutan, olması muhtemel (model en az %55) ve geçmişte işe yaramış bahis türü
     def ok_trust(k, tier):
         if TRUST is None:
@@ -1602,7 +1659,7 @@ def backtest_raw(matches, now):
                         "sh": (hl[0] / lam[0], hl[1] / lam[1]) if hl else None,
                         "hg": m["hg"], "ag": m["ag"], "m": m,
                         "rp": {k: (v["tier"], m_ev(k, m), v["p"], v["score"]) for k, v in ev["m"].items()},
-                        "rpmain": ev["main"]})
+                        "rpmain": ev["main"], "f25": (ev["m"].get("o25") or {}).get("f")})
     return out
 
 
@@ -2329,7 +2386,11 @@ def main():
         print("Lig:", slug, flush=True)
         leagues[slug] = process_league(slug, name, cal, now)
     leagues = [leagues[s] for s, _, _ in LEAGUES]
+    global LAST_RUN
+    LAST_RUN = leagues
     allraw = [x for L in leagues for x in L.get("raw", [])]
+    global LAST_RAW
+    LAST_RAW = allraw
     cut = now - dt.timedelta(days=BACKTEST_DAYS)
     pool_eval = fit_kc([x for x in allraw if x["date"] < cut])
     pool_all = fit_kc(allraw)
@@ -2370,6 +2431,7 @@ def main():
     write_analiz(leagues, now)
     write_analiz_html()
     write_karne(st, leagues, now)
+    write_ust25(st, leagues, now, LAST_RAW)
     send_mail(st, leagues, now)
     save_store(st)
 
@@ -2858,7 +2920,8 @@ def accuracy_tab(leagues):
 
 # ------------------------------------------------------------ gol raporu sekmesi
 RP_CSS = """
-.topnav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0 6px}
+.topnav{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0 6px}
+.topnav a.lvb{grid-column:span 2}
 .topnav a{display:block;text-align:center;white-space:nowrap;background:var(--card);color:var(--tx);border:1px solid var(--bd);text-decoration:none;font-weight:700;font-size:13px;padding:8px 4px;border-radius:16px}
 .topnav a.lvb{background:#d93025;color:#fff;border-color:#d93025}
 .bars{font-family:monospace;letter-spacing:1px;color:var(--ac)}
@@ -4112,6 +4175,7 @@ def write_html(leagues, now, st=None):
             f"<div class='topnav'><a href='bahis.html?v={int(now.timestamp())}'>Kuponlarım</a>"
             f"<a href='analiz.html?v={int(now.timestamp())}'>Analiz</a>"
             f"<a href='karne.html?v={int(now.timestamp())}'>Karne</a>"
+            f"<a href='ust25.html?v={int(now.timestamp())}'>2.5 Üst</a>"
             f"<a class='lvb' href='canli.html?v={int(now.timestamp())}'>● Canlı</a></div>"
             f"<div class='upd'>Güncelleme: {local:%d.%m.%Y %H:%M} · "
             f"Maçlar: {d0:%d.%m %H:%M} - {d1:%d.%m %H:%M} · Model tahmindir, kâr garantisi vermez."
@@ -5355,6 +5419,145 @@ def write_karne(st, leagues, now):
             f"{karne_section(rows, 'all', False)}</div><script>{KARNE_JS}</script></body></html>")
     with open("karne.html", "w", encoding="utf-8") as f:
         f.write(page)
+
+
+# ------------------------------------------------------------ 2.5 ÜST SAYFASI (ust25.html)
+def o25_reasons(f, p):
+    """Özellik vektöründen okunabilir gerekçeler: (lehine mi, metin)."""
+    if not f:
+        return []
+    base = f[12] + 0.55
+    out = [(p >= base + 0.08, f"Model %{p * 100:.0f} veriyor (ligde 2.5 Üst %{base * 100:.0f})")]
+    if base >= 0.60:
+        out.append((True, f"Golcü lig: ligde 2.5 Üst oranı %{base * 100:.0f}"))
+    elif base <= 0.50:
+        out.append((False, f"Az gollü lig: ligde 2.5 Üst oranı sadece %{base * 100:.0f}"))
+    if f[11] >= 0.08:
+        out.append((True, f"İki takımın maçlarında ilk golden sonra maç açılıyor (ligden {f[11] * 100:+.0f} puan)"))
+    elif f[11] <= -0.08:
+        out.append((False, f"İlk golden sonra maç kapanıyor (ligden {f[11] * 100:+.0f} puan)"))
+    if f[8] >= 0.3:
+        out.append((True, f"Şutlara göre beklenen toplam gol lig ortalamasının {f[8]:+.1f} üstünde"))
+    elif f[8] <= -0.3:
+        out.append((False, f"Şutlara göre beklenen toplam gol lig ortalamasının {f[8]:+.1f} altında"))
+    if f[7] >= 0.3:
+        out.append((True, f"Son maçlarına göre beklenen toplam gol ligden {f[7]:+.1f} fazla"))
+    elif f[7] <= -0.3:
+        out.append((False, f"Son maçlarına göre beklenen toplam gol ligden {f[7]:+.1f} az"))
+    if f[10] >= 0.08:
+        out.append((True, "İki takım da maçlarının çoğunda gol yiyor"))
+    elif f[10] <= -0.08:
+        out.append((False, "İki takımın savunması sağlam: gol yemedikleri maç çok"))
+    return out
+
+
+def o25_bucket(p):
+    return "g" if p >= O25_STRONG else ("o" if p >= O25_MID else ("n" if p >= O25_NET else None))
+
+
+O25_BLAB = {"g": f"Güçlü (model ≥%{O25_STRONG * 100:.0f})", "o": f"Orta (%{O25_MID * 100:.0f}–{O25_STRONG * 100:.0f})",
+            "n": f"Geniş ağ (%{O25_NET * 100:.0f}–{O25_MID * 100:.0f})"}
+
+
+def write_ust25(st, leagues, now, allraw):
+    def pct(a, b):
+        return f"%{a / b * 100:.0f}" if b else "-"
+    # geri test: son 60 gün, her maç o güne kadarki veriyle
+    cut = now - dt.timedelta(days=BACKTEST_DAYS)
+    bt = defaultdict(lambda: [0, 0])
+    for x in allraw or []:
+        if x["date"] < cut or "rp" not in x or "o25" not in x["rp"]:
+            continue
+        b_ = o25_bucket(x["rp"]["o25"][2])
+        y = x["hg"] + x["ag"] >= 3
+        bt["all"][0] += y
+        bt["all"][1] += 1
+        if b_:
+            bt[b_][0] += y
+            bt[b_][1] += 1
+    # gerçek kayıt: maç öncesi kaydedilen tahminler
+    rk = defaultdict(lambda: [0, 0])
+    first = None
+    for e in st.get("preds", {}).values():
+        q = (e.get("p") or {}).get("o25")
+        if q is None or not e.get("res"):
+            continue
+        first = min(first or e["d"], e["d"])
+        b_ = o25_bucket(q)
+        if b_:
+            y = e["res"][0] + e["res"][1] >= 3
+            rk[b_][0] += y
+            rk[b_][1] += 1
+    tbl = ("<div class='wrap'><table><tr><th>Grup</th><th class='n'>Geri test<br><small>son 60 gün</small></th>"
+           f"<th class='n'>Gerçek kayıt<br><small>{dt.date.fromisoformat(first):%d.%m.%Y} tarihinden beri</small></th></tr>" if first else
+           "<div class='wrap'><table><tr><th>Grup</th><th class='n'>Geri test<br><small>son 60 gün</small></th><th class='n'>Gerçek kayıt</th></tr>")
+    for k in ("g", "o", "n"):
+        tbl += (f"<tr><td>{O25_BLAB[k]}</td><td class='n'>{pct(*bt[k])} <small>({bt[k][1]})</small></td>"
+                f"<td class='n'>{pct(*rk[k])} <small>({rk[k][1]})</small></td></tr>")
+    tbl += f"<tr><td>Tüm maçlar</td><td class='n'>{pct(*bt['all'])} <small>({bt['all'][1]})</small></td><td></td></tr></table></div>"
+    # bugünün ağı
+    items, started = defaultdict(list), []
+    for L in leagues:
+        for c in L.get("cards", []):
+            ev = ((c.get("rapor") or {}).get("m") or {}).get("o25")
+            if not ev:
+                continue
+            b_ = o25_bucket(ev["p"])
+            if not b_:
+                continue
+            if c["score"] or c["state"] != "pre":
+                started.append((c, L["name"], ev))
+            else:
+                items[b_].append((c, L["name"], ev))
+
+    def card(c, ln, ev, res=""):
+        rs = o25_reasons(ev.get("f"), ev["p"])
+        lam = c["lam"][0] + c["lam"][1]
+        tr = "".join(f"<li class='{'y' if ok else 'n'}'>{E(t)}</li>" for ok, t in rs)
+        tc = c.get("tctx") or {}
+        fm = " · ".join(f"{E(n)} {t['trend']['bars']} {t['trend']['lab']}" for n, t in ((c["home"], tc.get("h") or {}), (c["away"], tc.get("a") or {}))
+                        if t.get("trend"))
+        return (f"<details class='uc'><summary><div class='uh'><span><b>{E(c['home'])} - {E(c['away'])}</b>{res}"
+                f"<small>{c['day']} {c['time']} · {E(ln)} · beklenen {lam:.1f} gol</small></span>"
+                f"<span class='up'>%{ev['p'] * 100:.0f}</span></div></summary><ul class='ck'>{tr}</ul>"
+                + (f"<p class='note'>Form: {fm}</p>" if fm else "") + "</details>")
+    body = ""
+    for k in ("g", "o", "n"):
+        lst = sorted(items[k], key=lambda x: -x[2]["p"])
+        body += f"<div class='sec'>{O25_BLAB[k]} · {len(lst)} maç</div>"
+        body += "".join(card(*x) for x in lst) or "<p class='note'>Bu grupta başlamamış maç yok.</p>"
+    if started:
+        body += f"<div class='sec'>Başlayan / biten · {len(started)} maç</div>"
+        for c, ln, ev in sorted(started, key=lambda x: x[0]["kick"], reverse=True):
+            res = ""
+            if c["score"]:
+                ok = c["score"][0] + c["score"][1] >= 3
+                res = f" <b class='{'pos' if ok else 'neg'}'>{c['score'][0]}-{c['score'][1]} {'✓' if ok else '✗'}</b>"
+            else:
+                res = " <b style='color:#d93025'>CANLI</b>"
+            body += card(c, ln, ev, res)
+    page = (f"<!doctype html><html lang='tr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>"
+            f"<title>2.5 Üst Ağı</title><style>{CSS}{RP_CSS}{UST_CSS}</style></head><body>"
+            "<header><div style='display:flex;justify-content:space-between;align-items:center'><h1>2.5 Üst Ağı</h1>"
+            "<a href='index.html' style='color:var(--ac);text-decoration:none;font-weight:600'>← Günün maçları</a></div>"
+            "<p class='note'>Bugünün bütün maçlarında 2.5 Üst ihtimali. Geri testte bu bahiste en iyi seçimi modelin kendi ihtimali "
+            "yaptığı için gruplar doğrudan ona göre: Güçlü, Orta ve daha geniş bir ağ. Maça dokununca lehine (✓) ve aleyhine (✗) "
+            f"gerekçeler açılır. Güncelleme: {now.astimezone(TR):%d.%m.%Y %H:%M}</p></header>"
+            f"<div style='padding:0 12px 24px'><div class='sec'>Geçmişte ne kadar tuttu?</div>{tbl}"
+            "<p class='note'>Geri test: son 60 günün maçları, her maç sadece o güne kadarki verilerle. Gerçek kayıt: maç başlamadan "
+            "kaydedilen tahminler. Parantez içi maç sayısı.</p>"
+            f"{body}</div></body></html>")
+    with open("ust25.html", "w", encoding="utf-8") as f:
+        f.write(page)
+
+
+UST_CSS = """
+.uc{border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin:6px 0;background:var(--card)}
+.uc summary{list-style:none;cursor:pointer}.uc summary::-webkit-details-marker{display:none}
+.uh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.uh small{display:block;color:var(--mu);font-size:12px;font-weight:400;margin-top:2px}
+.up{font-size:20px;font-weight:800;color:var(--ac);white-space:nowrap}
+"""
 
 
 # -------------------------------------------------------------------- CANLI AKTARIM
