@@ -706,6 +706,26 @@
      "mp": 0.606
     }
    ]
+  },
+  {
+   "id": "k1792852868251",
+   "t": "2026-10-24T14:41:08.251Z",
+   "tutar": 500,
+   "kaynak": "analiz sayfası",
+   "legs": [
+    {
+     "m": "401882831",
+     "ad": "Racing - Espanyol",
+     "lg": "İspanya La Liga",
+     "k": "2026-10-24T14:15:00+00:00",
+     "b": "iyo05",
+     "bl": "İY 0.5 Üst",
+     "o": 1.56,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.8237
+    }
+   ]
   }
  ]
 }
