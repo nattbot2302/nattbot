@@ -23,6 +23,12 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
+      - name: ESPN önbelleği
+        uses: actions/cache@v4
+        with:
+          path: .espn_cache
+          key: espn-${{ github.run_id }}
+          restore-keys: espn-
       - run: python bot.py
         env:
           MAIL_USER: ${{ secrets.MAIL_USER }}

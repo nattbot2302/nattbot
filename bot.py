@@ -331,7 +331,88 @@ def make_chunks(start, end, size):
     return res
 
 
+# ------------------------------------------------------------ ESPN önbelleği
+# Biten maçların sonucu değişmez. Her çalışmada bütün geçmişi gün gün istemek (çalışma başına ~9.600 istek)
+# ESPN'in engellemesine yol açtı. Geçmiş önbellekte tutulur; her çalışmada sadece son RECENT_DAYS gün
+# ve önümüzdeki 2 gün istenir (~350 istek). ESPN o an engelliyorsa önbellekteki veriyle devam edilir.
+import gzip
+CACHE_FILE = ".espn_cache/cache.json.gz"
+CACHE_SEED = "data/espn_seed.json.gz"
+RECENT_DAYS = 10
+CACHE = {}
+
+
+def _ser(m):
+    m = dict(m)
+    m["date"] = m["date"].isoformat()
+    for k in ("_coef", "vh", "va", "cup", "sz"):
+        m.pop(k, None)
+    return m
+
+
+def _deser(m):
+    m = dict(m)
+    m["date"] = dt.datetime.fromisoformat(m["date"])
+    if m.get("ht"):
+        m["ht"] = tuple(m["ht"])
+    return m
+
+
+def load_cache():
+    for p in (CACHE_FILE, CACHE_SEED):
+        try:
+            with gzip.open(p, "rt", encoding="utf-8") as f:
+                d = json.load(f)
+            CACHE.update({k: v for k, v in d.items() if isinstance(v, dict) and "allm" in v})
+            print("önbellek:", p, len(CACHE), "lig", flush=True)
+            return
+        except Exception:  # noqa
+            continue
+
+
+def save_cache():
+    os.makedirs(os.path.dirname(CACHE_FILE), exist_ok=True)
+    with gzip.open(CACHE_FILE, "wt", encoding="utf-8") as f:
+        json.dump(CACHE, f, ensure_ascii=False, separators=(",", ":"))
+
+
 def fetch_league(slug, now):
+    """Önbellek + son günler. Önbellek yoksa tüm geçmiş bir kez çekilir."""
+    c = CACHE.get(slug)
+    if c and c.get("allm"):
+        old = {m["id"]: _deser(m) for m in c["allm"]}
+        last = dt.datetime.fromisoformat(c["t"]) if c.get("t") else max(m["date"] for m in old.values())
+        start = min(now.date() - dt.timedelta(days=RECENT_DAYS), last.date() - dt.timedelta(days=2))
+        start = max(start, now.date() - dt.timedelta(days=120))       # önbellek çok eskiyse boşluğu doldur
+        end = now.date() + dt.timedelta(days=2)
+        new, fails = {}, 0
+        with ThreadPoolExecutor(max_workers=4) as ex:
+            futs = [ex.submit(get_chunk, slug, d1, d2) for d1, d2 in make_chunks(start, end, 1)]
+            for f in futs:
+                try:
+                    for m in f.result():
+                        new[m["id"]] = m
+                except Exception:  # noqa
+                    fails += 1
+        if fails == len(futs):
+            print(f"  {slug}: ESPN'e ulaşılamadı, önbellekteki veri kullanılıyor ({c.get('t', '')[:16]})", flush=True)
+        else:
+            old.update(new)
+            c["t"] = now.isoformat()
+        cut = now - dt.timedelta(days=HISTORY_DAYS)
+        allm = sorted((m for m in old.values() if m["date"] >= cut), key=lambda m: m["date"])
+        c["allm"] = [_ser(m) for m in allm]
+        print(f"  {slug}: önbellek + son {RECENT_DAYS} gün, {len(futs)} istek, {fails} hata, {len(allm)} maç", flush=True)
+        finished = [m for m in allm if m["done"] and m["hg"] is not None and m["ag"] is not None]
+        if fails == len(futs) and not finished:
+            raise RuntimeError("ESPN'e ulaşılamadı ve önbellek boş")
+        return finished, allm
+    finished, allm = fetch_league_full(slug, now)
+    CACHE[slug] = {"t": now.isoformat(), "allm": [_ser(m) for m in allm]}
+    return finished, allm
+
+
+def fetch_league_full(slug, now):
     """Son günlerin tüm maçları. ESPN'in kabul ettiği aralık boyutunu kendisi bulur."""
     end = now.date() + dt.timedelta(days=1)
     probe_err = ""
@@ -346,7 +427,7 @@ def fetch_league(slug, now):
             continue
         events = {m["id"]: m for m in first}
         fails = 0
-        with ThreadPoolExecutor(max_workers=8) as ex:
+        with ThreadPoolExecutor(max_workers=4) as ex:
             futs = [ex.submit(get_chunk, slug, d1, d2) for d1, d2 in chunks]
             for f in futs:
                 try:
@@ -2368,6 +2449,7 @@ def main():
     now = dt.datetime.now(UTC)
     PREV_SNAPSHOT = snapshot_from_html()       # sayfa yeniden yazılmadan önce önceki durumu oku
     load_odds()
+    load_cache()
     leagues = {}
     # önce yerel ligler: kupa maçlarındaki lig gücü düzeltmesi bunlara dayanır
     for slug, name, cal in sorted(LEAGUES, key=lambda x: x[0].startswith("uefa.")):
@@ -2393,6 +2475,10 @@ def main():
         print("Lig:", slug, flush=True)
         leagues[slug] = process_league(slug, name, cal, now)
     leagues = [leagues[s] for s, _, _ in LEAGUES]
+    try:
+        save_cache()
+    except Exception as e:  # noqa
+        print("önbellek kaydedilemedi:", e, flush=True)
     global LAST_RUN
     LAST_RUN = leagues
     allraw = [x for L in leagues for x in L.get("raw", [])]
