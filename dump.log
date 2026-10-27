@@ -1,125 +1,303 @@
 {
- "wal.1 20261018": [
-  200,
-  0,
-  "Welsh Premier League",
-  []
- ],
- "wal.1 20261010": [
-  200,
-  0,
-  "Welsh Premier League",
-  []
- ],
- "wal.1 20260920": [
-  200,
-  0,
-  "Welsh Premier League",
-  []
- ],
- "wal.1 20260301": [
-  200,
-  0,
-  "Welsh Premier League",
-  []
- ],
- "irl.1 20261018": [
-  200,
-  0,
-  "Irish Premier Division",
-  []
- ],
- "irl.1 20261010": [
-  200,
-  0,
-  "Irish Premier Division",
-  []
- ],
- "irl.1 20260920": [
-  200,
-  0,
-  "Irish Premier Division",
-  []
- ],
- "irl.1 20260301": [
-  200,
-  0,
-  "Irish Premier Division",
-  []
- ],
- "nir.1 20261018": [
-  200,
-  0,
-  "Northern Irish Premiership",
-  []
- ],
- "nir.1 20261010": [
-  200,
-  0,
-  "Northern Irish Premiership",
-  []
- ],
- "nir.1 20260920": [
-  200,
-  0,
-  "Northern Irish Premiership",
-  []
- ],
- "nir.1 20260301": [
-  200,
-  0,
-  "Northern Irish Premiership",
-  []
- ],
- "irl.2 20261018": [
-  400,
-  0,
-  null,
-  []
- ],
- "irl.2 20261010": [
-  400,
-  0,
-  null,
-  []
- ],
- "irl.2 20260920": [
-  400,
-  0,
-  null,
-  []
- ],
- "irl.2 20260301": [
-  400,
-  0,
-  null,
-  []
- ],
- "fra.2 20261018": [
-  200,
-  0,
-  "French Ligue 2",
-  []
- ],
- "fra.2 20261010": [
-  200,
-  3,
-  "French Ligue 2",
-  [
-   "Red Star FC 93 at Clermont Foot",
-   "Stade de Reims at Nantes"
+ "401882829": {
+  "home": {
+   "t": "Real Sociedad",
+   "g": "2",
+   "sh": "17",
+   "sot": "3",
+   "pos": "62",
+   "cor": "2"
+  },
+  "away": {
+   "t": "Levante",
+   "g": "1",
+   "sh": "6",
+   "sot": "2",
+   "pos": "38",
+   "cor": "3"
+  },
+  "goals": [
+   [
+    "6'",
+    "89",
+    false,
+    false
+   ],
+   [
+    "22'",
+    "1538",
+    false,
+    false
+   ],
+   [
+    "27'",
+    "89",
+    false,
+    false
+   ]
+  ],
+  "red": []
+ },
+ "401882832": {
+  "home": {
+   "t": "Barcelona",
+   "g": "1",
+   "sh": "18",
+   "sot": "6",
+   "pos": "62.2",
+   "cor": "6"
+  },
+  "away": {
+   "t": "Real Madrid",
+   "g": "2",
+   "sh": "10",
+   "sot": "5",
+   "pos": "37.8",
+   "cor": "6"
+  },
+  "goals": [
+   [
+    "41'",
+    "86",
+    false,
+    false
+   ],
+   [
+    "61'",
+    "83",
+    false,
+    false
+   ],
+   [
+    "87'",
+    "86",
+    false,
+    false
+   ]
+  ],
+  "red": []
+ },
+ "401878961": {
+  "home": {
+   "t": "Union SG",
+   "g": "5",
+   "sh": "23",
+   "sot": "12",
+   "pos": "67.1",
+   "cor": "13"
+  },
+  "away": {
+   "t": "Cercle Brugge",
+   "g": "2",
+   "sh": "5",
+   "sot": "2",
+   "pos": "32.9",
+   "cor": "1"
+  },
+  "goals": [
+   [
+    "24'",
+    "3610",
+    true,
+    false
+   ],
+   [
+    "48'",
+    "3610",
+    false,
+    true
+   ],
+   [
+    "49'",
+    "5807",
+    false,
+    false
+   ],
+   [
+    "62'",
+    "5807",
+    false,
+    false
+   ],
+   [
+    "74'",
+    "5807",
+    false,
+    true
+   ],
+   [
+    "80'",
+    "5807",
+    false,
+    false
+   ],
+   [
+    "90'",
+    "5807",
+    false,
+    false
+   ]
+  ],
+  "red": [
+   [
+    "64'",
+    "3610"
+   ]
   ]
- ],
- "fra.2 20260920": [
-  200,
-  0,
-  "French Ligue 2",
-  []
- ],
- "fra.2 20260301": [
-  200,
-  0,
-  "French Ligue 2",
-  []
- ]
+ },
+ "401896742": {
+  "home": {
+   "t": "Aris",
+   "g": "3",
+   "sh": "13",
+   "sot": "4",
+   "pos": "55.3",
+   "cor": "5"
+  },
+  "away": {
+   "t": "Atromitos",
+   "g": "1",
+   "sh": "8",
+   "sot": "3",
+   "pos": "44.7",
+   "cor": "1"
+  },
+  "goals": [
+   [
+    "3'",
+    "11553",
+    false,
+    false
+   ],
+   [
+    "9'",
+    "6790",
+    false,
+    false
+   ],
+   [
+    "23'",
+    "11553",
+    false,
+    false
+   ],
+   [
+    "27'",
+    "11553",
+    false,
+    false
+   ]
+  ],
+  "red": []
+ },
+ "401896740": {
+  "home": {
+   "t": "OFI Crete",
+   "g": "2",
+   "sh": "12",
+   "sot": "7",
+   "pos": "41.8",
+   "cor": "5"
+  },
+  "away": {
+   "t": "PAOK",
+   "g": "1",
+   "sh": "26",
+   "sot": "8",
+   "pos": "58.2",
+   "cor": "9"
+  },
+  "goals": [
+   [
+    "38'",
+    "1010",
+    false,
+    false
+   ],
+   [
+    "83'",
+    "1010",
+    true,
+    false
+   ],
+   [
+    "89'",
+    "605",
+    false,
+    false
+   ]
+  ],
+  "red": []
+ },
+ "401874779": {
+  "home": {
+   "t": "Udinese",
+   "g": "0",
+   "sh": "12",
+   "sot": "5",
+   "pos": "40.1",
+   "cor": "5"
+  },
+  "away": {
+   "t": "Milan",
+   "g": "2",
+   "sh": "19",
+   "sot": "7",
+   "pos": "59.9",
+   "cor": "4"
+  },
+  "goals": [
+   [
+    "6'",
+    "103",
+    false,
+    false
+   ],
+   [
+    "65'",
+    "103",
+    false,
+    false
+   ]
+  ],
+  "red": []
+ },
+ "401875566": {
+  "home": {
+   "t": "AZ Alkmaar",
+   "g": "0",
+   "sh": "13",
+   "sot": "5",
+   "pos": "51.2",
+   "cor": "3"
+  },
+  "away": {
+   "t": "FC Twente",
+   "g": "2",
+   "sh": "16",
+   "sot": "5",
+   "pos": "48.8",
+   "cor": "6"
+  },
+  "goals": [
+   [
+    "84'",
+    "152",
+    false,
+    false
+   ],
+   [
+    "90'+3'",
+    "152",
+    false,
+    false
+   ]
+  ],
+  "red": [
+   [
+    "88'",
+    "152"
+   ]
+  ]
+ }
 }
