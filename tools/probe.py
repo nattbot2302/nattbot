@@ -1,12 +1,16 @@
 import requests, json
+want = {"401874779","401875566","401878961","401882829","401882832","401896740","401896742"}
 out = {}
-for slug in ["wal.1", "irl.1", "nir.1", "irl.2", "fra.2"]:
-    for d in ["20261018", "20261010", "20260920", "20260301"]:
-        try:
-            r = requests.get(f"https://site.api.espn.com/apis/site/v2/sports/soccer/{slug}/scoreboard", params={"dates": d}, timeout=20)
-            j = r.json() if r.ok else {}
-            evs = j.get("events", [])
-            out[f"{slug} {d}"] = [r.status_code, len(evs), (j.get("leagues") or [{}])[0].get("name"), [e.get("name") for e in evs[:2]]]
-        except Exception as e:
-            out[f"{slug} {d}"] = str(e)
+for slug in ["esp.1", "bel.1", "gre.1", "ita.1", "ned.1"]:
+    r = requests.get(f"https://site.api.espn.com/apis/site/v2/sports/soccer/{slug}/scoreboard", params={"dates": "20261025"}, timeout=20)
+    for ev in (r.json().get("events", []) if r.ok else []):
+        if ev["id"] not in want: continue
+        c = ev["competitions"][0]
+        row = {}
+        for x in c["competitors"]:
+            st = {s["name"]: s.get("displayValue") for s in x.get("statistics", [])}
+            row[x["homeAway"]] = {"t": x["team"].get("shortDisplayName"), "g": x.get("score"), "sh": st.get("totalShots"), "sot": st.get("shotsOnTarget"), "pos": st.get("possessionPct"), "cor": st.get("wonCorners")}
+        row["goals"] = [(d.get("clock", {}).get("displayValue"), (d.get("team") or {}).get("id"), d.get("penaltyKick"), d.get("ownGoal")) for d in c.get("details", []) if d.get("scoringPlay")]
+        row["red"] = [(d.get("clock", {}).get("displayValue"), (d.get("team") or {}).get("id")) for d in c.get("details", []) if d.get("redCard")]
+        out[ev["id"]] = row
 print(json.dumps(out, ensure_ascii=False, indent=1))
