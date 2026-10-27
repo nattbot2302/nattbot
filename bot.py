@@ -3372,6 +3372,7 @@ def rapor_tab(leagues, now):
             f"<select id='tf-b' onchange='rpFilter()'>{opt_b}</select>"
             "<button onclick='tfNext(3)'>Sonraki 3 saat</button><button onclick='tfAll()'>Tümü</button></div>")
     chips = ("<button data-k='main' class='on' onclick=\"rpShow('main')\">Günün önerileri</button>"
+             "<button data-k='near' onclick=\"rpShow('near')\">Yakın adaylar</button>"
              "<button data-k='fest' onclick=\"rpShow('fest')\">Gol şöleni</button>") + "".join(
         f"<button data-k='{k}' onclick=\"rpShow('{k}')\">{l}</button>" for k, l in RP_MARKETS) + \
         "<button data-k='done' onclick=\"rpShow('done')\">Başlayan / Biten</button>"
@@ -3384,6 +3385,23 @@ def rapor_tab(leagues, now):
             f"en az %{MAIN_MIN_P * 100:.0f} ihtimal vermeli; ayrıca o bahis türü geçmişte gerçekten işe yaramış olmalı "
             "(1.5 Üst ve İY 0.5 Üst hariç). Her maçta varsa 2. öneri de yazılır. <b class='cnt'></b></p>"
             f"{body}<p class='empty none'>Seçilen saat aralığında başlamamış önerili maç yok.</p></div>")
+    # Yakın adaylar: kriterleri tutan (Orta/Güçlü) ama model %55 eşiğine ya da güven filtresine takılan bahisler.
+    # Az maçlı günlerde (Pazartesi/Salı) günün önerileri boş kalabildiği için ayrı listelenir.
+    near = []
+    for c, ln in cards:
+        if c["rapor"]["main"] or c["score"] or c["state"] != "pre":
+            continue
+        cand = [(v["tier"], v["p"], k) for k, v in c["rapor"]["m"].items()
+                if k not in MAIN_EXCLUDE and v["tier"] >= 1 and v["p"] >= 0.45]
+        if cand:
+            t_, p_, k_ = max(cand)
+            near.append((t_, p_, c, ln, k_))
+    near.sort(key=lambda x: (-x[0], -x[1]))
+    nitems = "".join(rp_item(c, k, ln, full=False) for _, _, c, ln, k in near)
+    out += ("<div class='rps' id='rps-near'><p class='note'>Günün önerisi olmayan maçlarda kriterleri tutan (Orta/Güçlü) "
+            "ama model ihtimali %55'in altında kalan ya da o bahis türü geçmişte yeterince iyi tutmadığı için elenen bahisler. "
+            "Günün önerilerinden daha risklidir. <b class='cnt'></b></p>"
+            f"{nitems}<p class='empty none'>Seçilen saat aralığında yakın aday yok.</p></div>")
     # Gol şöleni: 4.5 / 5.5 Üst ihtimali olağandışı yüksek maçlar (günün önerisi eşiğine takılsalar da kaçmasın)
     fest = []
     for c, ln in cards:
@@ -3763,6 +3781,11 @@ def write_maclar(leagues, now):
         start = max(start, now - dt.timedelta(days=2))
     end = now + dt.timedelta(days=2)
     bet_ids = {str(l.get("m")) for k in load_bets()["kuponlar"] for l in k["legs"] if l.get("m")}
+    try:                                   # Analiz sayfasındaki kuponların maçları da (sonuçları gösterilsin)
+        with open(DRAFT_FILE, encoding="utf-8") as f:
+            bet_ids |= {str(l.get("m")) for k in json.load(f).get("kuponlar", []) for l in k.get("legs", []) if l.get("m")}
+    except Exception:  # noqa
+        pass
     rows, seen = [], set()
     md = {}
     for L in leagues:
@@ -5143,10 +5166,13 @@ function legText(l, a){
   if(s.low) t += 'Takımlardan birinin geçmiş verisi az, tahmin daha belirsiz. ';
   return t;
 }
+function legRes2(l){ const m = l.m ? MBY[l.m] : null; return m && m.s ? {r: settle(l.b, m.s), s: m.s} : null; }
 function legHtml(l, a, i, kid){
   const [vl, vc] = VLAB[a.v];
+  const rr = legRes2(l);
   let h = '<details class="al"><summary><div class="alh"><span><b>'+esc(l.ad)+'</b><small>'+esc(l.bl)+(+l.o>1?' · '+(+l.o).toFixed(2):'')+'</small></span>'+
-          '<span class="alp">'+(a.p!=null?pc(a.p):'-')+'<small class="'+vc+'">'+vl+'</small></span></div></summary>';
+          '<span class="alp">'+(a.p!=null?pc(a.p):'-')+'<small class="'+vc+'">'+vl+'</small>'+
+          (rr && rr.r!==null ? '<small class="'+(rr.r?'pos':'neg')+'">'+rr.s[0]+'-'+rr.s[1]+(rr.s[2]!=null?' (İY '+rr.s[2]+'-'+rr.s[3]+')':'')+' '+(rr.r?'✓':'✗')+'</small>' : '')+'</span></div></summary>';
   h += '<p class="tx">'+esc(legText(l, a))+'</p>';
   if(a.rp){
     h += '<ul class="ck">'+a.rp.c.map(c=>'<li class="'+(c[0]?'y':'n')+'">'+esc(c[1])+'</li>').join('')+
@@ -5223,8 +5249,10 @@ function renderCoupons(){
   const ks = DATA.kuponlar.slice().sort((a,b)=>(b.t||'').localeCompare(a.t||''));
   $('kps').innerHTML = ks.map((k,j)=>{
     const ans = k.legs.map(legAn), known = ans.filter(a=>a.p!=null), prod = known.reduce((x,a)=>x*a.p,1);
+    const rs = k.legs.map(l=>{const x=legRes2(l); return x?x.r:null;});
+    const st = rs.some(r=>r===false) ? '<b class="neg">Yattı</b> · ' : (rs.length && rs.every(r=>r===true) ? '<b class="pos">Tuttu</b> · ' : '');
     return '<details class="kp"'+(j===0?' open':'')+'><summary><div class="kh"><span>'+dm(dayOf(k.t))+' '+hm(k.t)+' · '+k.legs.length+' maç'+(k.not?' · '+esc(k.not):'')+'</span>'+
-      '<span>'+(known.length?'model '+pc(prod):'')+'</span></div><div class="ks">'+esc(k.legs.map(l=>l.ad.split(' - ')[0]).slice(0,3).join(', '))+(k.legs.length>3?' …':'')+'</div></summary>'+
+      '<span>'+st+(known.length?'model '+pc(prod):'')+'</span></div><div class="ks">'+esc(k.legs.map(l=>l.ad.split(' - ')[0]).slice(0,3).join(', '))+(k.legs.length>3?' …':'')+'</div></summary>'+
       couponSummary(k.legs, ans)+k.legs.map((l,i)=>legHtml(l, ans[i], i, k.id)).join('')+
       '<div style="text-align:right;margin-top:8px"><button class="btn sm pri" onclick="playK(\''+k.id+'\')">Oynadım: kupon kaydına ekle</button> '+
       '<button class="btn sm" onclick="delK(\''+k.id+'\')">Sil</button></div></details>'; }).join('') ||
