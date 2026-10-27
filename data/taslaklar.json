@@ -21488,6 +21488,3433 @@
      }
     }
    ]
+  },
+  {
+   "id": "t202610272210",
+   "t": "2026-10-27T22:10:00+03:00",
+   "not": "Claude · 27.10 akşam · Kupon A · Daha sağlam",
+   "legs": [
+    {
+     "m": "401874780",
+     "ad": "AS Roma - Cagliari",
+     "lg": "İtalya Serie A",
+     "k": "2026-10-27T19:45:00+00:00",
+     "b": "ms1",
+     "bl": "MS 1",
+     "o": null,
+     "snap": {
+      "h": "AS Roma",
+      "a": "Cagliari",
+      "lg": "İtalya Serie A",
+      "k": "2026-10-27T19:45:00+00:00",
+      "l": [
+       1.9326,
+       0.8722,
+       0.7131,
+       0.3512
+      ],
+      "p": {
+       "p1": 0.6326,
+       "px": 0.1941,
+       "p2": 0.1733,
+       "o15": 0.7595,
+       "o25": 0.5317,
+       "o35": 0.3091,
+       "o45": 0.153,
+       "o55": 0.0655,
+       "btts": 0.4875,
+       "iy05": 0.655,
+       "iy15": 0.2878,
+       "iykg": 0.151,
+       "p21": 0.0363,
+       "p12": 0.0109,
+       "h05": 0.8552,
+       "a05": 0.582,
+       "h15": 0.5754,
+       "a15": 0.2174,
+       "ih05": 0.5099,
+       "ia05": 0.2961
+      },
+      "rp": {
+       "iy05": {
+        "p": 0.655,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %66 (lig ortalaması %68)"
+         ],
+         [
+          0,
+          "AS Roma son maçları: 5/8 (%62)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: 5/8 (%62)"
+         ],
+         [
+          0,
+          "AS Roma evdeki son maçları: 2/4 (%50)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 39/60 (%65)"
+         ],
+         [
+          0,
+          "Son maçlara göre ilk yarı gol beklentisi 0.9 (lig 1.3)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %35'i ilk yarıda (lig %43)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: AS Roma 4/8, Cagliari 4/8 (lig %55)"
+         ]
+        ]
+       },
+       "iy15": {
+        "p": 0.2878,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %29 (lig ortalaması %36)"
+         ],
+         [
+          0,
+          "AS Roma son maçları: 2/8 (%25)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: 1/8 (%12)"
+         ],
+         [
+          0,
+          "AS Roma evdeki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 21/60 (%35)"
+         ],
+         [
+          0,
+          "Son maçlara göre ilk yarı gol beklentisi 0.9 (lig 1.3)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %35'i ilk yarıda (lig %43)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: AS Roma 4/8, Cagliari 4/8 (lig %55)"
+         ]
+        ]
+       },
+       "iykg": {
+        "p": 0.151,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %15 (lig ortalaması %19)"
+         ],
+         [
+          0,
+          "AS Roma son maçları: 0/8 (%0)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: 1/8 (%12)"
+         ],
+         [
+          0,
+          "AS Roma evdeki son maçları: 0/4 (%0)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 11/60 (%18)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %35'i ilk yarıda (lig %43)"
+         ],
+         [
+          0,
+          "İlk yarıda gol attığı maç: AS Roma 4/8, Cagliari 3/8"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: AS Roma 4/8, Cagliari 4/8 (lig %55)"
+         ]
+        ]
+       },
+       "o15": {
+        "p": 0.7595,
+        "t": 0,
+        "ok": 1,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %76 (lig ortalaması %85)"
+         ],
+         [
+          0,
+          "AS Roma son maçları: 7/8 (%88)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: 4/8 (%50)"
+         ],
+         [
+          1,
+          "AS Roma evdeki son maçları: 4/4 (%100)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 50/60 (%83)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.5 (lig 3.0)"
+         ]
+        ],
+        "i": []
+       },
+       "o25": {
+        "p": 0.5317,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %53 (lig ortalaması %59)"
+         ],
+         [
+          0,
+          "AS Roma son maçları: 5/8 (%62)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: 2/8 (%25)"
+         ],
+         [
+          1,
+          "AS Roma evdeki son maçları: 3/4 (%75)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: 2/4 (%50)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 39/60 (%65)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.5 (lig 3.0)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.2 (lig 3.4)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: AS Roma 5/7, Cagliari 2/8 (lig %59)"
+         ]
+        ]
+       },
+       "o35": {
+        "p": 0.3091,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %31 (lig ortalaması %30)"
+         ],
+         [
+          1,
+          "AS Roma son maçları: 4/8 (%50)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: 1/8 (%12)"
+         ],
+         [
+          1,
+          "AS Roma evdeki son maçları: 2/4 (%50)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 19/60 (%32)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.5 (lig 3.0)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.2 (lig 3.4)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: AS Roma 5/7, Cagliari 2/8 (lig %59)"
+         ]
+        ]
+       },
+       "o45": {
+        "p": 0.153,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %15 (lig ortalaması %18)"
+         ],
+         [
+          0,
+          "AS Roma son maçları: 1/8 (%12)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: 0/8 (%0)"
+         ],
+         [
+          0,
+          "AS Roma evdeki son maçları: 0/4 (%0)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: 0/4 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 12/60 (%20)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.5 (lig 3.0)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.2 (lig 3.4)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: AS Roma 5/7, Cagliari 2/8 (lig %59)"
+         ]
+        ]
+       },
+       "o55": {
+        "p": 0.0655,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %7 (lig ortalaması %6)"
+         ],
+         [
+          0,
+          "AS Roma son maçları: 1/8 (%12)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: 0/8 (%0)"
+         ],
+         [
+          0,
+          "AS Roma evdeki son maçları: 0/4 (%0)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: 0/4 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 4/60 (%7)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.5 (lig 3.0)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.2 (lig 3.4)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: AS Roma 5/7, Cagliari 2/8 (lig %59)"
+         ]
+        ]
+       },
+       "btts": {
+        "p": 0.4875,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %49 (lig ortalaması %56)"
+         ],
+         [
+          0,
+          "AS Roma son maçları: 3/8 (%38)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: 2/8 (%25)"
+         ],
+         [
+          0,
+          "AS Roma evdeki son maçları: 2/4 (%50)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 35/60 (%58)"
+         ],
+         [
+          0,
+          "Gol attığı maç: AS Roma 7/8, Cagliari 5/8"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen gol: AS Roma 1.9, Cagliari 1.3 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "u25": {
+        "p": 0.4683,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %47 (lig ortalaması %41)"
+         ],
+         [
+          0,
+          "AS Roma son maçları: 3/8 (%38)"
+         ],
+         [
+          1,
+          "Cagliari son maçları: 6/8 (%75)"
+         ],
+         [
+          0,
+          "AS Roma evdeki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 21/60 (%35)"
+         ],
+         [
+          1,
+          "Son maçlara göre beklenen toplam gol 2.5 (lig 3.0)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.2 (lig 3.4)"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "İlk golden sonra 2+ gol daha gelen maç: AS Roma 5/7, Cagliari 2/8 (lig %59)"
+         ]
+        ]
+       },
+       "h05": {
+        "p": 0.8552,
+        "t": 1,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %86 (lig ortalaması %78)"
+         ],
+         [
+          1,
+          "AS Roma son maçları: gol attığı maç 7/8 (%88)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: gol yediği maç 5/8 (%62)"
+         ],
+         [
+          1,
+          "AS Roma evdeki son maçları: gol attığı maç 4/4 (%100)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: gol yediği maç 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 50/60 (%83)"
+         ],
+         [
+          1,
+          "Son maçlara göre AS Roma gol beklentisi 1.8 (AS Roma maç başı 2.4 attı, Cagliari 1.1 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          1,
+          "Şutlara göre AS Roma beklenen gol 1.9 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.582,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %58 (lig ortalaması %78)"
+         ],
+         [
+          0,
+          "AS Roma son maçları: gol yediği maç 3/8 (%38)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: gol attığı maç 5/8 (%62)"
+         ],
+         [
+          0,
+          "AS Roma evdeki son maçları: gol yediği maç 2/4 (%50)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: gol attığı maç 3/4 (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 44/60 (%73)"
+         ],
+         [
+          0,
+          "Son maçlara göre Cagliari gol beklentisi 0.8 (Cagliari maç başı 0.8 attı, AS Roma 0.8 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          0,
+          "Şutlara göre Cagliari beklenen gol 1.3 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.5754,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %58 (lig ortalaması %49)"
+         ],
+         [
+          1,
+          "AS Roma son maçları: 2+ gol attığı maç 7/8 (%88)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: 2+ gol yediği maç 2/8 (%25)"
+         ],
+         [
+          1,
+          "AS Roma evdeki son maçları: 2+ gol attığı maç 4/4 (%100)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: 2+ gol yediği maç 1/4 (%25)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 36/60 (%60)"
+         ],
+         [
+          0,
+          "Son maçlara göre AS Roma gol beklentisi 1.8 (AS Roma maç başı 2.4 attı, Cagliari 1.1 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          0,
+          "Şutlara göre AS Roma beklenen gol 1.9 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.2174,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %22 (lig ortalaması %45)"
+         ],
+         [
+          0,
+          "AS Roma son maçları: 2+ gol yediği maç 2/8 (%25)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: 2+ gol attığı maç 1/8 (%12)"
+         ],
+         [
+          0,
+          "AS Roma evdeki son maçları: 2+ gol yediği maç 1/4 (%25)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: 2+ gol attığı maç 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 24/60 (%40)"
+         ],
+         [
+          0,
+          "Son maçlara göre Cagliari gol beklentisi 0.8 (Cagliari maç başı 0.8 attı, AS Roma 0.8 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          0,
+          "Şutlara göre Cagliari beklenen gol 1.3 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.5099,
+        "t": 0,
+        "ok": 0,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %51 (lig ortalaması %49)"
+         ],
+         [
+          0,
+          "AS Roma son maçları: ilk yarıda gol attığı maç 4/8 (%50)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: ilk yarıda gol yediği maç 3/8 (%38)"
+         ],
+         [
+          0,
+          "AS Roma evdeki son maçları: ilk yarıda gol attığı maç 2/4 (%50)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: ilk yarıda gol yediği maç 2/4 (%50)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 31/60 (%52)"
+         ],
+         [
+          0,
+          "Son maçlara göre AS Roma ilk yarı gol beklentisi 0.6 (AS Roma maç başı 0.9 attı, Cagliari 0.4 yedi; lig takım ort. 0.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.2961,
+        "t": 0,
+        "ok": 0,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %30 (lig ortalaması %38)"
+         ],
+         [
+          0,
+          "AS Roma son maçları: ilk yarıda gol yediği maç 1/8 (%12)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: ilk yarıda gol attığı maç 3/8 (%38)"
+         ],
+         [
+          0,
+          "AS Roma evdeki son maçları: ilk yarıda gol yediği maç 0/4 (%0)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: ilk yarıda gol attığı maç 1/4 (%25)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 19/60 (%32)"
+         ],
+         [
+          0,
+          "Son maçlara göre Cagliari ilk yarı gol beklentisi 0.2 (Cagliari maç başı 0.4 attı, AS Roma 0.1 yedi; lig takım ort. 0.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ms1": {
+        "p": 0.6326,
+        "t": 1,
+        "ok": 6,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %63 (lig ortalaması %48)"
+         ],
+         [
+          1,
+          "AS Roma son maçları: 8 maçta 5 kazandı (%62)"
+         ],
+         [
+          0,
+          "Cagliari son maçları: 8 maçta 3 kaybetti (%38)"
+         ],
+         [
+          1,
+          "AS Roma evdeki son maçları: 4 maçta 3 kazandı (%75)"
+         ],
+         [
+          0,
+          "Cagliari dışarıdaki son maçları: 4 maçta 1 kaybetti (%25)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 35/60 (%58)"
+         ],
+         [
+          1,
+          "Son 10 maç puan ortalaması: AS Roma 2.2, Cagliari 1.6"
+         ],
+         [
+          1,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): AS Roma +0.6, Cagliari -0.6"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "AS Roma öne geçince kazandı 4/5; Cagliari geriye düşünce puan aldı 0/3 (lig %72 / %28)"
+         ]
+        ]
+       },
+       "ms2": {
+        "p": 0.1733,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %17 (lig ortalaması %35)"
+         ],
+         [
+          0,
+          "AS Roma son maçları: 8 maçta 0 kaybetti (%0)"
+         ],
+         [
+          1,
+          "Cagliari son maçları: 8 maçta 4 kazandı (%50)"
+         ],
+         [
+          0,
+          "AS Roma evdeki son maçları: 4 maçta 0 kaybetti (%0)"
+         ],
+         [
+          1,
+          "Cagliari dışarıdaki son maçları: 4 maçta 3 kazandı (%75)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 16/60 (%27)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: AS Roma 2.2, Cagliari 1.6"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): AS Roma +0.6, Cagliari -0.6"
+         ]
+        ],
+        "i": []
+       }
+      },
+      "low": false,
+      "tsc": {
+       "h": {
+        "n": 8,
+        "s": 7,
+        "c": 3,
+        "s2": 7,
+        "c2": 2,
+        "n1": 8,
+        "s1": 4,
+        "c1": 1,
+        "s12": 2,
+        "c12": 0
+       },
+       "a": {
+        "n": 8,
+        "s": 5,
+        "c": 5,
+        "s2": 1,
+        "c2": 2,
+        "n1": 8,
+        "s1": 3,
+        "c1": 3,
+        "s12": 0,
+        "c12": 0
+       }
+      },
+      "tc": {
+       "h": "3. sıra (zirve yarışında) · son 5: BGBBG · son 10 maçta maç başı 2.4 attı, 0.8 yedi · şutlarına göre şanslı gidiyor · form eğrisi ▇█▆▅▃▃▅▁ düşüşte · son maçından beri 3 gün: rotasyon riski",
+       "a": "9. sıra (orta sıralarda) · son 5: MMBGG · son 10 maçta maç başı 0.8 attı, 1.1 yedi · şutlarına göre şanssız gidiyor · form eğrisi ▇▂█▇▄▁▁▁ düşüşte · son maçından beri 3 gün: rotasyon riski"
+      }
+     }
+    },
+    {
+     "m": "401880820",
+     "ad": "Luton - Doncaster",
+     "lg": "İngiltere 1. Lig (League One)",
+     "k": "2026-10-27T19:45:00+00:00",
+     "b": "tev15",
+     "bl": "Ev 1.5 Üst",
+     "o": null,
+     "snap": {
+      "h": "Luton",
+      "a": "Doncaster",
+      "lg": "İngiltere 1. Lig (League One)",
+      "k": "2026-10-27T19:45:00+00:00",
+      "l": [
+       1.8984,
+       1.1776,
+       0.7155,
+       0.5443
+      ],
+      "p": {
+       "p1": 0.5264,
+       "px": 0.2544,
+       "p2": 0.2191,
+       "o15": 0.8274,
+       "o25": 0.5936,
+       "o35": 0.3698,
+       "o45": 0.1976,
+       "o55": 0.0917,
+       "btts": 0.6038,
+       "iy05": 0.7163,
+       "iy15": 0.3589,
+       "iykg": 0.2145,
+       "p21": 0.0432,
+       "p12": 0.0125,
+       "h05": 0.8502,
+       "a05": 0.692,
+       "h15": 0.5658,
+       "a15": 0.3293,
+       "ih05": 0.511,
+       "ia05": 0.4197
+      },
+      "rp": {
+       "iy05": {
+        "p": 0.7163,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %72 (lig ortalaması %68)"
+         ],
+         [
+          1,
+          "Luton son maçları: 9/10 (%90)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: 7/10 (%70)"
+         ],
+         [
+          1,
+          "Luton evdeki son maçları: 4/5 (%80)"
+         ],
+         [
+          1,
+          "Doncaster dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 46/60 (%77)"
+         ],
+         [
+          0,
+          "Son maçlara göre ilk yarı gol beklentisi 1.1 (lig 1.1)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %42'i ilk yarıda (lig %40)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Luton 8/11, Doncaster 4/11 (lig %50)"
+         ]
+        ]
+       },
+       "iy15": {
+        "p": 0.3589,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %36 (lig ortalaması %31)"
+         ],
+         [
+          1,
+          "Luton son maçları: 5/10 (%50)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: 1/10 (%10)"
+         ],
+         [
+          0,
+          "Luton evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Doncaster dışarıdaki son maçları: 0/5 (%0)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 24/60 (%40)"
+         ],
+         [
+          0,
+          "Son maçlara göre ilk yarı gol beklentisi 1.1 (lig 1.1)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %42'i ilk yarıda (lig %40)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Luton 8/11, Doncaster 4/11 (lig %50)"
+         ]
+        ]
+       },
+       "iykg": {
+        "p": 0.2145,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %21 (lig ortalaması %17)"
+         ],
+         [
+          0,
+          "Luton son maçları: 2/10 (%20)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: 0/10 (%0)"
+         ],
+         [
+          0,
+          "Luton evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Doncaster dışarıdaki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 13/60 (%22)"
+         ],
+         [
+          0,
+          "İki takımın son maçlarında gollerin %42'i ilk yarıda (lig %40)"
+         ],
+         [
+          0,
+          "İlk yarıda gol attığı maç: Luton 5/10, Doncaster 4/10"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Luton 8/11, Doncaster 4/11 (lig %50)"
+         ]
+        ]
+       },
+       "o15": {
+        "p": 0.8274,
+        "t": 0,
+        "ok": 2,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %83 (lig ortalaması %79)"
+         ],
+         [
+          1,
+          "Luton son maçları: 9/10 (%90)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: 7/10 (%70)"
+         ],
+         [
+          0,
+          "Luton evdeki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Doncaster dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 53/60 (%88)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.8 (lig 2.8)"
+         ]
+        ],
+        "i": []
+       },
+       "o25": {
+        "p": 0.5936,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %59 (lig ortalaması %54)"
+         ],
+         [
+          1,
+          "Luton son maçları: 7/10 (%70)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: 3/10 (%30)"
+         ],
+         [
+          0,
+          "Luton evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Doncaster dışarıdaki son maçları: 3/5 (%60)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 42/60 (%70)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.8 (lig 2.8)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.0)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Luton 8/11, Doncaster 4/10 (lig %58)"
+         ]
+        ]
+       },
+       "o35": {
+        "p": 0.3698,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %37 (lig ortalaması %30)"
+         ],
+         [
+          0,
+          "Luton son maçları: 3/10 (%30)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: 2/10 (%20)"
+         ],
+         [
+          0,
+          "Luton evdeki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Doncaster dışarıdaki son maçları: 1/5 (%20)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 23/60 (%38)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.8 (lig 2.8)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.0)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Luton 8/11, Doncaster 4/10 (lig %58)"
+         ]
+        ]
+       },
+       "o45": {
+        "p": 0.1976,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %20 (lig ortalaması %14)"
+         ],
+         [
+          0,
+          "Luton son maçları: 2/10 (%20)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: 1/10 (%10)"
+         ],
+         [
+          0,
+          "Luton evdeki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Doncaster dışarıdaki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 11/60 (%18)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.8 (lig 2.8)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.0)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Luton 8/11, Doncaster 4/10 (lig %58)"
+         ]
+        ]
+       },
+       "o55": {
+        "p": 0.0917,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %9 (lig ortalaması %7)"
+         ],
+         [
+          0,
+          "Luton son maçları: 1/10 (%10)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: 0/10 (%0)"
+         ],
+         [
+          0,
+          "Luton evdeki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Doncaster dışarıdaki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 5/60 (%8)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.8 (lig 2.8)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.0)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Luton 8/11, Doncaster 4/10 (lig %58)"
+         ]
+        ]
+       },
+       "btts": {
+        "p": 0.6038,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %60 (lig ortalaması %58)"
+         ],
+         [
+          1,
+          "Luton son maçları: 8/10 (%80)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: 4/10 (%40)"
+         ],
+         [
+          0,
+          "Luton evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Doncaster dışarıdaki son maçları: 3/5 (%60)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 41/60 (%68)"
+         ],
+         [
+          1,
+          "Gol attığı maç: Luton 9/10, Doncaster 7/10"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen gol: Luton 1.7, Doncaster 1.3 (takım ort. 1.5)"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "Geriye düşünce gol attığı maç: Luton 3/4, Doncaster 4/6 (lig %63)"
+         ]
+        ]
+       },
+       "u25": {
+        "p": 0.4064,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %41 (lig ortalaması %46)"
+         ],
+         [
+          0,
+          "Luton son maçları: 3/10 (%30)"
+         ],
+         [
+          1,
+          "Doncaster son maçları: 7/10 (%70)"
+         ],
+         [
+          1,
+          "Luton evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Doncaster dışarıdaki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 18/60 (%30)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.8 (lig 2.8)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.0)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Luton 8/11, Doncaster 4/10 (lig %58)"
+         ]
+        ]
+       },
+       "h05": {
+        "p": 0.8502,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %85 (lig ortalaması %79)"
+         ],
+         [
+          1,
+          "Luton son maçları: gol attığı maç 9/10 (%90)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: gol yediği maç 6/10 (%60)"
+         ],
+         [
+          0,
+          "Luton evdeki son maçları: gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Doncaster dışarıdaki son maçları: gol yediği maç 4/5 (%80)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 54/60 (%90)"
+         ],
+         [
+          0,
+          "Son maçlara göre Luton gol beklentisi 1.4 (Luton maç başı 1.7 attı, Doncaster 1.1 yedi; lig takım ort. 1.4)"
+         ],
+         [
+          1,
+          "Şutlara göre Luton beklenen gol 1.7 (takım ort. 1.5)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.692,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %69 (lig ortalaması %71)"
+         ],
+         [
+          1,
+          "Luton son maçları: gol yediği maç 9/10 (%90)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: gol attığı maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "Luton evdeki son maçları: gol yediği maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Doncaster dışarıdaki son maçları: gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 45/60 (%75)"
+         ],
+         [
+          0,
+          "Son maçlara göre Doncaster gol beklentisi 1.4 (Doncaster maç başı 1.1 attı, Luton 1.6 yedi; lig takım ort. 1.4)"
+         ],
+         [
+          0,
+          "Şutlara göre Doncaster beklenen gol 1.3 (takım ort. 1.5)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.5658,
+        "t": 1,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %57 (lig ortalaması %45)"
+         ],
+         [
+          1,
+          "Luton son maçları: 2+ gol attığı maç 6/10 (%60)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: 2+ gol yediği maç 4/10 (%40)"
+         ],
+         [
+          1,
+          "Luton evdeki son maçları: 2+ gol attığı maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Doncaster dışarıdaki son maçları: 2+ gol yediği maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 41/60 (%68)"
+         ],
+         [
+          0,
+          "Son maçlara göre Luton gol beklentisi 1.4 (Luton maç başı 1.7 attı, Doncaster 1.1 yedi; lig takım ort. 1.4)"
+         ],
+         [
+          0,
+          "Şutlara göre Luton beklenen gol 1.7 (takım ort. 1.5)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.3293,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %33 (lig ortalaması %36)"
+         ],
+         [
+          0,
+          "Luton son maçları: 2+ gol yediği maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: 2+ gol attığı maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "Luton evdeki son maçları: 2+ gol yediği maç 0/5 (%0)"
+         ],
+         [
+          0,
+          "Doncaster dışarıdaki son maçları: 2+ gol attığı maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 19/60 (%32)"
+         ],
+         [
+          0,
+          "Son maçlara göre Doncaster gol beklentisi 1.4 (Doncaster maç başı 1.1 attı, Luton 1.6 yedi; lig takım ort. 1.4)"
+         ],
+         [
+          0,
+          "Şutlara göre Doncaster beklenen gol 1.3 (takım ort. 1.5)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.511,
+        "t": 0,
+        "ok": 3,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %51 (lig ortalaması %44)"
+         ],
+         [
+          0,
+          "Luton son maçları: ilk yarıda gol attığı maç 5/10 (%50)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: ilk yarıda gol yediği maç 3/10 (%30)"
+         ],
+         [
+          1,
+          "Luton evdeki son maçları: ilk yarıda gol attığı maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Doncaster dışarıdaki son maçları: ilk yarıda gol yediği maç 3/5 (%60)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 33/60 (%55)"
+         ],
+         [
+          0,
+          "Son maçlara göre Luton ilk yarı gol beklentisi 0.5 (Luton maç başı 0.7 attı, Doncaster 0.3 yedi; lig takım ort. 0.6)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.4197,
+        "t": 0,
+        "ok": 2,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %42 (lig ortalaması %41)"
+         ],
+         [
+          1,
+          "Luton son maçları: ilk yarıda gol yediği maç 6/10 (%60)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: ilk yarıda gol attığı maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "Luton evdeki son maçları: ilk yarıda gol yediği maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Doncaster dışarıdaki son maçları: ilk yarıda gol attığı maç 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 26/60 (%43)"
+         ],
+         [
+          1,
+          "Son maçlara göre Doncaster ilk yarı gol beklentisi 0.7 (Doncaster maç başı 0.5 attı, Luton 0.8 yedi; lig takım ort. 0.6)"
+         ]
+        ],
+        "i": []
+       },
+       "ms1": {
+        "p": 0.5264,
+        "t": 1,
+        "ok": 5,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %53 (lig ortalaması %41)"
+         ],
+         [
+          0,
+          "Luton son maçları: 10 maçta 4 kazandı (%40)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: 10 maçta 4 kaybetti (%40)"
+         ],
+         [
+          1,
+          "Luton evdeki son maçları: 5 maçta 3 kazandı (%60)"
+         ],
+         [
+          1,
+          "Doncaster dışarıdaki son maçları: 5 maçta 3 kaybetti (%60)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 34/60 (%57)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Luton 1.4, Doncaster 1.2"
+         ],
+         [
+          1,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Luton +0.4, Doncaster -0.4"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "Luton öne geçince kazandı 5/7; Doncaster geriye düşünce puan aldı 1/6 (lig %68 / %32)"
+         ]
+        ]
+       },
+       "ms2": {
+        "p": 0.2191,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %22 (lig ortalaması %30)"
+         ],
+         [
+          0,
+          "Luton son maçları: 10 maçta 4 kaybetti (%40)"
+         ],
+         [
+          0,
+          "Doncaster son maçları: 10 maçta 3 kazandı (%30)"
+         ],
+         [
+          0,
+          "Luton evdeki son maçları: 5 maçta 1 kaybetti (%20)"
+         ],
+         [
+          0,
+          "Doncaster dışarıdaki son maçları: 5 maçta 1 kazandı (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 13/60 (%22)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Luton 1.4, Doncaster 1.2"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Luton +0.4, Doncaster -0.4"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "Doncaster öne geçince kazandı 3/4; Luton geriye düşünce puan aldı 0/4 (lig %68 / %32)"
+         ]
+        ]
+       }
+      },
+      "low": false,
+      "tsc": {
+       "h": {
+        "n": 10,
+        "s": 9,
+        "c": 9,
+        "s2": 6,
+        "c2": 4,
+        "n1": 10,
+        "s1": 5,
+        "c1": 6,
+        "s12": 2,
+        "c12": 1
+       },
+       "a": {
+        "n": 10,
+        "s": 7,
+        "c": 6,
+        "s2": 4,
+        "c2": 4,
+        "n1": 10,
+        "s1": 4,
+        "c1": 3,
+        "s12": 1,
+        "c12": 0
+       }
+      },
+      "tc": {
+       "h": "10. sıra (orta sıralarda) · son 5: GGMGM · son 10 maçta maç başı 1.7 attı, 1.6 yedi · form eğrisi █▅▁▁▅▁▃▆ dengeli · son maçından beri 3 gün: rotasyon riski",
+       "a": "17. sıra (orta sıralarda) · son 5: GMMGG · son 10 maçta maç başı 1.1 attı, 1.1 yedi · form eğrisi ▄▁██▃▃▂▆ düşüşte · son maçından beri 3 gün: rotasyon riski"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "t202610272211",
+   "t": "2026-10-27T22:11:00+03:00",
+   "not": "Claude · 27.10 akşam · Kupon B · Taraf, yüksek oran",
+   "legs": [
+    {
+     "m": "401874786",
+     "ad": "Torino - Como",
+     "lg": "İtalya Serie A",
+     "k": "2026-10-27T19:45:00+00:00",
+     "b": "ms2",
+     "bl": "MS 2",
+     "o": null,
+     "snap": {
+      "h": "Torino",
+      "a": "Como",
+      "lg": "İtalya Serie A",
+      "k": "2026-10-27T19:45:00+00:00",
+      "l": [
+       1.1139,
+       1.5721,
+       0.5675,
+       0.7083
+      ],
+      "p": {
+       "p1": 0.2815,
+       "px": 0.2272,
+       "p2": 0.4913,
+       "o15": 0.7368,
+       "o25": 0.5029,
+       "o35": 0.2828,
+       "o45": 0.135,
+       "o55": 0.0556,
+       "btts": 0.5203,
+       "iy05": 0.7208,
+       "iy15": 0.3646,
+       "iykg": 0.2198,
+       "p21": 0.0136,
+       "p12": 0.0303,
+       "h05": 0.6717,
+       "a05": 0.7924,
+       "h15": 0.306,
+       "a15": 0.466,
+       "ih05": 0.4331,
+       "ia05": 0.5075
+      },
+      "rp": {
+       "iy05": {
+        "p": 0.7208,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %72 (lig ortalaması %68)"
+         ],
+         [
+          0,
+          "Torino son maçları: 6/8 (%75)"
+         ],
+         [
+          0,
+          "Como son maçları: 6/8 (%75)"
+         ],
+         [
+          0,
+          "Torino evdeki son maçları: 3/4 (%75)"
+         ],
+         [
+          1,
+          "Como dışarıdaki son maçları: 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 40/60 (%67)"
+         ],
+         [
+          0,
+          "Son maçlara göre ilk yarı gol beklentisi 1.4 (lig 1.3)"
+         ],
+         [
+          1,
+          "İki takımın son maçlarında gollerin %51'i ilk yarıda (lig %43)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Torino 2/8, Como 5/8 (lig %55)"
+         ]
+        ]
+       },
+       "iy15": {
+        "p": 0.3646,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %36 (lig ortalaması %36)"
+         ],
+         [
+          0,
+          "Torino son maçları: 3/8 (%38)"
+         ],
+         [
+          1,
+          "Como son maçları: 4/8 (%50)"
+         ],
+         [
+          0,
+          "Torino evdeki son maçları: 1/4 (%25)"
+         ],
+         [
+          1,
+          "Como dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 19/60 (%32)"
+         ],
+         [
+          0,
+          "Son maçlara göre ilk yarı gol beklentisi 1.4 (lig 1.3)"
+         ],
+         [
+          1,
+          "İki takımın son maçlarında gollerin %51'i ilk yarıda (lig %43)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Torino 2/8, Como 5/8 (lig %55)"
+         ]
+        ]
+       },
+       "iykg": {
+        "p": 0.2198,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %22 (lig ortalaması %19)"
+         ],
+         [
+          0,
+          "Torino son maçları: 2/8 (%25)"
+         ],
+         [
+          1,
+          "Como son maçları: 3/8 (%38)"
+         ],
+         [
+          0,
+          "Torino evdeki son maçları: 1/4 (%25)"
+         ],
+         [
+          1,
+          "Como dışarıdaki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 9/60 (%15)"
+         ],
+         [
+          1,
+          "İki takımın son maçlarında gollerin %51'i ilk yarıda (lig %43)"
+         ],
+         [
+          1,
+          "İlk yarıda gol attığı maç: Torino 4/8, Como 4/8"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Torino 2/8, Como 5/8 (lig %55)"
+         ]
+        ]
+       },
+       "o15": {
+        "p": 0.7368,
+        "t": 0,
+        "ok": 3,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %74 (lig ortalaması %85)"
+         ],
+         [
+          1,
+          "Torino son maçları: 8/8 (%100)"
+         ],
+         [
+          0,
+          "Como son maçları: 7/8 (%88)"
+         ],
+         [
+          1,
+          "Torino evdeki son maçları: 4/4 (%100)"
+         ],
+         [
+          1,
+          "Como dışarıdaki son maçları: 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 48/60 (%80)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.8 (lig 3.0)"
+         ]
+        ],
+        "i": []
+       },
+       "o25": {
+        "p": 0.5029,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %50 (lig ortalaması %59)"
+         ],
+         [
+          1,
+          "Torino son maçları: 6/8 (%75)"
+         ],
+         [
+          0,
+          "Como son maçları: 4/8 (%50)"
+         ],
+         [
+          1,
+          "Torino evdeki son maçları: 3/4 (%75)"
+         ],
+         [
+          0,
+          "Como dışarıdaki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 30/60 (%50)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.8 (lig 3.0)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.4)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Torino 6/8, Como 4/7 (lig %59)"
+         ]
+        ]
+       },
+       "o35": {
+        "p": 0.2828,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %28 (lig ortalaması %30)"
+         ],
+         [
+          0,
+          "Torino son maçları: 1/8 (%12)"
+         ],
+         [
+          0,
+          "Como son maçları: 2/8 (%25)"
+         ],
+         [
+          0,
+          "Torino evdeki son maçları: 1/4 (%25)"
+         ],
+         [
+          1,
+          "Como dışarıdaki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 15/60 (%25)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.8 (lig 3.0)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.4)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Torino 6/8, Como 4/7 (lig %59)"
+         ]
+        ]
+       },
+       "o45": {
+        "p": 0.135,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %14 (lig ortalaması %18)"
+         ],
+         [
+          0,
+          "Torino son maçları: 1/8 (%12)"
+         ],
+         [
+          0,
+          "Como son maçları: 1/8 (%12)"
+         ],
+         [
+          0,
+          "Torino evdeki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Como dışarıdaki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 7/60 (%12)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.8 (lig 3.0)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.4)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Torino 6/8, Como 4/7 (lig %59)"
+         ]
+        ]
+       },
+       "o55": {
+        "p": 0.0556,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %6 (lig ortalaması %6)"
+         ],
+         [
+          0,
+          "Torino son maçları: 0/8 (%0)"
+         ],
+         [
+          0,
+          "Como son maçları: 0/8 (%0)"
+         ],
+         [
+          0,
+          "Torino evdeki son maçları: 0/4 (%0)"
+         ],
+         [
+          0,
+          "Como dışarıdaki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 2/60 (%3)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.8 (lig 3.0)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.4)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Torino 6/8, Como 4/7 (lig %59)"
+         ]
+        ]
+       },
+       "btts": {
+        "p": 0.5203,
+        "t": 0,
+        "ok": 4,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %52 (lig ortalaması %56)"
+         ],
+         [
+          1,
+          "Torino son maçları: 6/8 (%75)"
+         ],
+         [
+          0,
+          "Como son maçları: 5/8 (%62)"
+         ],
+         [
+          1,
+          "Torino evdeki son maçları: 3/4 (%75)"
+         ],
+         [
+          1,
+          "Como dışarıdaki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 32/60 (%53)"
+         ],
+         [
+          1,
+          "Gol attığı maç: Torino 7/8, Como 6/8"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen gol: Torino 1.2, Como 1.9 (takım ort. 1.7)"
+         ]
+        ],
+        "i": [
+         [
+          1,
+          "Geriye düşünce gol attığı maç: Torino 4/5, Como 2/3 (lig %57)"
+         ]
+        ]
+       },
+       "u25": {
+        "p": 0.4971,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %50 (lig ortalaması %41)"
+         ],
+         [
+          0,
+          "Torino son maçları: 2/8 (%25)"
+         ],
+         [
+          0,
+          "Como son maçları: 4/8 (%50)"
+         ],
+         [
+          0,
+          "Torino evdeki son maçları: 1/4 (%25)"
+         ],
+         [
+          0,
+          "Como dışarıdaki son maçları: 2/5 (%40)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 30/60 (%50)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.8 (lig 3.0)"
+         ],
+         [
+          1,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.4)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Torino 6/8, Como 4/7 (lig %59)"
+         ]
+        ]
+       },
+       "h05": {
+        "p": 0.6717,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %67 (lig ortalaması %78)"
+         ],
+         [
+          1,
+          "Torino son maçları: gol attığı maç 7/8 (%88)"
+         ],
+         [
+          0,
+          "Como son maçları: gol yediği maç 6/8 (%75)"
+         ],
+         [
+          0,
+          "Torino evdeki son maçları: gol attığı maç 3/4 (%75)"
+         ],
+         [
+          1,
+          "Como dışarıdaki son maçları: gol yediği maç 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 42/60 (%70)"
+         ],
+         [
+          0,
+          "Son maçlara göre Torino gol beklentisi 1.2 (Torino maç başı 1.6 attı, Como 0.9 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          0,
+          "Şutlara göre Torino beklenen gol 1.2 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.7924,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %79 (lig ortalaması %78)"
+         ],
+         [
+          1,
+          "Torino son maçları: gol yediği maç 7/8 (%88)"
+         ],
+         [
+          0,
+          "Como son maçları: gol attığı maç 6/8 (%75)"
+         ],
+         [
+          1,
+          "Torino evdeki son maçları: gol yediği maç 4/4 (%100)"
+         ],
+         [
+          0,
+          "Como dışarıdaki son maçları: gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 49/60 (%82)"
+         ],
+         [
+          0,
+          "Son maçlara göre Como gol beklentisi 1.6 (Como maç başı 1.8 attı, Torino 1.4 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          1,
+          "Şutlara göre Como beklenen gol 1.9 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.306,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %31 (lig ortalaması %49)"
+         ],
+         [
+          0,
+          "Torino son maçları: 2+ gol attığı maç 4/8 (%50)"
+         ],
+         [
+          0,
+          "Como son maçları: 2+ gol yediği maç 1/8 (%12)"
+         ],
+         [
+          0,
+          "Torino evdeki son maçları: 2+ gol attığı maç 2/4 (%50)"
+         ],
+         [
+          0,
+          "Como dışarıdaki son maçları: 2+ gol yediği maç 1/5 (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 19/60 (%32)"
+         ],
+         [
+          0,
+          "Son maçlara göre Torino gol beklentisi 1.2 (Torino maç başı 1.6 attı, Como 0.9 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          0,
+          "Şutlara göre Torino beklenen gol 1.2 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.466,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %47 (lig ortalaması %45)"
+         ],
+         [
+          0,
+          "Torino son maçları: 2+ gol yediği maç 4/8 (%50)"
+         ],
+         [
+          1,
+          "Como son maçları: 2+ gol attığı maç 5/8 (%62)"
+         ],
+         [
+          1,
+          "Torino evdeki son maçları: 2+ gol yediği maç 3/4 (%75)"
+         ],
+         [
+          1,
+          "Como dışarıdaki son maçları: 2+ gol attığı maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 30/60 (%50)"
+         ],
+         [
+          0,
+          "Son maçlara göre Como gol beklentisi 1.6 (Como maç başı 1.8 attı, Torino 1.4 yedi; lig takım ort. 1.5)"
+         ],
+         [
+          0,
+          "Şutlara göre Como beklenen gol 1.9 (takım ort. 1.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.4331,
+        "t": 0,
+        "ok": 2,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %43 (lig ortalaması %49)"
+         ],
+         [
+          0,
+          "Torino son maçları: ilk yarıda gol attığı maç 4/8 (%50)"
+         ],
+         [
+          1,
+          "Como son maçları: ilk yarıda gol yediği maç 5/8 (%62)"
+         ],
+         [
+          0,
+          "Torino evdeki son maçları: ilk yarıda gol attığı maç 2/4 (%50)"
+         ],
+         [
+          1,
+          "Como dışarıdaki son maçları: ilk yarıda gol yediği maç 5/5 (%100)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 25/60 (%42)"
+         ],
+         [
+          0,
+          "Son maçlara göre Torino ilk yarı gol beklentisi 0.7 (Torino maç başı 0.6 attı, Como 0.8 yedi; lig takım ort. 0.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.5075,
+        "t": 2,
+        "ok": 6,
+        "n": 7,
+        "c": [
+         [
+          1,
+          "Model: %51 (lig ortalaması %38)"
+         ],
+         [
+          1,
+          "Torino son maçları: ilk yarıda gol yediği maç 4/8 (%50)"
+         ],
+         [
+          1,
+          "Como son maçları: ilk yarıda gol attığı maç 4/8 (%50)"
+         ],
+         [
+          1,
+          "Torino evdeki son maçları: ilk yarıda gol yediği maç 2/4 (%50)"
+         ],
+         [
+          1,
+          "Como dışarıdaki son maçları: ilk yarıda gol attığı maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 24/60 (%40)"
+         ],
+         [
+          1,
+          "Son maçlara göre Como ilk yarı gol beklentisi 0.8 (Como maç başı 1.0 attı, Torino 0.5 yedi; lig takım ort. 0.7)"
+         ]
+        ],
+        "i": []
+       },
+       "ms1": {
+        "p": 0.2815,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %28 (lig ortalaması %48)"
+         ],
+         [
+          0,
+          "Torino son maçları: 8 maçta 4 kazandı (%50)"
+         ],
+         [
+          0,
+          "Como son maçları: 8 maçta 1 kaybetti (%12)"
+         ],
+         [
+          0,
+          "Torino evdeki son maçları: 4 maçta 2 kazandı (%50)"
+         ],
+         [
+          0,
+          "Como dışarıdaki son maçları: 5 maçta 1 kaybetti (%20)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 20/60 (%33)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Torino 1.6, Como 2.1"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Torino -0.3, Como +1.2"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Torino öne geçince kazandı 3/3; Como geriye düşünce puan aldı 2/3 (lig %72 / %28)"
+         ]
+        ]
+       },
+       "ms2": {
+        "p": 0.4913,
+        "t": 2,
+        "ok": 7,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %49 (lig ortalaması %35)"
+         ],
+         [
+          0,
+          "Torino son maçları: 8 maçta 3 kaybetti (%38)"
+         ],
+         [
+          1,
+          "Como son maçları: 8 maçta 5 kazandı (%62)"
+         ],
+         [
+          1,
+          "Torino evdeki son maçları: 4 maçta 2 kaybetti (%50)"
+         ],
+         [
+          1,
+          "Como dışarıdaki son maçları: 5 maçta 3 kazandı (%60)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 27/60 (%45)"
+         ],
+         [
+          1,
+          "Son 10 maç puan ortalaması: Torino 1.6, Como 2.1"
+         ],
+         [
+          1,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Torino -0.3, Como +1.2"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Como öne geçince kazandı 4/4; Torino geriye düşünce puan aldı 2/5 (lig %72 / %28)"
+         ]
+        ]
+       }
+      },
+      "low": false,
+      "tsc": {
+       "h": {
+        "n": 8,
+        "s": 7,
+        "c": 7,
+        "s2": 4,
+        "c2": 4,
+        "n1": 8,
+        "s1": 4,
+        "c1": 4,
+        "s12": 1,
+        "c12": 0
+       },
+       "a": {
+        "n": 8,
+        "s": 6,
+        "c": 6,
+        "s2": 5,
+        "c2": 1,
+        "n1": 8,
+        "s1": 4,
+        "c1": 5,
+        "s12": 3,
+        "c12": 1
+       }
+      },
+      "tc": {
+       "h": "8. sıra (orta sıralarda) · son 5: GGGBM · son 10 maçta maç başı 1.6 attı, 1.4 yedi · şutlarına göre şanslı gidiyor · form eğrisi ▁▁▄▁▇▆▄█ yükselişte",
+       "a": "5. sıra (üst sıralarda) · son 5: GGBMG · son 10 maçta maç başı 1.8 attı, 0.9 yedi · şutlarına göre şanssız gidiyor · form eğrisi ▂▆█▃▁▄▄▆ dengeli · son maçından beri 3 gün: rotasyon riski"
+      }
+     }
+    },
+    {
+     "m": "401880834",
+     "ad": "Leicester - Wigan",
+     "lg": "İngiltere 1. Lig (League One)",
+     "k": "2026-10-27T19:45:00+00:00",
+     "b": "ms1",
+     "bl": "MS 1",
+     "o": null,
+     "snap": {
+      "h": "Leicester",
+      "a": "Wigan",
+      "lg": "İngiltere 1. Lig (League One)",
+      "k": "2026-10-27T19:45:00+00:00",
+      "l": [
+       1.8064,
+       1.0547,
+       0.8608,
+       0.3838
+      ],
+      "p": {
+       "p1": 0.5334,
+       "px": 0.2632,
+       "p2": 0.2033,
+       "o15": 0.7955,
+       "o25": 0.545,
+       "o35": 0.3217,
+       "o45": 0.1619,
+       "o55": 0.0705,
+       "btts": 0.561,
+       "iy05": 0.7119,
+       "iy15": 0.3534,
+       "iykg": 0.1839,
+       "p21": 0.02,
+       "p12": 0.0201,
+       "h05": 0.8357,
+       "a05": 0.6517,
+       "h15": 0.5391,
+       "a15": 0.2844,
+       "ih05": 0.5772,
+       "ia05": 0.3187
+      },
+      "rp": {
+       "iy05": {
+        "p": 0.7119,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %71 (lig ortalaması %68)"
+         ],
+         [
+          1,
+          "Leicester son maçları: 9/10 (%90)"
+         ],
+         [
+          0,
+          "Wigan son maçları: 5/10 (%50)"
+         ],
+         [
+          1,
+          "Leicester evdeki son maçları: 5/5 (%100)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 42/60 (%70)"
+         ],
+         [
+          0,
+          "Son maçlara göre ilk yarı gol beklentisi 1.2 (lig 1.1)"
+         ],
+         [
+          1,
+          "İki takımın son maçlarında gollerin %48'i ilk yarıda (lig %40)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Leicester 6/11, Wigan 3/11 (lig %50)"
+         ]
+        ]
+       },
+       "iy15": {
+        "p": 0.3534,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %35 (lig ortalaması %31)"
+         ],
+         [
+          1,
+          "Leicester son maçları: 5/10 (%50)"
+         ],
+         [
+          0,
+          "Wigan son maçları: 1/10 (%10)"
+         ],
+         [
+          1,
+          "Leicester evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 22/60 (%37)"
+         ],
+         [
+          0,
+          "Son maçlara göre ilk yarı gol beklentisi 1.2 (lig 1.1)"
+         ],
+         [
+          1,
+          "İki takımın son maçlarında gollerin %48'i ilk yarıda (lig %40)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Leicester 6/11, Wigan 3/11 (lig %50)"
+         ]
+        ]
+       },
+       "iykg": {
+        "p": 0.1839,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %18 (lig ortalaması %17)"
+         ],
+         [
+          0,
+          "Leicester son maçları: 2/10 (%20)"
+         ],
+         [
+          0,
+          "Wigan son maçları: 0/10 (%0)"
+         ],
+         [
+          0,
+          "Leicester evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 12/60 (%20)"
+         ],
+         [
+          1,
+          "İki takımın son maçlarında gollerin %48'i ilk yarıda (lig %40)"
+         ],
+         [
+          0,
+          "İlk yarıda gol attığı maç: Leicester 6/10, Wigan 1/10"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk 30 dakikada gol olan maç: Leicester 6/11, Wigan 3/11 (lig %50)"
+         ]
+        ]
+       },
+       "o15": {
+        "p": 0.7955,
+        "t": 0,
+        "ok": 3,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %80 (lig ortalaması %79)"
+         ],
+         [
+          1,
+          "Leicester son maçları: 9/10 (%90)"
+         ],
+         [
+          0,
+          "Wigan son maçları: 5/10 (%50)"
+         ],
+         [
+          1,
+          "Leicester evdeki son maçları: 5/5 (%100)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: 2/5 (%40)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 51/60 (%85)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.6 (lig 2.8)"
+         ]
+        ],
+        "i": []
+       },
+       "o25": {
+        "p": 0.545,
+        "t": 0,
+        "ok": 3,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %54 (lig ortalaması %54)"
+         ],
+         [
+          1,
+          "Leicester son maçları: 7/10 (%70)"
+         ],
+         [
+          0,
+          "Wigan son maçları: 4/10 (%40)"
+         ],
+         [
+          1,
+          "Leicester evdeki son maçları: 4/5 (%80)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: 2/5 (%40)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 38/60 (%63)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.6 (lig 2.8)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.0)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Leicester 7/10, Wigan 5/10 (lig %58)"
+         ]
+        ]
+       },
+       "o35": {
+        "p": 0.3217,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %32 (lig ortalaması %30)"
+         ],
+         [
+          0,
+          "Leicester son maçları: 4/10 (%40)"
+         ],
+         [
+          0,
+          "Wigan son maçları: 2/10 (%20)"
+         ],
+         [
+          0,
+          "Leicester evdeki son maçları: 2/5 (%40)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 20/60 (%33)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.6 (lig 2.8)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.0)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Leicester 7/10, Wigan 5/10 (lig %58)"
+         ]
+        ]
+       },
+       "o45": {
+        "p": 0.1619,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %16 (lig ortalaması %14)"
+         ],
+         [
+          0,
+          "Leicester son maçları: 1/10 (%10)"
+         ],
+         [
+          0,
+          "Wigan son maçları: 0/10 (%0)"
+         ],
+         [
+          0,
+          "Leicester evdeki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 9/60 (%15)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.6 (lig 2.8)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.0)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Leicester 7/10, Wigan 5/10 (lig %58)"
+         ]
+        ]
+       },
+       "o55": {
+        "p": 0.0705,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %7 (lig ortalaması %7)"
+         ],
+         [
+          0,
+          "Leicester son maçları: 1/10 (%10)"
+         ],
+         [
+          0,
+          "Wigan son maçları: 0/10 (%0)"
+         ],
+         [
+          0,
+          "Leicester evdeki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: 0/5 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 3/60 (%5)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.6 (lig 2.8)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.0)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Leicester 7/10, Wigan 5/10 (lig %58)"
+         ]
+        ]
+       },
+       "btts": {
+        "p": 0.561,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %56 (lig ortalaması %58)"
+         ],
+         [
+          0,
+          "Leicester son maçları: 6/10 (%60)"
+         ],
+         [
+          0,
+          "Wigan son maçları: 3/10 (%30)"
+         ],
+         [
+          0,
+          "Leicester evdeki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: 2/5 (%40)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 39/60 (%65)"
+         ],
+         [
+          0,
+          "Gol attığı maç: Leicester 8/10, Wigan 4/10"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen gol: Leicester 1.8, Wigan 1.3 (takım ort. 1.5)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Geriye düşünce gol attığı maç: Leicester 3/4, Wigan 3/8 (lig %63)"
+         ]
+        ]
+       },
+       "u25": {
+        "p": 0.455,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %46 (lig ortalaması %46)"
+         ],
+         [
+          0,
+          "Leicester son maçları: 3/10 (%30)"
+         ],
+         [
+          1,
+          "Wigan son maçları: 6/10 (%60)"
+         ],
+         [
+          0,
+          "Leicester evdeki son maçları: 1/5 (%20)"
+         ],
+         [
+          1,
+          "Wigan dışarıdaki son maçları: 3/5 (%60)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 22/60 (%37)"
+         ],
+         [
+          0,
+          "Son maçlara göre beklenen toplam gol 2.6 (lig 2.8)"
+         ],
+         [
+          0,
+          "Şutlara göre beklenen toplam gol 3.1 (lig 3.0)"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "İlk golden sonra 2+ gol daha gelen maç: Leicester 7/10, Wigan 5/10 (lig %58)"
+         ]
+        ]
+       },
+       "h05": {
+        "p": 0.8357,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %84 (lig ortalaması %79)"
+         ],
+         [
+          0,
+          "Leicester son maçları: gol attığı maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "Wigan son maçları: gol yediği maç 8/10 (%80)"
+         ],
+         [
+          0,
+          "Leicester evdeki son maçları: gol attığı maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: gol yediği maç 4/5 (%80)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 54/60 (%90)"
+         ],
+         [
+          0,
+          "Son maçlara göre Leicester gol beklentisi 1.5 (Leicester maç başı 1.6 attı, Wigan 1.4 yedi; lig takım ort. 1.4)"
+         ],
+         [
+          1,
+          "Şutlara göre Leicester beklenen gol 1.8 (takım ort. 1.5)"
+         ]
+        ],
+        "i": []
+       },
+       "a05": {
+        "p": 0.6517,
+        "t": 0,
+        "ok": 0,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %65 (lig ortalaması %71)"
+         ],
+         [
+          0,
+          "Leicester son maçları: gol yediği maç 7/10 (%70)"
+         ],
+         [
+          0,
+          "Wigan son maçları: gol attığı maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "Leicester evdeki son maçları: gol yediği maç 4/5 (%80)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: gol attığı maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 43/60 (%72)"
+         ],
+         [
+          0,
+          "Son maçlara göre Wigan gol beklentisi 1.1 (Wigan maç başı 0.6 attı, Leicester 1.6 yedi; lig takım ort. 1.4)"
+         ],
+         [
+          0,
+          "Şutlara göre Wigan beklenen gol 1.3 (takım ort. 1.5)"
+         ]
+        ],
+        "i": []
+       },
+       "h15": {
+        "p": 0.5391,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %54 (lig ortalaması %45)"
+         ],
+         [
+          0,
+          "Leicester son maçları: 2+ gol attığı maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "Wigan son maçları: 2+ gol yediği maç 4/10 (%40)"
+         ],
+         [
+          0,
+          "Leicester evdeki son maçları: 2+ gol attığı maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: 2+ gol yediği maç 2/5 (%40)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 39/60 (%65)"
+         ],
+         [
+          0,
+          "Son maçlara göre Leicester gol beklentisi 1.5 (Leicester maç başı 1.6 attı, Wigan 1.4 yedi; lig takım ort. 1.4)"
+         ],
+         [
+          0,
+          "Şutlara göre Leicester beklenen gol 1.8 (takım ort. 1.5)"
+         ]
+        ],
+        "i": []
+       },
+       "a15": {
+        "p": 0.2844,
+        "t": 0,
+        "ok": 2,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %28 (lig ortalaması %36)"
+         ],
+         [
+          1,
+          "Leicester son maçları: 2+ gol yediği maç 5/10 (%50)"
+         ],
+         [
+          0,
+          "Wigan son maçları: 2+ gol attığı maç 1/10 (%10)"
+         ],
+         [
+          1,
+          "Leicester evdeki son maçları: 2+ gol yediği maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: 2+ gol attığı maç 0/5 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 17/60 (%28)"
+         ],
+         [
+          0,
+          "Son maçlara göre Wigan gol beklentisi 1.1 (Wigan maç başı 0.6 attı, Leicester 1.6 yedi; lig takım ort. 1.4)"
+         ],
+         [
+          0,
+          "Şutlara göre Wigan beklenen gol 1.3 (takım ort. 1.5)"
+         ]
+        ],
+        "i": []
+       },
+       "ih05": {
+        "p": 0.5772,
+        "t": 0,
+        "ok": 4,
+        "n": 7,
+        "c": [
+         [
+          1,
+          "Model: %58 (lig ortalaması %44)"
+         ],
+         [
+          1,
+          "Leicester son maçları: ilk yarıda gol attığı maç 6/10 (%60)"
+         ],
+         [
+          0,
+          "Wigan son maçları: ilk yarıda gol yediği maç 4/10 (%40)"
+         ],
+         [
+          1,
+          "Leicester evdeki son maçları: ilk yarıda gol attığı maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: ilk yarıda gol yediği maç 2/5 (%40)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 30/60 (%50)"
+         ],
+         [
+          1,
+          "Son maçlara göre Leicester ilk yarı gol beklentisi 0.8 (Leicester maç başı 1.0 attı, Wigan 0.6 yedi; lig takım ort. 0.6)"
+         ]
+        ],
+        "i": []
+       },
+       "ia05": {
+        "p": 0.3187,
+        "t": 0,
+        "ok": 1,
+        "n": 7,
+        "c": [
+         [
+          0,
+          "Model: %32 (lig ortalaması %41)"
+         ],
+         [
+          0,
+          "Leicester son maçları: ilk yarıda gol yediği maç 5/10 (%50)"
+         ],
+         [
+          0,
+          "Wigan son maçları: ilk yarıda gol attığı maç 1/10 (%10)"
+         ],
+         [
+          1,
+          "Leicester evdeki son maçları: ilk yarıda gol yediği maç 3/5 (%60)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: ilk yarıda gol attığı maç 0/5 (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 24/60 (%40)"
+         ],
+         [
+          0,
+          "Son maçlara göre Wigan ilk yarı gol beklentisi 0.5 (Wigan maç başı 0.1 attı, Leicester 0.8 yedi; lig takım ort. 0.6)"
+         ]
+        ],
+        "i": []
+       },
+       "ms1": {
+        "p": 0.5334,
+        "t": 1,
+        "ok": 6,
+        "n": 8,
+        "c": [
+         [
+          1,
+          "Model: %53 (lig ortalaması %41)"
+         ],
+         [
+          0,
+          "Leicester son maçları: 10 maçta 4 kazandı (%40)"
+         ],
+         [
+          1,
+          "Wigan son maçları: 10 maçta 7 kaybetti (%70)"
+         ],
+         [
+          0,
+          "Leicester evdeki son maçları: 5 maçta 2 kazandı (%40)"
+         ],
+         [
+          1,
+          "Wigan dışarıdaki son maçları: 5 maçta 4 kaybetti (%80)"
+         ],
+         [
+          1,
+          "Benzer 60 maç: 33/60 (%55)"
+         ],
+         [
+          1,
+          "Son 10 maç puan ortalaması: Leicester 1.4, Wigan 0.7"
+         ],
+         [
+          1,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Leicester +0.4, Wigan -0.6"
+         ]
+        ],
+        "i": [
+         [
+          0,
+          "Leicester öne geçince kazandı 4/6; Wigan geriye düşünce puan aldı 0/8 (lig %68 / %32)"
+         ]
+        ]
+       },
+       "ms2": {
+        "p": 0.2033,
+        "t": 0,
+        "ok": 1,
+        "n": 8,
+        "c": [
+         [
+          0,
+          "Model: %20 (lig ortalaması %30)"
+         ],
+         [
+          0,
+          "Leicester son maçları: 10 maçta 4 kaybetti (%40)"
+         ],
+         [
+          0,
+          "Wigan son maçları: 10 maçta 2 kazandı (%20)"
+         ],
+         [
+          1,
+          "Leicester evdeki son maçları: 5 maçta 3 kaybetti (%60)"
+         ],
+         [
+          0,
+          "Wigan dışarıdaki son maçları: 5 maçta 0 kazandı (%0)"
+         ],
+         [
+          0,
+          "Benzer 60 maç: 12/60 (%20)"
+         ],
+         [
+          0,
+          "Son 10 maç puan ortalaması: Leicester 1.4, Wigan 0.7"
+         ],
+         [
+          0,
+          "Şut üstünlüğü (maç başı beklenen gol farkı): Leicester +0.4, Wigan -0.6"
+         ]
+        ],
+        "i": []
+       }
+      },
+      "low": false,
+      "tsc": {
+       "h": {
+        "n": 10,
+        "s": 8,
+        "c": 7,
+        "s2": 4,
+        "c2": 5,
+        "n1": 10,
+        "s1": 6,
+        "c1": 5,
+        "s12": 3,
+        "c12": 2
+       },
+       "a": {
+        "n": 10,
+        "s": 4,
+        "c": 8,
+        "s2": 1,
+        "c2": 4,
+        "n1": 10,
+        "s1": 1,
+        "c1": 4,
+        "s12": 0,
+        "c12": 1
+       }
+      },
+      "tc": {
+       "h": "13. sıra (orta sıralarda) · son 5: MGGMB · son 10 maçta maç başı 1.6 attı, 1.6 yedi · şutlarına göre şanssız gidiyor · form eğrisi ▆▁▆▇▁▇█▂ dengeli · son maçından beri 3 gün: rotasyon riski",
+       "a": "24. sıra (düşme hattında) · son 5: MMGMM · son 10 maçta maç başı 0.6 attı, 1.4 yedi · şutlarına göre şanssız gidiyor · form eğrisi █▁█▇▄▇▃█ dengeli · son maçından beri 3 gün: rotasyon riski"
+      }
+     }
+    }
+   ]
   }
  ]
 }
