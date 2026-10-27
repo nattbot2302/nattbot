@@ -365,10 +365,13 @@ function legText(l, a){
   if(s.low) t += 'Takımlardan birinin geçmiş verisi az, tahmin daha belirsiz. ';
   return t;
 }
+function legRes2(l){ const m = l.m ? MBY[l.m] : null; return m && m.s ? {r: settle(l.b, m.s), s: m.s} : null; }
 function legHtml(l, a, i, kid){
   const [vl, vc] = VLAB[a.v];
+  const rr = legRes2(l);
   let h = '<details class="al"><summary><div class="alh"><span><b>'+esc(l.ad)+'</b><small>'+esc(l.bl)+(+l.o>1?' · '+(+l.o).toFixed(2):'')+'</small></span>'+
-          '<span class="alp">'+(a.p!=null?pc(a.p):'-')+'<small class="'+vc+'">'+vl+'</small></span></div></summary>';
+          '<span class="alp">'+(a.p!=null?pc(a.p):'-')+'<small class="'+vc+'">'+vl+'</small>'+
+          (rr && rr.r!==null ? '<small class="'+(rr.r?'pos':'neg')+'">'+rr.s[0]+'-'+rr.s[1]+(rr.s[2]!=null?' (İY '+rr.s[2]+'-'+rr.s[3]+')':'')+' '+(rr.r?'✓':'✗')+'</small>' : '')+'</span></div></summary>';
   h += '<p class="tx">'+esc(legText(l, a))+'</p>';
   if(a.rp){
     h += '<ul class="ck">'+a.rp.c.map(c=>'<li class="'+(c[0]?'y':'n')+'">'+esc(c[1])+'</li>').join('')+
@@ -445,8 +448,10 @@ function renderCoupons(){
   const ks = DATA.kuponlar.slice().sort((a,b)=>(b.t||'').localeCompare(a.t||''));
   $('kps').innerHTML = ks.map((k,j)=>{
     const ans = k.legs.map(legAn), known = ans.filter(a=>a.p!=null), prod = known.reduce((x,a)=>x*a.p,1);
+    const rs = k.legs.map(l=>{const x=legRes2(l); return x?x.r:null;});
+    const st = rs.some(r=>r===false) ? '<b class="neg">Yattı</b> · ' : (rs.length && rs.every(r=>r===true) ? '<b class="pos">Tuttu</b> · ' : '');
     return '<details class="kp"'+(j===0?' open':'')+'><summary><div class="kh"><span>'+dm(dayOf(k.t))+' '+hm(k.t)+' · '+k.legs.length+' maç'+(k.not?' · '+esc(k.not):'')+'</span>'+
-      '<span>'+(known.length?'model '+pc(prod):'')+'</span></div><div class="ks">'+esc(k.legs.map(l=>l.ad.split(' - ')[0]).slice(0,3).join(', '))+(k.legs.length>3?' …':'')+'</div></summary>'+
+      '<span>'+st+(known.length?'model '+pc(prod):'')+'</span></div><div class="ks">'+esc(k.legs.map(l=>l.ad.split(' - ')[0]).slice(0,3).join(', '))+(k.legs.length>3?' …':'')+'</div></summary>'+
       couponSummary(k.legs, ans)+k.legs.map((l,i)=>legHtml(l, ans[i], i, k.id)).join('')+
       '<div style="text-align:right;margin-top:8px"><button class="btn sm pri" onclick="playK(\''+k.id+'\')">Oynadım: kupon kaydına ekle</button> '+
       '<button class="btn sm" onclick="delK(\''+k.id+'\')">Sil</button></div></details>'; }).join('') ||
