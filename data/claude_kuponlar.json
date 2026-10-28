@@ -23,7 +23,10 @@
       "Inter Milan son maçları: 8 maçta 7 kazandı (%88)",
       "Venezia: 20. sıra (düşme hattında) · form eğrisi ▆▅▅▁█▁▆▆ dengeli",
       "Inter Milan: 2. sıra (zirve yarışında) · form eğrisi ▄▆▂▆▁▆██ dengeli"
-     ]
+     ],
+     "rol": "Gol Raporu'nda günün önerisi",
+     "p_now": 0.6674,
+     "t_now": 2
     },
     {
      "m": "401878355",
@@ -41,7 +44,10 @@
       "Celtic evdeki son maçları: 2+ gol attığı maç 3/5 (%60)",
       "Celtic: 1. sıra (zirve yarışında) · form eğrisi ▅▇▄▅▁█▇▄ dengeli",
       "Dundee Utd: 4. sıra (üst sıralarda) · form eğrisi ▃▇▁▆█▅▅▅ yükselişte"
-     ]
+     ],
+     "rol": "Gol Raporu'nda 2. öneri",
+     "p_now": 0.6604,
+     "t_now": 1
     }
    ],
    "p": 0.4757
@@ -69,7 +75,10 @@
       "Kansas City son maçları: 9/10 (%90)",
       "Minnesota: 25. sıra (orta sıralarda) · form eğrisi ▁▂▂▁▄▅██ yükselişte",
       "Kansas City: 30. sıra (düşme hattında) · form eğrisi █▅██▅▁▂▂ düşüşte"
-     ]
+     ],
+     "rol": "Gol Raporu'nda günün önerisi",
+     "p_now": 0.7631,
+     "t_now": 2
     },
     {
      "m": "761908",
@@ -87,7 +96,10 @@
       "Miami evdeki son maçları: 4/5 (%80)",
       "Miami: 3. sıra (zirve yarışında) · form eğrisi ▇▅▄▂█▅▇▁ dengeli",
       "Cincinnati: 15. sıra (orta sıralarda) · form eğrisi ▅█▁▆▄▄▄▇ dengeli"
-     ]
+     ],
+     "rol": "Gol Raporu'nda 2. öneri",
+     "p_now": 0.7509,
+     "t_now": 2
     }
    ],
    "p": 0.573
@@ -115,7 +127,10 @@
       "Portland son maçları: ilk yarıda gol yediği maç 9/10 (%90)",
       "St. Louis: 6. sıra (üst sıralarda) · form eğrisi ▅▇▇█▆▆▂▁ düşüşte",
       "Portland: 21. sıra (orta sıralarda) · form eğrisi ▃▃▁▁▃▁▄█ yükselişte"
-     ]
+     ],
+     "rol": "Gol Raporu'nda günün önerisi",
+     "p_now": 0.7121,
+     "t_now": 2
     },
     {
      "m": "761918",
@@ -133,7 +148,10 @@
       "Vancouver evdeki son maçları: ilk yarıda gol attığı maç 4/5 (%80)",
       "Vancouver: 2. sıra (zirve yarışında) · form eğrisi ▃█▂▁▄▂▃▁ düşüşte",
       "San Diego: 24. sıra (orta sıralarda) · form eğrisi ▅▃█▇▁█▆█ düşüşte"
-     ]
+     ],
+     "rol": "Gol Raporu'nda günün önerisi",
+     "p_now": 0.6642,
+     "t_now": 2
     }
    ],
    "p": 0.473
@@ -161,7 +179,10 @@
       "Chicago evdeki son maçları: 5/5 (%100)",
       "Chicago: 7. sıra (üst sıralarda) · form eğrisi ▅▂██▃▁▅▆ düşüşte",
       "Orlando: 16. sıra (orta sıralarda) · form eğrisi ██▁▁▁▃▇▂ dengeli"
-     ]
+     ],
+     "rol": "Gol Raporu'nda 2. öneri",
+     "p_now": 0.7182,
+     "t_now": 1
     },
     {
      "m": "761907",
@@ -177,7 +198,10 @@
       "Şutlara göre beklenen toplam gol 3.7 (lig 3.3)",
       "Charlotte: 11. sıra (orta sıralarda) · form eğrisi ▇▅▆▃█▁█▂ düşüşte",
       "CF Montréal: 29. sıra (orta sıralarda) · form eğrisi ▅▅▄█▇▁▆▆ düşüşte"
-     ]
+     ],
+     "rol": "Gol Raporu'nda günün önerisi",
+     "p_now": 0.6569,
+     "t_now": 1
     }
    ],
    "p": 0.4718
@@ -205,7 +229,10 @@
       "Juventus son maçları: 6/8 (%75)",
       "Genoa: 16. sıra (orta sıralarda) · form eğrisi ▅▇▁▇▇█▄▆ dengeli",
       "Juventus: 7. sıra (orta sıralarda) · form eğrisi ▇▇▇▃██▁▅ dengeli"
-     ]
+     ],
+     "rol": "Gol Raporu'nda öneri değil, aday (Zayif seviye)",
+     "p_now": 0.5725,
+     "t_now": 0
     },
     {
      "m": "401899577",
@@ -223,7 +250,10 @@
       "Şutlara göre beklenen toplam gol 2.4 (lig 2.8)",
       "Carrarese: 17. sıra (orta sıralarda) · form eğrisi ▂▃▆▁▅█▇▂ dengeli",
       "Arezzo: 13. sıra (orta sıralarda) · form eğrisi █▇▁█▄██▅ dengeli"
-     ]
+     ],
+     "rol": "Gol Raporu'nda öneri değil, aday (Orta seviye)",
+     "p_now": 0.5805,
+     "t_now": 1
     }
    ],
    "p": 0.3489
@@ -251,7 +281,10 @@
       "Napoli son maçları: ilk yarıda gol attığı maç 4/8 (%50)",
       "Monza: 15. sıra (orta sıralarda) · form eğrisi ▃▁▅█▃▃█▁ dengeli",
       "Napoli: 10. sıra (orta sıralarda) · form eğrisi ▅▁▃▄▂█▃▆ yükselişte"
-     ]
+     ],
+     "rol": "Gol Raporu'nda günün önerisi",
+     "p_now": 0.6023,
+     "t_now": 2
     }
    ],
    "p": 0.6115
@@ -279,7 +312,10 @@
       "Palermo son maçları: 3/8 (%38)",
       "Pisa: 6. sıra (orta sıralarda) · form eğrisi ▃▁▆▁▃█▃▂ dengeli",
       "Palermo: 1. sıra (zirve yarışında) · form eğrisi ▄▃▄▁▃█▅▅ yükselişte"
-     ]
+     ],
+     "rol": "Gol Raporu'nda öneri değil, aday (Güçlü seviye)",
+     "p_now": 0.3908,
+     "t_now": 2
     }
    ],
    "p": 0.403
