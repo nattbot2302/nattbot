@@ -48,6 +48,22 @@ LEAGUES = [
     ("jpn.1", "Japonya J1 Lig", False),
     ("chn.1", "Çin Süper Lig", True),
     ("aus.1", "Avustralya A-Lig", False),
+    ("por.1", "Portekiz 1. Lig", False),
+    ("tur.1", "Türkiye Süper Lig", False),
+    ("ita.2", "İtalya Serie B", False),
+    ("esp.2", "İspanya 2. Lig", False),
+    ("arg.1", "Arjantin 1. Lig", True),
+    ("arg.2", "Arjantin 2. Lig", True),
+    ("mex.1", "Meksika Liga MX", False),
+    ("mex.2", "Meksika 2. Lig", False),
+    ("bra.2", "Brezilya Serie B", True),
+    ("col.1", "Kolombiya 1. Lig", True),
+    ("chi.1", "Şili 1. Lig", True),
+    ("uru.1", "Uruguay 1. Lig", True),
+    ("ecu.1", "Ekvador 1. Lig", True),
+    ("par.1", "Paraguay 1. Lig", True),
+    ("per.1", "Peru 1. Lig", True),
+    ("ind.1", "Hindistan Süper Lig", False),
 ]
 
 HISTORY_DAYS = 420      # geçmiş veri penceresi
@@ -340,6 +356,8 @@ CACHE_FILE = ".espn_cache/cache.json.gz"
 CACHE_SEED = "data/espn_seed.json.gz"
 RECENT_DAYS = 10
 CACHE = {}
+NEW_FULL_BUDGET = 4      # bir çalışmada geçmişi sıfırdan çekilecek en fazla lig sayısı
+NEW_LEAGUE_DAYS = 240    # yeni ligde geçmiş kaç gün çekilir
 
 
 def _ser(m):
@@ -407,17 +425,21 @@ def fetch_league(slug, now):
         if fails == len(futs) and not finished:
             raise RuntimeError("ESPN'e ulaşılamadı ve önbellek boş")
         return finished, allm
-    finished, allm = fetch_league_full(slug, now)
+    global NEW_FULL_BUDGET
+    if NEW_FULL_BUDGET <= 0:
+        raise RuntimeError("lig ilk kez yükleniyor; ESPN'e yük olmasın diye geçmişi sonraki çalışmalarda çekilecek")
+    NEW_FULL_BUDGET -= 1
+    finished, allm = fetch_league_full(slug, now, NEW_LEAGUE_DAYS)
     CACHE[slug] = {"t": now.isoformat(), "allm": [_ser(m) for m in allm]}
     return finished, allm
 
 
-def fetch_league_full(slug, now):
+def fetch_league_full(slug, now, max_days=330):
     """Son günlerin tüm maçları. ESPN'in kabul ettiği aralık boyutunu kendisi bulur."""
     end = now.date() + dt.timedelta(days=1)
     probe_err = ""
     for size in (45, 21, 7, 1):
-        days = HISTORY_DAYS if size > 1 else 330
+        days = HISTORY_DAYS if size > 1 else max_days
         start = now.date() - dt.timedelta(days=days)
         chunks = make_chunks(start, end, size)
         try:
@@ -1877,6 +1899,8 @@ def process_league(slug, name, calendar, now):
     ss = season_start(now, calendar)
     todays = [m for m in allm if d0 <= m["date"] < d1]
     info["raw"] = backtest_raw(finished, now)
+    for x in info["raw"]:
+        x["lg"] = slug
     info["_ctx"] = (model, past, th, ss, todays)
     return info
 
@@ -3162,14 +3186,40 @@ def rp_comment(c, key, context=True):
     return " ".join(out)
 
 
+def market_p(c, key):
+    """ESPN'in verdiği orandan (DraftKings) piyasanın bu bahse biçtiği ihtimal; yoksa None."""
+    f = odds_feat(c.get("odds")) if c.get("odds") else None
+    if not f:
+        return None
+    if key == "ms1":
+        return f[0]
+    if key == "ms2":
+        return f[1]
+    if key in ("o25", "u25") and f[2] is not None:
+        return f[2] if key == "o25" else 1 - f[2]
+    return None
+
+
+def market_line(c, key):
+    mp = market_p(c, key)
+    if mp is None:
+        return ""
+    p = c["rapor"]["m"][key]["p"]
+    d = p - mp
+    warn = (f" · <b class='neg'>model piyasadan {d * 100:+.0f} puan farklı</b>" if abs(d) >= 0.10 else
+            " · model ve piyasa aynı yerde" if abs(d) < 0.04 else "")
+    return f"<div class='note'>Piyasa (ESPN oranı): %{mp * 100:.0f}{warn}</div>"
+
+
 def bet_block(c, key, title="", context=True):
     ev = c["rapor"]["m"][key]
+    mline = market_line(c, key)
     checks = "".join(f"<li class='{'y' if ok else 'n'}'>{E(t)}</li>" for ok, t in ev["checks"])
     checks += "".join(f"<li class='i'>{E(t)} <span class='note'>· bilgi, {'lehine' if ok else 'aleyhine'}</span></li>"
                       for ok, t in ev.get("info", []))
     head = (f"<div class='sec'>{title}{GM_LABEL[key]} · {ev['ok']}/{ev['tot']} kriter · model %{ev['p'] * 100:.0f} "
             f"<span class='tier t{ev['tier']}'>{TIER_NAME[ev['tier']]}</span></div>") if title else ""
-    return (f"{head}<ul class='ck'>{checks}</ul>{hist_text(key, ev['tier'])}"
+    return (f"{head}{mline}<ul class='ck'>{checks}</ul>{hist_text(key, ev['tier'])}"
             f"<div class='yorum'>{E(rp_comment(c, key, context))}</div>")
 
 
@@ -5084,6 +5134,7 @@ def analiz_entry(c):
             "l": [round(x, 4) for x in (c["lam"][0], c["lam"][1], lam1[0], lam1[1])],
             "p": {k: round(r[k], 4) for k in PRED_KEYS if r.get(k) is not None},
             "rp": rp, "low": bool(c.get("low")), "tsc": c.get("tsc"),
+            "mk": {k: round(v, 4) for k in ("ms1", "ms2", "o25", "u25") for v in [market_p(c, k)] if v is not None},
             "tc": {"h": tc_text(c.get("tctx", {}).get("h")), "a": tc_text(c.get("tctx", {}).get("a"))}}
 
 
@@ -5162,6 +5213,8 @@ function legText(l, a){
   if(a.p!=null) t += l.bl+' için tutma ihtimali '+pc(a.p)+'. ';
   if(a.rp) t += 'Kontrol listesinde '+a.rp.ok+'/'+a.rp.n+' kriter tutuyor ('+TIER[a.rp.t]+'). ';
   if(a.hist) t += 'Bu seviyedeki '+l.bl+' önerileri geçmişte '+pc(a.hist[0])+' tuttu ('+a.hist[1]+' maç; tüm maçlarda '+pc(a.hist[2])+'). ';
+  const mk = s.mk && RAPOR_OF[l.b] ? s.mk[RAPOR_OF[l.b]] : null;
+  if(mk!=null) t += 'Piyasa (ESPN oranı) bu bahse '+pc(mk)+' veriyor'+(a.p!=null?(Math.abs(a.p-mk)>=0.10?'; model ile arasında '+Math.round((a.p-mk)*100)+' puan fark var, dikkat.':'.'):'.')+' ';
   if(a.imp!=null) t += 'Girdiğin '+(+l.o).toFixed(2)+' oranı bu bahse '+pc(a.imp)+' ihtimal biçiyor'+(a.p!=null?(a.p<a.imp-0.05?'; model daha az emin.':(a.p>a.imp+0.05?'; model daha emin.':'; model de aynı yerde.')):'.')+' ';
   if(s.low) t += 'Takımlardan birinin geçmiş verisi az, tahmin daha belirsiz. ';
   return t;
@@ -5537,6 +5590,76 @@ function openD(id){const d=document.getElementById(id); if(d) d.open=true;}
 """
 
 
+def load_live_log():
+    try:
+        sh("git", "fetch", "-q", "--depth", "1", "origin", RELAY_BRANCH, check=False)
+        return json.loads(sh("git", "show", "FETCH_HEAD:kayit.json"))
+    except Exception:  # noqa
+        return {}
+
+
+def live_settle(t, res):
+    """Canlı öneri etiketini maç sonucuna göre sonuçlandırır (İY x.5 Üst/Alt, x.5 Üst/Alt, İY 1/X/2, MS 1/2)."""
+    hg, ag, h1, a1 = res
+    iy = t.startswith("İY ")
+    body = t[3:] if iy else t
+    if iy and (h1 is None or a1 is None):
+        return None
+    x, y = (h1, a1) if iy else (hg, ag)
+    mt = re.match(r"^(\d+(?:\.\d)?) (Üst|Alt)$", body)
+    if mt:
+        ln = float(mt.group(1))
+        return (x + y > ln) if mt.group(2) == "Üst" else (x + y < ln)
+    if body in ("1", "X", "2"):
+        return res3(x, y) == {"1": 0, "X": 1, "2": 2}[body]
+    if t in ("MS 1", "MS 2"):
+        return res3(hg, ag) == (0 if t == "MS 1" else 2)
+    return None
+
+
+def live_karne_html(leagues):
+    log = load_live_log()
+    if not log:
+        return ("<div class='sec'>Canlı öneriler</div><p class='note'>Canlı önerilerin kaydı yeni başladı; canlı sayfada "
+                "Güçlü/Orta öneri çıktıkça burada sonuçlarıyla birlikte görünecek.</p>")
+    results = {}
+    for L in leagues:
+        results.update(L.get("results", {}))
+    rows = []
+    for k, v in log.items():
+        r = results.get(str(v["id"]))
+        ok = live_settle(v["t"], r) if r and r[0] is not None else None
+        rows.append((v, ok))
+    done = [(v, ok) for v, ok in rows if ok is not None]
+    pend = len(rows) - len(done)
+
+    def pct(a, b):
+        return f"%{a / b * 100:.0f}" if b else "-"
+    grp = defaultdict(lambda: [0, 0])
+    for v, ok in done:
+        kind = ("İlk yarı" if v["iy"] else "Maç sonu") + (" · Alt" if v["t"].endswith("Alt") or v["t"] == "İY X" else
+                                                           " · Üst" if v["t"].endswith("Üst") else " · Sonuç")
+        for g in (kind, f"Seviye: {v['level']}", "Toplam"):
+            grp[g][0] += ok
+            grp[g][1] += 1
+    out = (f"<div class='sec'>Canlı öneriler</div><p class='note'>Canlı sayfada Güçlü/Orta seviyeye ulaşan öneriler, ilk "
+           f"göründükleri dakika ve skorla kaydedilir. {len(done)} sonuçlandı{f', {pend} bekliyor' if pend else ''}.</p>")
+    if done:
+        out += ("<div class='wrap'><table><tr><th>Grup</th><th class='n'>Öneri</th><th class='n'>Tuttu</th></tr>" +
+                "".join(f"<tr><td>{E(g)}</td><td class='n'>{c}</td><td class='n'>{pct(a, c)}</td></tr>"
+                        for g, (a, c) in sorted(grp.items(), key=lambda kv: (kv[0] != 'Toplam', kv[0]))) + "</table></div>")
+        out += "<details class='kd'><summary><b>Canlı öneriler maç maç</b></summary>"
+        for v, ok in sorted(done, key=lambda x: x[0].get("ts", ""), reverse=True):
+            r = results.get(str(v["id"]))
+            out += (f"<div class='km {'y' if ok else 'n'}'><div class='kmh'><span>{'✓' if ok else '✗'} <b>{E(v.get('h') or '')} "
+                    f"{r[0]}-{r[1]} {E(v.get('a') or '')}</b></span><span class='tier t{2 if v['level'] == 'Güçlü' else 1}'>"
+                    f"{v['level'].upper()}</span></div><div class='note'>{E(v.get('lg') or '')} · {v['min']}. dk, skor {v['hg']}-{v['ag']} "
+                    f"iken: <b>{E(v['t'])}</b> ({E(v.get('sub') or '')}) · %{v['p'] * 100:.0f}"
+                    f"{f' · İY {r[2]}-{r[3]}' if r[2] is not None else ''}</div></div>")
+        out += "</details>"
+    return out
+
+
 def write_karne(st, leagues, now):
     rows = karne_rows(st, leagues)
     first = min((r["d"] for r in rows), default=None)
@@ -5553,7 +5676,7 @@ def write_karne(st, leagues, now):
             f"<div class='kchips'><button class='on' onclick=\"kz('1',this)\">1. öneriler</button>"
             f"<button onclick=\"kz('2',this)\">2. öneriler</button><button onclick=\"kz('all',this)\">Hepsi</button></div></header>"
             f"<div style='padding:0 12px 24px'>{karne_section(r1, '1', True)}{karne_section(r2, '2', False)}"
-            f"{karne_section(rows, 'all', False)}</div><script>{KARNE_JS}</script></body></html>")
+            f"{karne_section(rows, 'all', False)}{live_karne_html(leagues)}</div><script>{KARNE_JS}</script></body></html>")
     with open("karne.html", "w", encoding="utf-8") as f:
         f.write(page)
 
@@ -5656,7 +5779,7 @@ def write_ust25(st, leagues, now, allraw):
                         if t.get("trend"))
         return (f"<details class='uc'><summary><div class='uh'><span><b>{E(c['home'])} - {E(c['away'])}</b>{res}"
                 f"<small>{c['day']} {c['time']} · {E(ln)} · beklenen {lam:.1f} gol</small></span>"
-                f"<span class='up'>%{ev['p'] * 100:.0f}</span></div></summary><ul class='ck'>{tr}</ul>"
+                f"<span class='up'>%{ev['p'] * 100:.0f}</span></div></summary>{market_line(c, 'o25')}<ul class='ck'>{tr}</ul>"
                 + (f"<p class='note'>Form: {fm}</p>" if fm else "") + "</details>")
     body = ""
     for k in ("g", "o", "n"):
@@ -5815,6 +5938,10 @@ def relay_setup():
         for k, ev in (old.get("events") or {}).items():
             if ev.get("hist"):
                 LIVE_HIST[k] = ev["hist"]
+        try:
+            LIVE_LOG.update(json.loads(sh("git", "show", "FETCH_HEAD:kayit.json", cwd=RELAY_DIR)))
+        except Exception:  # noqa
+            pass
         print("önceki dakika geçmişi:", len(LIVE_HIST), "maç", flush=True)
     except Exception:  # noqa
         pass
@@ -5823,10 +5950,66 @@ def relay_setup():
     return ws
 
 
+# ------------------------------------------------------------ canlı önerilerin kaydı
+# Aktarım, birkaç dakikada bir canlı sayfanın KENDİ hesabını (aynı JavaScript, node ile) çalıştırır ve
+# Güçlü/Orta seviyeye ulaşan canlı önerileri ilk göründükleri dakika ve skorla kaydeder (kayit.json, canli dalı).
+LIVE_LOG = {}
+LIVE_LOG_KEEP_DAYS = 10
+NODE_HARNESS = r"""
+const fs = require('fs'); const inp = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+MODEL = inp.model; const out = [];
+for(const [id, ev] of Object.entries(inp.events)){
+  try{
+    const L = parseLive(ev); if(L.state!=='in') continue;
+    const m = MODEL.matches.find(x=>x.id===id); if(!m) continue;
+    const o = liveEval(m, L);
+    const ps = (o.iy && 45-o.t >= LIVE_MIN_LEFT) ? o.iyPicks : o.picks;
+    for(const x of ps) if(x.level) out.push({id, t:x.t, sub:x.sub, p:Math.round(x.p*1000)/1000, level:x.level, iy:!!x.iy, min:o.t, hg:L.hg, ag:L.ag});
+  }catch(e){}
+}
+console.log(JSON.stringify(out));
+"""
+
+
+def live_js_eval(model, events):
+    import subprocess
+    js = "const REPO='';\n" + live_core_js() + NODE_HARNESS
+    jp, ip = os.path.join(RELAY_DIR, "_lp.js"), os.path.join(RELAY_DIR, "_lp_in.json")
+    with open(jp, "w", encoding="utf-8") as f:
+        f.write(js)
+    with open(ip, "w", encoding="utf-8") as f:
+        json.dump({"model": model, "events": events}, f)
+    r = subprocess.run(["node", jp, ip], capture_output=True, text=True, timeout=90)
+    if r.returncode != 0:
+        raise RuntimeError(r.stderr[:200])
+    return json.loads(r.stdout.strip().splitlines()[-1])
+
+
+def log_live_picks(model, events, now):
+    try:
+        picks = live_js_eval(model, events)
+    except Exception as e:  # noqa
+        print("  canlı öneri hesaplanamadı:", e, flush=True)
+        return
+    meta = {m["id"]: m for m in model.get("matches", [])}
+    for p in picks:
+        key = f"{p['id']}|{p['t']}"
+        if key in LIVE_LOG:
+            continue
+        mm = meta.get(p["id"], {})
+        LIVE_LOG[key] = dict(p, h=mm.get("h"), a=mm.get("a"), lg=mm.get("lg"), k=mm.get("k"), ts=now.isoformat())
+        print(f"  canlı öneri kaydı: {mm.get('h')}-{mm.get('a')} {p['min']}' {p['hg']}-{p['ag']} {p['t']} %{p['p'] * 100:.0f} {p['level']}", flush=True)
+    cut = (now - dt.timedelta(days=LIVE_LOG_KEEP_DAYS)).isoformat()
+    for k in [k for k, v in LIVE_LOG.items() if (v.get("ts") or "") < cut]:
+        del LIVE_LOG[k]
+
+
 def relay_push(payload, first):
     with open(os.path.join(RELAY_DIR, "canli.json"), "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))
-    sh("git", "add", "canli.json", cwd=RELAY_DIR)
+    with open(os.path.join(RELAY_DIR, "kayit.json"), "w", encoding="utf-8") as f:
+        json.dump(LIVE_LOG, f, ensure_ascii=False, separators=(",", ":"))
+    sh("git", "add", "canli.json", "kayit.json", cwd=RELAY_DIR)
     if first:
         sh("git", "commit", "-q", "-m", "canlı skorlar", cwd=RELAY_DIR)
     else:
@@ -5864,6 +6047,8 @@ def live_loop():
             break
         events = relay_snapshot(rel)
         live = sum(1 for e in events.values() if e["status"].get("type", {}).get("state") == "in")
+        if live and n % 3 == 0:
+            log_live_picks(model, events, now)
         try:
             relay_push({"t": now.isoformat(), "events": events}, first)
             first = False
