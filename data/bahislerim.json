@@ -746,6 +746,61 @@
      "mp": 0.392
     }
    ]
+  },
+  {
+   "id": "k1793225884903",
+   "t": "2026-10-28T22:18:04.903Z",
+   "tutar": 500,
+   "legs": [
+    {
+     "m": "761908",
+     "ad": "Miami - Cincinnati",
+     "lg": "ABD MLS",
+     "k": "2026-10-28T23:30:00+00:00",
+     "b": "o35",
+     "bl": "3.5 Üst",
+     "o": 1.44,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.552
+    },
+    {
+     "m": "761911",
+     "ad": "Chicago - Orlando",
+     "lg": "ABD MLS",
+     "k": "2026-10-29T00:30:00+00:00",
+     "b": "o35",
+     "bl": "3.5 Üst",
+     "o": 1.41,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.5414
+    },
+    {
+     "m": "761915",
+     "ad": "St. Louis - Portland",
+     "lg": "ABD MLS",
+     "k": "2026-10-29T00:30:00+00:00",
+     "b": "tiev05",
+     "bl": "Ev İY 0.5 Üst",
+     "o": 1.47,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.7121
+    },
+    {
+     "m": "761913",
+     "ad": "Minnesota - Kansas City",
+     "lg": "ABD MLS",
+     "k": "2026-10-29T00:30:00+00:00",
+     "b": "o35",
+     "bl": "3.5 Üst",
+     "o": 1.66,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.5681
+    }
+   ]
   }
  ]
 }
