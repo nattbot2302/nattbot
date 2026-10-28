@@ -2813,7 +2813,27 @@ def summary_tab(leagues):
             act.append((exp, L, avg("o25"), avg("btts"),
                         avg("iy05") if all(c["r"].get("iy05") is not None for c in cs) else None))
     act.sort(key=lambda x: (len(x[1]["cards"]) >= 2, x[0]), reverse=True)
-    out = "<h2>Günün özeti</h2>" + radar_html(leagues)
+    out = "<h2>Günün özeti</h2>"
+    mains = sorted([(c, L["name"]) for L in leagues for c in L["cards"] if (c.get("rapor") or {}).get("main")],
+                   key=lambda x: x[0]["kick"])
+    if mains:
+        out += ("<h3>Günün önerileri</h3><p class='note'>Gol Raporu'ndaki 'Günün önerileri' ile aynı liste. Ayrıntı için "
+                "Gol Raporu'na bak.</p><div class='wrap'><table><tr><th>Saat</th><th>Maç</th><th>Öneri</th>"
+                "<th class='n'>Model</th></tr>")
+        for c, ln in mains:
+            k = c["rapor"]["main"]
+            v = c["rapor"]["m"][k]
+            res = ""
+            if c["score"]:
+                o = rp_outcome(c, k)
+                res = f" <b class='{'pos' if o else 'neg'}'>{c['score'][0]}-{c['score'][1]}</b>" if o is not None else ""
+            out += (f"<tr><td>{c['time']}</td><td>{E(c['home'])} - {E(c['away'])}{res}<br><span class='note'>{E(ln)}</span></td>"
+                    f"<td>{GM_LABEL[k]}</td><td class='n'>%{v['p'] * 100:.0f}<br>"
+                    f"<span class='tier t{v['tier']}'>{TIER_NAME[v['tier']]}</span></td></tr>")
+        out += "</table></div>"
+    else:
+        out += "<p class='note'>Bugün günün önerisi çıkan maç yok. Gol Raporu'ndaki 'Yakın adaylar' sekmesine bakabilirsin.</p>"
+    out += "<h3>Ligler</h3>"
     if act:
         top = act[0]
         out += (f"<p><span class='fire'>Günün en golcü ligi: {E(top[1]['name'])}</span> "
@@ -2829,19 +2849,6 @@ def summary_tab(leagues):
                 f"<td class='n'>{pct(iy05)}</td><td class='n'>{num(L['avg90'], '{:.2f}')}</td></tr>")
     out += "</table></div><p class='note'>Son 90g: ligde son 90 günde maç başı gerçekleşen gol.</p>"
 
-    allc = [(c, L["name"]) for L in leagues for c in L["cards"] if not c["score"]]
-    for title, key in (("2.5 Üst", "o25"), ("KG Var", "btts"), ("İY 0.5 Üst", "iy05"),
-                       ("İY 1.5 Üst", "iy15")):
-        sel = sorted([x for x in allc if x[0]["r"].get(key) is not None],
-                     key=lambda x: -x[0]["r"][key])[:6]
-        if not sel:
-            continue
-        out += (f"<h3>En yüksek {title}</h3><div class='wrap'><table>"
-                f"<tr><th>Maç</th><th>Lig</th><th class='n'>%</th></tr>")
-        for c, ln in sel:
-            out += (f"<tr><td>{c['time']} {E(c['home'])} - {E(c['away'])}</td><td>{E(ln)}</td>"
-                    f"<td class='n'>{pct(c['r'][key])}</td></tr>")
-        out += "</table></div>"
 
     errs = [f"{L['name']}: {L['err']}" for L in leagues if L["err"]]
     if errs:
@@ -3283,23 +3290,78 @@ def rp_item(c, key, lname, full=True):
     if not full:
         return (head + f"<div class='rb'><b>{GM_LABEL[key]}</b> · {ev['ok']}/{ev['tot']} kriter · model %{ev['p'] * 100:.0f}</div>"
                 f"</summary>{bet_block(c, key)}</details>")
-    line1 = f"<div class='rb'><span class='no'>1</span><b>{GM_LABEL[key]}</b> · {ev['ok']}/{ev['tot']} kriter · model %{ev['p'] * 100:.0f}</div>"
+    is_main = key == c["rapor"].get("main")
+    line1 = (f"<div class='rb'><span class='no'>1</span><b>{GM_LABEL[key]}</b> · {ev['ok']}/{ev['tot']} kriter · model %{ev['p'] * 100:.0f}</div>"
+             if is_main else
+             f"<div class='rb'><span class='note'>Bu maçta günün önerisi yok · en iyi seviye:</span> <b>{GM_LABEL[key]}</b> · "
+             f"model %{ev['p'] * 100:.0f}</div>")
     line2 = ""
     if alt:
         ea = c["rapor"]["m"][alt]
         line2 = (f"<div class='rb r2'><span class='no'>2</span>{GM_LABEL[alt]} · {ea['ok']}/{ea['tot']} kriter · "
                  f"model %{ea['p'] * 100:.0f} <span class='tier t{ea['tier']}'>{TIER_NAME[ea['tier']]}</span></div>")
+    def role(k):
+        return " <b class='pos'>· 1. öneri</b>" if k == c["rapor"].get("main") else (
+            " <b>· 2. öneri</b>" if k == c["rapor"].get("alt") else "")
+
+    def mk(k):
+        v = market_p(c, k)
+        return f"%{v * 100:.0f}" if v is not None else "-"
     others = "".join(
-        f"<tr><td>{GM_LABEL[k]}</td><td class='n'>%{v['p'] * 100:.0f}</td><td class='n'>{v['ok']}/{v['tot']}</td>"
+        f"<tr><td>{GM_LABEL[k]}{role(k)}</td><td class='n'>%{v['p'] * 100:.0f}</td><td class='n'>{mk(k)}</td>"
+        f"<td class='n'>{v['ok']}/{v['tot']}</td>"
         f"<td class='n'><span class='tier t{v['tier']}'>{TIER_NAME[v['tier']]}</span></td></tr>"
         for k, v in sorted(c["rapor"]["m"].items(), key=lambda kv: (-kv[1]["tier"], -kv[1]["score"])))
-    body = bet_block(c, key, "1. öneri: ")
+    body = bet_block(c, key, "1. öneri: " if is_main else "En iyi seviye: ")
     if alt:
         body += bet_block(c, alt, "2. öneri: ", context=False)
     return (head + line1 + line2 + "</summary>" + body +
             f"{team_line(c['home'], c['tctx']['h'])}{team_line(c['away'], c['tctx']['a'])}{gi_html(c)}"
             "<div class='sec'>Bu maçtaki tüm bahisler</div><div class='wrap'><table><tr><th>Bahis</th>"
-            f"<th class='n'>Model</th><th class='n'>Kriter</th><th class='n'>Seviye</th></tr>{others}</table></div></details>")
+            f"<th class='n'>Model</th><th class='n'>Piyasa</th><th class='n'>Kriter</th><th class='n'>Seviye</th></tr>{others}</table></div></details>")
+
+
+def best_key(c):
+    """Maçın gösterilecek bahsi: günün önerisi; yoksa en yüksek seviyeli (düşük oranlılar hariç) bahis."""
+    rp = c.get("rapor") or {}
+    if rp.get("main"):
+        return rp["main"]
+    m = rp.get("m") or {}
+    cand = [(v["tier"], v["score"], k) for k, v in m.items() if k not in MAIN_EXCLUDE] or \
+           [(v["tier"], v["score"], k) for k, v in m.items()]
+    return max(cand)[2] if cand else None
+
+
+def league_card(c, lname):
+    """Lig sekmesindeki maç: Gol Raporu ile birebir aynı değerlendirme + ayrıntılı olasılıklar."""
+    k = best_key(c)
+    stats = card_html(dict(c, vb=[], surprise=[]))
+    if not k:
+        return stats
+    return (rp_item(c, k, lname, full=True) +
+            f"<details class='rp'><summary><b>Tüm olasılıklar ve istatistikler</b> <span class='note'>"
+            f"{E(c['home'])} - {E(c['away'])}</span></summary>{stats}</details>")
+
+
+GUIDE_HTML = (
+    "<details class='rp' open><summary><b>Rehber: neye bakmalıyım?</b> <span class='note'>(dokun)</span></summary><div class='tc'>"
+    "<b>Tek kaynak.</b> Bütün sayfalar aynı bot çalışmasının (08:00, 14:00, 23:30) aynı değerlendirmesinden üretilir: her maç ve "
+    "her bahis için <b>model ihtimali</b>, <b>seviye</b> ve <b>günün önerisi</b>.<br>"
+    "• <b>Model ihtimali</b>: o bahsin tutma ihtimali (%).<br>"
+    "• <b>Seviye (Güçlü / Orta / Zayıf)</b>: bahsin o ligin ortalamasına göre ne kadar öne çıktığı. Ortalaması düşük bahislerde "
+    "(3.5 Üst, 4.5 Üst) ihtimal %40 iken bile Güçlü olabilir; <b>seviye tek başına öneri değildir</b>.<br>"
+    "• <b>Günün önerisi</b>: seviyesi en az Orta, model ihtimali en az %55, bahis türü geçmişte gerçekten tutmuş ve oranı çok "
+    "düşük değil (1.5 Üst, İY 0.5 Üst, Ev/Dep 0.5 Üst hariç). <b>'Öneri' kelimesi sadece bunun için kullanılır.</b><br>"
+    "• <b>Aday listeleri</b> (öneri değil, bilgi): Yakın adaylar, Gol şöleni, bahis sekmeleri, 2.5 Üst Ağı'nın Orta ve geniş ağ grupları.<br><br>"
+    "<b>Hangi sayfa neyi gösterir?</b><br>"
+    "• Gol Raporu: günün önerileri + her bahis için bütün maçlar (seviyeye göre).<br>"
+    "• Lig sekmeleri: aynı değerlendirme, maç maç; altında ayrıntılı olasılıklar.<br>"
+    "• Özet: günün önerileri ve liglerin gol seviyesi.<br>"
+    "• 2.5 Üst: 2.5 Üst'te bütün maçlar, ihtimale göre gruplu.<br>"
+    "• Analiz: senin girdiğin kupondaki her maçın aynı değerlendirmesi.<br>"
+    "• Kuponlar (Claude): isteğinle kurduğum kuponlar; her maçın Gol Raporu'ndaki yeri yazar.<br>"
+    "• Karne: günün önerilerinin ve canlı önerilerin gerçek sonuçları.<br>"
+    "• Canlı: maç içi değerlendirme (gol dakikaları, baskı, model); maç öncesi önerilerden ayrıdır.</div></details>")
 
 
 LEARN_HTML = (
@@ -3414,7 +3476,7 @@ def rapor_tab(leagues, now):
            "listesi: model, iki takımın son 10 maçı, ev sahibinin evdeki ve deplasmanın dışarıdaki son 5 maçı, benzer "
            "maçlar, aralarındaki maçlar ve gol ortalamaları (MS için puan ortalaması). Bir madde, ligin genel oranının belirgin üstündeyse ✓ alır. "
            "<b>Güçlü</b>: maddelerin en az %80'i ✓. <b>Orta</b>: en az %60'ı. Bir maça dokununca detayı açılır.</p>")
-    out += gated_headline(leagues) + LEARN_HTML
+    out += GUIDE_HTML + gated_headline(leagues) + LEARN_HTML
     out += "<details class='rp'><summary><b>Bu kurallar geçmişte ne kadar tuttu?</b> <span class='note'>(dokun)</span></summary>"
     out += rapor_bt_html(leagues).replace("<h3>Bu kurallar geçmişte ne kadar tuttu?</h3>", "") + "</details>"
     hours = [(d0 + dt.timedelta(hours=h)).astimezone(TR) for h in range(25)]
@@ -4302,17 +4364,12 @@ def write_html(leagues, now, st=None):
     order = sorted(range(len(leagues)),
                    key=lambda i: (bool(leagues[i]["err"]), -len(leagues[i]["cards"]), i))
     nav = ["<option value='rapor' selected>Gol Raporu</option>", "<option value='t1'>T-1 · Dün ne oldu</option>",
-           "<option value='ozet'>Özet</option>", "<option value='kupon'>Kuponlar</option>", "<optgroup label='Ligler'>"]
+           "<option value='ozet'>Özet</option>", "<optgroup label='Ligler'>"]
     st = st or {"preds": {}, "meta": {}}
     results = all_results(leagues)
     d0_, _ = day_window(now)
-    today_cp = st.get("kupon", {}).get(f"{d0_:%Y-%m-%d}") or build_coupons(leagues, now)
-    n_cp = [f"{short} {len(today_cp.get(k, []))}" for k, _, _, short in COUPONS if today_cp.get(k)]
-    cp_banner = ("<div class='act' style='cursor:pointer' onclick=\"show('kupon')\"><b>Günün kuponları hazır →</b>"
-                 f"<small>{' · '.join(n_cp)}</small></div>")
     tabs = [f"<section class='tab on' id='rapor'>{rapor_tab(leagues, now)}</section>",
-            f"<section class='tab' id='ozet'>{cp_banner}{summary_tab(leagues)}</section>",
-            f"<section class='tab' id='kupon'>{coupons_tab(st, today_cp, results, now)}</section>",
+            f"<section class='tab' id='ozet'>{summary_tab(leagues)}</section>",
             f"<section class='tab' id='t1'>{learn_html(st, now)}{t1_tab(st, now)}</section>"]
     for i in order:
         L = leagues[i]
@@ -4323,7 +4380,7 @@ def write_html(leagues, now, st=None):
         elif not L["cards"]:
             body = "<p class='empty'>Bugün bu ligde maç yok.</p>"
         else:
-            body = "".join(card_html(c) for c in L["cards"])
+            body = "".join(league_card(c, L["name"]) for c in L["cards"])
         meta = f"{L['nfin']} geçmiş maç verisi"
         if L["avg90"]:
             meta += f" · son 90 gün maç başı {L['avg90']:.2f} gol"
@@ -4332,9 +4389,8 @@ def write_html(leagues, now, st=None):
             meta += f" · İY verisi maçların {pct(hm['cov'])}'ında var"
         tabs.append(f"<section class='tab' id='{tid}'><h2>{E(L['name'])}</h2>"
                     f"<p class='row'>{meta}</p>{body}</section>")
-    nav.append("</optgroup><option value='bahis'>Bahislerim (kazanç analizi)</option><option value='karne'>Karne</option>")
+    nav.append("</optgroup><option value='bahis'>Bahislerim (kazanç analizi)</option>")
     tabs.append(f"<section class='tab' id='bahis'>{bets_tab(st, MACS_BY_ID)}</section>")
-    tabs.append(f"<section class='tab' id='karne'>{karne_tab(st, now)}{coupon_karne(st, results)}</section>")
     nav.append("<option value='dogruluk'>Doğruluk</option>")
     tabs.append(f"<section class='tab' id='dogruluk'>{accuracy_tab(leagues)}</section>")
 
@@ -5140,6 +5196,7 @@ def analiz_entry(c):
             "l": [round(x, 4) for x in (c["lam"][0], c["lam"][1], lam1[0], lam1[1])],
             "p": {k: round(r[k], 4) for k in PRED_KEYS if r.get(k) is not None},
             "rp": rp, "low": bool(c.get("low")), "tsc": c.get("tsc"),
+            "main": (c.get("rapor") or {}).get("main"), "alt": (c.get("rapor") or {}).get("alt"),
             "mk": {k: round(v, 4) for k in ("ms1", "ms2", "o25", "u25") for v in [market_p(c, k)] if v is not None},
             "tc": {"h": tc_text(c.get("tctx", {}).get("h")), "a": tc_text(c.get("tctx", {}).get("a"))}}
 
@@ -5842,9 +5899,39 @@ def load_ck():
         return {"kuponlar": []}
 
 
+def ck_role(l, cur):
+    """Kupondaki bahsin Gol Raporu'ndaki yeri: 1. öneri / 2. öneri / aday (+ şu anki ihtimal)."""
+    rk = BET_TO_RAPOR.get(l["b"])
+    e = cur.get(str(l["m"]))
+    if not e or not rk or rk not in e.get("rp", {}):
+        return None
+    v = e["rp"][rk]
+    role = ("Gol Raporu'nda günün önerisi" if e.get("main") == rk else
+            "Gol Raporu'nda 2. öneri" if e.get("alt") == rk else
+            f"Gol Raporu'nda öneri değil, aday ({TIER_NAME.get(v['t'], '').capitalize()} seviye)")
+    return {"rol": role, "p": v["p"], "t": v["t"]}
+
+
 def write_claude_page(results, now):
     d = load_ck()
     ks = d["kuponlar"]
+    try:
+        with open(AN_FILE, encoding="utf-8") as f:
+            cur = json.load(f).get("m", {})
+    except Exception:  # noqa
+        cur = {}
+    changed = False
+    for k in ks:
+        for l in k["legs"]:
+            r_ = ck_role(l, cur)
+            if r_:
+                if l.get("rol") != r_["rol"] or abs((l.get("p_now") or 0) - r_["p"]) > 1e-4:
+                    l["rol"], l["p_now"], l["t_now"] = r_["rol"], round(r_["p"], 4), r_["t"]
+                    changed = True
+    if changed:
+        with open(CK_FILE, "w", encoding="utf-8") as f:
+            json.dump({"kuponlar": [{kk: vv for kk, vv in k.items() if not kk.startswith("_")} for k in ks]},
+                      f, ensure_ascii=False, indent=1, default=str)
 
     def pct(a, b):
         return f"%{a / b * 100:.0f}" if b else "-"
@@ -5890,9 +5977,14 @@ def write_claude_page(results, now):
                            f"{f' (İY {s_[2]}-{s_[3]})' if s_[2] is not None else ''} {'✓' if l['_ok'] else '✗'}</b>")
                 when = dt.datetime.fromisoformat(l["k"]).astimezone(TR)
                 mk = f" · piyasa %{l['mk'] * 100:.0f}" if l.get("mk") is not None else ""
+                now_ = ""
+                if l.get("p_now") is not None and (abs(l["p_now"] - l["p"]) >= 0.03 or l.get("t_now") != l.get("tier")):
+                    now_ = (f" · <b>son güncellemede %{l['p_now'] * 100:.0f} "
+                            f"{TIER_NAME.get(l.get('t_now', 0), '')}</b>")
+                role = f"<div class='note'>{E(l['rol'])}</div>" if l.get("rol") else ""
                 body += (f"<div class='lg2'><div><b>{E(l['ad'])}</b> · {E(l['bl'])}{res}</div>"
-                         f"<div class='note'>{when:%d.%m %H:%M} · {E(l['lg'])} · model %{l['p'] * 100:.0f} · "
-                         f"{TIER_NAME.get(l.get('tier', 0), '')}{mk}</div>"
+                         f"<div class='note'>{when:%d.%m %H:%M} · {E(l['lg'])} · kurulduğunda model %{l['p'] * 100:.0f} · "
+                         f"{TIER_NAME.get(l.get('tier', 0), '')}{mk}{now_}</div>{role}"
                          + ("<ul class='ck'>" + "".join(f"<li class='{'i' if 'form eğrisi' in x else 'y'}'>{E(x)}</li>" for x in l.get("why", [])) + "</ul>" if l.get("why") else "")
                          + "</div>")
             body += "</div>"
@@ -5902,7 +5994,9 @@ def write_claude_page(results, now):
             "<header><div style='display:flex;justify-content:space-between;align-items:center'><h1>Claude'un Kuponları</h1>"
             "<a href='index.html' style='color:var(--ac);text-decoration:none;font-weight:600'>← Günün maçları</a></div>"
             "<p class='note'>Senin isteğinle modelin verisinden kurduğum kuponlar, tarih bazlı. Her maç tek bir kupona girer; "
-            "kuponlar kısa tutulur. Sonuçlar botun her çalışmasında kendiliğinden işlenir. Model ihtimali tahmindir, kâr garantisi vermez. "
+            "kuponlar kısa tutulur. Her maçta kuponu kurduğum andaki model ihtimali ve o maçın Gol Raporu'ndaki yeri (günün önerisi, "
+            "2. öneri ya da aday) yazar; sonradan veri güncellenip ihtimal değiştiyse o da gösterilir. Sonuçlar botun her "
+            "çalışmasında kendiliğinden işlenir. Model ihtimali tahmindir, kâr garantisi vermez. "
             f"Güncelleme: {now.astimezone(TR):%d.%m.%Y %H:%M}</p></header>"
             f"<div style='padding:0 12px 24px'>{head}{body or '<p class=empty>Henüz kupon yok.</p>'}</div></body></html>")
     with open("claude.html", "w", encoding="utf-8") as f:
