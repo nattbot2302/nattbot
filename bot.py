@@ -5908,7 +5908,7 @@ def ck_role(l, cur):
     v = e["rp"][rk]
     role = ("Gol Raporu'nda günün önerisi" if e.get("main") == rk else
             "Gol Raporu'nda 2. öneri" if e.get("alt") == rk else
-            f"Gol Raporu'nda öneri değil, aday ({TIER_NAME.get(v['t'], '').capitalize()} seviye)")
+            f"Gol Raporu'nda öneri değil, aday ({ {0: 'Zayıf', 1: 'Orta', 2: 'Güçlü'}.get(v['t'], '')} seviye)")
     return {"rol": role, "p": v["p"], "t": v["t"]}
 
 
