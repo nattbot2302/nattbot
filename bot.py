@@ -2549,6 +2549,10 @@ def main():
     write_analiz_html()
     write_karne(st, leagues, now)
     write_ust25(st, leagues, now, LAST_RAW)
+    res_all = {}
+    for L in leagues:
+        res_all.update(L.get("results", {}))
+    write_claude_page(res_all, now)
     send_mail(st, leagues, now)
     save_store(st)
 
@@ -3038,7 +3042,7 @@ def accuracy_tab(leagues):
 # ------------------------------------------------------------ gol raporu sekmesi
 RP_CSS = """
 .topnav{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0 6px}
-.topnav a.lvb{grid-column:span 2}
+.topnav a.lvb{grid-column:span 1}
 .topnav a{display:block;text-align:center;white-space:nowrap;background:var(--card);color:var(--tx);border:1px solid var(--bd);text-decoration:none;font-weight:700;font-size:13px;padding:8px 4px;border-radius:16px}
 .topnav a.lvb{background:#d93025;color:#fff;border-color:#d93025}
 .bars{font-family:monospace;letter-spacing:1px;color:var(--ac)}
@@ -3831,11 +3835,12 @@ def write_maclar(leagues, now):
         start = max(start, now - dt.timedelta(days=2))
     end = now + dt.timedelta(days=2)
     bet_ids = {str(l.get("m")) for k in load_bets()["kuponlar"] for l in k["legs"] if l.get("m")}
-    try:                                   # Analiz sayfasındaki kuponların maçları da (sonuçları gösterilsin)
-        with open(DRAFT_FILE, encoding="utf-8") as f:
-            bet_ids |= {str(l.get("m")) for k in json.load(f).get("kuponlar", []) for l in k.get("legs", []) if l.get("m")}
-    except Exception:  # noqa
-        pass
+    for fn in (DRAFT_FILE, "data/claude_kuponlar.json"):   # Analiz ve Claude kuponlarının maçları da
+        try:
+            with open(fn, encoding="utf-8") as f:
+                bet_ids |= {str(l.get("m")) for k in json.load(f).get("kuponlar", []) for l in k.get("legs", []) if l.get("m")}
+        except Exception:  # noqa
+            pass
     rows, seen = [], set()
     md = {}
     for L in leagues:
@@ -4342,6 +4347,7 @@ def write_html(leagues, now, st=None):
             f"<a href='analiz.html?v={int(now.timestamp())}'>Analiz</a>"
             f"<a href='karne.html?v={int(now.timestamp())}'>Karne</a>"
             f"<a href='ust25.html?v={int(now.timestamp())}'>2.5 Üst</a>"
+            f"<a href='claude.html?v={int(now.timestamp())}'>Kuponlar</a>"
             f"<a class='lvb' href='canli.html?v={int(now.timestamp())}'>● Canlı</a></div>"
             f"<div class='upd'>Güncelleme: {local:%d.%m.%Y %H:%M} · "
             f"Maçlar: {d0:%d.%m %H:%M} - {d1:%d.%m %H:%M} · Model tahmindir, kâr garantisi vermez."
@@ -5817,6 +5823,99 @@ UST_CSS = """
 .uh{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .uh small{display:block;color:var(--mu);font-size:12px;font-weight:400;margin-top:2px}
 .up{font-size:20px;font-weight:800;color:var(--ac);white-space:nowrap}
+"""
+
+
+# ------------------------------------------------------------ CLAUDE'UN KUPONLARI (claude.html)
+# Kullanıcı istediğinde Claude'un modelin verisinden kurduğu kuponlar: data/claude_kuponlar.json.
+# Sayfa tarih bazlı; sonuçlar her bot çalışmasında kendiliğinden işlenir.
+CK_FILE = "data/claude_kuponlar.json"
+
+
+def load_ck():
+    try:
+        with open(CK_FILE, encoding="utf-8") as f:
+            d = json.load(f)
+        d.setdefault("kuponlar", [])
+        return d
+    except Exception:  # noqa
+        return {"kuponlar": []}
+
+
+def write_claude_page(results, now):
+    d = load_ck()
+    ks = d["kuponlar"]
+
+    def pct(a, b):
+        return f"%{a / b * 100:.0f}" if b else "-"
+    byday = defaultdict(list)
+    tot = {"k": [0, 0], "l": [0, 0], "exp_k": 0.0, "exp_l": 0.0}
+    for k in ks:
+        rs = []
+        for l in k["legs"]:
+            r = results.get(str(l["m"]))
+            l["_s"] = r
+            l["_ok"] = bet_settle(l["b"], r) if r and r[0] is not None else None
+            rs.append(l["_ok"])
+            if l["_ok"] is not None:
+                tot["l"][0] += l["_ok"]
+                tot["l"][1] += 1
+                tot["exp_l"] += l.get("p") or 0
+        k["_st"] = "yatti" if any(r is False for r in rs) else ("tuttu" if rs and all(r is True for r in rs) else "bekliyor")
+        if k["_st"] != "bekliyor":
+            tot["k"][0] += k["_st"] == "tuttu"
+            tot["k"][1] += 1
+            tot["exp_k"] += k.get("p") or 0
+        byday[k["d"]].append(k)
+    head = (f"<div class='grid'><div class='b lo'>Kupon<br><b>{tot['k'][0]}/{tot['k'][1]}</b><small>tuttu · model "
+            f"{tot['exp_k']:.1f} bekliyordu</small></div><div class='b lo'>Maç<br><b>{tot['l'][0]}/{tot['l'][1]}</b>"
+            f"<small>{pct(*tot['l'])} · model {tot['exp_l']:.1f}</small></div></div>") if tot["k"][1] or tot["l"][1] else ""
+    body = ""
+    for i, day in enumerate(sorted(byday, reverse=True)):
+        lst = byday[day]
+        w = sum(1 for k in lst if k["_st"] == "tuttu")
+        dn = sum(1 for k in lst if k["_st"] != "bekliyor")
+        body += (f"<details class='cd'{' open' if i == 0 else ''}><summary><b>{dt.date.fromisoformat(day):%d.%m.%Y}</b> · "
+                 f"{len(lst)} kupon{f' · {w}/{dn} tuttu' if dn else ''}</summary>")
+        for k in lst:
+            st = {"tuttu": "<b class='pos'>Tuttu</b>", "yatti": "<b class='neg'>Yattı</b>"}.get(k["_st"], "Bekliyor")
+            body += (f"<div class='ck2'><div class='ckh'><b>{E(k['title'])}</b><span>{st}</span></div>"
+                     f"<div class='note'>Model: birlikte tutma ihtimali <b>%{k['p'] * 100:.0f}</b> (yaklaşık "
+                     f"{max(1, round(1 / k['p']))} kuponda 1)</div><p class='tx'>{E(k.get('why', ''))}</p>")
+            for l in k["legs"]:
+                s_ = l.get("_s")
+                res = ""
+                if l["_ok"] is not None:
+                    res = (f" <b class='{'pos' if l['_ok'] else 'neg'}'>{s_[0]}-{s_[1]}"
+                           f"{f' (İY {s_[2]}-{s_[3]})' if s_[2] is not None else ''} {'✓' if l['_ok'] else '✗'}</b>")
+                when = dt.datetime.fromisoformat(l["k"]).astimezone(TR)
+                mk = f" · piyasa %{l['mk'] * 100:.0f}" if l.get("mk") is not None else ""
+                body += (f"<div class='lg2'><div><b>{E(l['ad'])}</b> · {E(l['bl'])}{res}</div>"
+                         f"<div class='note'>{when:%d.%m %H:%M} · {E(l['lg'])} · model %{l['p'] * 100:.0f} · "
+                         f"{TIER_NAME.get(l.get('tier', 0), '')}{mk}</div>"
+                         + ("<ul class='ck'>" + "".join(f"<li class='{'i' if 'form eğrisi' in x else 'y'}'>{E(x)}</li>" for x in l.get("why", [])) + "</ul>" if l.get("why") else "")
+                         + "</div>")
+            body += "</div>"
+        body += "</details>"
+    page = (f"<!doctype html><html lang='tr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>"
+            f"<title>Claude'un Kuponları</title><style>{CSS}{RP_CSS}{CK_CSS}</style></head><body>"
+            "<header><div style='display:flex;justify-content:space-between;align-items:center'><h1>Claude'un Kuponları</h1>"
+            "<a href='index.html' style='color:var(--ac);text-decoration:none;font-weight:600'>← Günün maçları</a></div>"
+            "<p class='note'>Senin isteğinle modelin verisinden kurduğum kuponlar, tarih bazlı. Her maç tek bir kupona girer; "
+            "kuponlar kısa tutulur. Sonuçlar botun her çalışmasında kendiliğinden işlenir. Model ihtimali tahmindir, kâr garantisi vermez. "
+            f"Güncelleme: {now.astimezone(TR):%d.%m.%Y %H:%M}</p></header>"
+            f"<div style='padding:0 12px 24px'>{head}{body or '<p class=empty>Henüz kupon yok.</p>'}</div></body></html>")
+    with open("claude.html", "w", encoding="utf-8") as f:
+        f.write(page)
+
+
+CK_CSS = """
+.cd{border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin:8px 0;background:var(--card)}
+.cd>summary{cursor:pointer;font-size:15px}
+.ck2{border-top:1px solid var(--bd);padding:10px 0}
+.ckh{display:flex;justify-content:space-between;gap:8px;font-size:15px}
+.lg2{border-left:3px solid var(--ac);background:var(--lo);border-radius:0 8px 8px 0;padding:6px 10px;margin:6px 0;font-size:13.5px}
+.tx{font-size:13.5px;line-height:1.5;margin:6px 0}
 """
 
 

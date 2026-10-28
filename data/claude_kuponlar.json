@@ -1,0 +1,288 @@
+{
+ "kuponlar": [
+  {
+   "id": "c202610280",
+   "d": "2026-10-28",
+   "t": "2026-10-28T06:10:09.061630+00:00",
+   "title": "Kupon 1 · Günün en sağlamı",
+   "why": "Inter'in Venezia deplasmanı, modelin ve piyasanın aynı yerde olduğu (%70 / %69) en net taraf tercihi. Celtic evinde maç başı 2.4 gol bekleniyor; Ev 1.5 Üst kriterlerde Orta, piyasa da Celtic'i %75 favori görüyor.",
+   "legs": [
+    {
+     "m": "401874773",
+     "ad": "Venezia - Inter Milan",
+     "lg": "İtalya Serie A",
+     "k": "2026-10-28T17:30:00+00:00",
+     "b": "ms2",
+     "bl": "MS 2",
+     "p": 0.6986,
+     "tier": 2,
+     "mk": 0.6904,
+     "why": [
+      "Model: %70 (lig ortalaması %36)",
+      "Venezia son maçları: 8 maçta 7 kaybetti (%88)",
+      "Inter Milan son maçları: 8 maçta 7 kazandı (%88)",
+      "Venezia: 20. sıra (düşme hattında) · form eğrisi ▆▅▅▁█▁▆▆ dengeli",
+      "Inter Milan: 2. sıra (zirve yarışında) · form eğrisi ▄▆▂▆▁▆██ dengeli"
+     ]
+    },
+    {
+     "m": "401878355",
+     "ad": "Celtic - Dundee Utd",
+     "lg": "İskoçya 1. Lig",
+     "k": "2026-10-28T19:45:00+00:00",
+     "b": "tev15",
+     "bl": "Ev 1.5 Üst",
+     "p": 0.6809,
+     "tier": 1,
+     "mk": null,
+     "why": [
+      "Model: %68 (lig ortalaması %38)",
+      "Celtic son maçları: 2+ gol attığı maç 7/10 (%70)",
+      "Celtic evdeki son maçları: 2+ gol attığı maç 3/5 (%60)",
+      "Celtic: 1. sıra (zirve yarışında) · form eğrisi ▅▇▄▅▁█▇▄ dengeli",
+      "Dundee Utd: 4. sıra (üst sıralarda) · form eğrisi ▃▇▁▆█▅▅▅ yükselişte"
+     ]
+    }
+   ],
+   "p": 0.4757
+  },
+  {
+   "id": "c202610281",
+   "d": "2026-10-28",
+   "t": "2026-10-28T06:10:09.061630+00:00",
+   "title": "Kupon 2 · MLS 2.5 Üst",
+   "why": "MLS bu sezon golcü bir lig. Minnesota–Kansas City (beklenen 4.0 gol) ve Miami–Cincinnati (4.0) 2.5 Üst'te Güçlü; bu seviyede 2.5 Üst geçmişte ~%70 tuttu.",
+   "legs": [
+    {
+     "m": "761913",
+     "ad": "Minnesota - Kansas City",
+     "lg": "ABD MLS",
+     "k": "2026-10-29T00:30:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "p": 0.7631,
+     "tier": 2,
+     "mk": null,
+     "why": [
+      "Model: %76 (lig ortalaması %64)",
+      "Minnesota son maçları: 9/10 (%90)",
+      "Kansas City son maçları: 9/10 (%90)",
+      "Minnesota: 25. sıra (orta sıralarda) · form eğrisi ▁▂▂▁▄▅██ yükselişte",
+      "Kansas City: 30. sıra (düşme hattında) · form eğrisi █▅██▅▁▂▂ düşüşte"
+     ]
+    },
+    {
+     "m": "761908",
+     "ad": "Miami - Cincinnati",
+     "lg": "ABD MLS",
+     "k": "2026-10-28T23:30:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "p": 0.7509,
+     "tier": 2,
+     "mk": null,
+     "why": [
+      "Model: %75 (lig ortalaması %64)",
+      "Cincinnati son maçları: 8/10 (%80)",
+      "Miami evdeki son maçları: 4/5 (%80)",
+      "Miami: 3. sıra (zirve yarışında) · form eğrisi ▇▅▄▂█▅▇▁ dengeli",
+      "Cincinnati: 15. sıra (orta sıralarda) · form eğrisi ▅█▁▆▄▄▄▇ dengeli"
+     ]
+    }
+   ],
+   "p": 0.573
+  },
+  {
+   "id": "c202610282",
+   "d": "2026-10-28",
+   "t": "2026-10-28T06:10:09.061630+00:00",
+   "title": "Kupon 3 · İlk yarıda ev sahibi golü",
+   "why": "St. Louis ve Vancouver evlerinde ilk yarıda gol atma eğilimli; ikisi de Ev İY 0.5 Üst'te Güçlü. Oranı düşük olmayan, ilk yarıda biten hızlı bir kupon.",
+   "legs": [
+    {
+     "m": "761915",
+     "ad": "St. Louis - Portland",
+     "lg": "ABD MLS",
+     "k": "2026-10-29T00:30:00+00:00",
+     "b": "tiev05",
+     "bl": "Ev İY 0.5 Üst",
+     "p": 0.7121,
+     "tier": 2,
+     "mk": null,
+     "why": [
+      "Model: %71 (lig ortalaması %55)",
+      "St. Louis son maçları: ilk yarıda gol attığı maç 8/10 (%80)",
+      "Portland son maçları: ilk yarıda gol yediği maç 9/10 (%90)",
+      "St. Louis: 6. sıra (üst sıralarda) · form eğrisi ▅▇▇█▆▆▂▁ düşüşte",
+      "Portland: 21. sıra (orta sıralarda) · form eğrisi ▃▃▁▁▃▁▄█ yükselişte"
+     ]
+    },
+    {
+     "m": "761918",
+     "ad": "Vancouver - San Diego",
+     "lg": "ABD MLS",
+     "k": "2026-10-29T02:30:00+00:00",
+     "b": "tiev05",
+     "bl": "Ev İY 0.5 Üst",
+     "p": 0.6642,
+     "tier": 2,
+     "mk": null,
+     "why": [
+      "Model: %66 (lig ortalaması %55)",
+      "San Diego son maçları: ilk yarıda gol yediği maç 7/10 (%70)",
+      "Vancouver evdeki son maçları: ilk yarıda gol attığı maç 4/5 (%80)",
+      "Vancouver: 2. sıra (zirve yarışında) · form eğrisi ▃█▂▁▄▂▃▁ düşüşte",
+      "San Diego: 24. sıra (orta sıralarda) · form eğrisi ▅▃█▇▁█▆█ düşüşte"
+     ]
+    }
+   ],
+   "p": 0.473
+  },
+  {
+   "id": "c202610283",
+   "d": "2026-10-28",
+   "t": "2026-10-28T06:10:09.061630+00:00",
+   "title": "Kupon 4 · KG Var + 2.5 Üst",
+   "why": "Chicago–Orlando'da iki takım da golcü (beklenen 2.3 - 1.6 gol). Charlotte–Montréal'de 2.5 Üst modelde %66 (bu maç için ESPN'de 2.5 çizgisi yok, piyasa kıyası yapılamadı).",
+   "legs": [
+    {
+     "m": "761911",
+     "ad": "Chicago - Orlando",
+     "lg": "ABD MLS",
+     "k": "2026-10-29T00:30:00+00:00",
+     "b": "kgv",
+     "bl": "KG Var",
+     "p": 0.7182,
+     "tier": 1,
+     "mk": null,
+     "why": [
+      "Model: %72 (lig ortalaması %64)",
+      "Orlando son maçları: 8/10 (%80)",
+      "Chicago evdeki son maçları: 5/5 (%100)",
+      "Chicago: 7. sıra (üst sıralarda) · form eğrisi ▅▂██▃▁▅▆ düşüşte",
+      "Orlando: 16. sıra (orta sıralarda) · form eğrisi ██▁▁▁▃▇▂ dengeli"
+     ]
+    },
+    {
+     "m": "761907",
+     "ad": "Charlotte - CF Montréal",
+     "lg": "ABD MLS",
+     "k": "2026-10-28T23:30:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "p": 0.6569,
+     "tier": 1,
+     "mk": null,
+     "why": [
+      "Şutlara göre beklenen toplam gol 3.7 (lig 3.3)",
+      "Charlotte: 11. sıra (orta sıralarda) · form eğrisi ▇▅▆▃█▁█▂ düşüşte",
+      "CF Montréal: 29. sıra (orta sıralarda) · form eğrisi ▅▅▄█▇▁▆▆ düşüşte"
+     ]
+    }
+   ],
+   "p": 0.4718
+  },
+  {
+   "id": "c202610284",
+   "d": "2026-10-28",
+   "t": "2026-10-28T06:10:09.061630+00:00",
+   "title": "Kupon 5 · Az gollü maçlar (2.5 Alt)",
+   "why": "Genoa–Juventus'ta beklenen gol 2.3; model ve piyasa 2.5 Alt'ta aynı yerde (%59 / %60). Carrarese–Arezzo Serie B'nin az gollü maçlarından. Riskli tarafı: iki bacak da %59.",
+   "legs": [
+    {
+     "m": "401874988",
+     "ad": "Genoa - Juventus",
+     "lg": "İtalya Serie A",
+     "k": "2026-10-28T19:45:00+00:00",
+     "b": "u25",
+     "bl": "2.5 Alt",
+     "p": 0.5917,
+     "tier": 1,
+     "mk": 0.5993,
+     "why": [
+      "Model: %59 (lig ortalaması %40)",
+      "Genoa son maçları: 5/8 (%62)",
+      "Juventus son maçları: 6/8 (%75)",
+      "Genoa: 16. sıra (orta sıralarda) · form eğrisi ▅▇▁▇▇█▄▆ dengeli",
+      "Juventus: 7. sıra (orta sıralarda) · form eğrisi ▇▇▇▃██▁▅ dengeli"
+     ]
+    },
+    {
+     "m": "401899577",
+     "ad": "Carrarese - Arezzo",
+     "lg": "İtalya Serie B",
+     "k": "2026-10-28T19:00:00+00:00",
+     "b": "u25",
+     "bl": "2.5 Alt",
+     "p": 0.5897,
+     "tier": 1,
+     "mk": 0.5346,
+     "why": [
+      "Model: %59 (lig ortalaması %48)",
+      "Carrarese son maçları: 5/8 (%62)",
+      "Şutlara göre beklenen toplam gol 2.4 (lig 2.8)",
+      "Carrarese: 17. sıra (orta sıralarda) · form eğrisi ▂▃▆▁▅█▇▂ dengeli",
+      "Arezzo: 13. sıra (orta sıralarda) · form eğrisi █▇▁█▄██▅ dengeli"
+     ]
+    }
+   ],
+   "p": 0.3489
+  },
+  {
+   "id": "c202610285",
+   "d": "2026-10-28",
+   "t": "2026-10-28T06:10:09.061630+00:00",
+   "title": "Tek maç · Napoli ilk yarıda gol atar",
+   "why": "Napoli'nin Monza deplasmanında ilk yarı golü Güçlü (%61). Monza–Napoli'de model 2.5 Üst'e piyasadan 11 puan fazla veriyor; o yüzden maç sonu yerine ilk yarı takım golünü seçtim.",
+   "legs": [
+    {
+     "m": "401874799",
+     "ad": "Monza - Napoli",
+     "lg": "İtalya Serie A",
+     "k": "2026-10-28T19:45:00+00:00",
+     "b": "tidp05",
+     "bl": "Dep İY 0.5 Üst",
+     "p": 0.6115,
+     "tier": 2,
+     "mk": null,
+     "why": [
+      "Model: %61 (lig ortalaması %39)",
+      "Monza son maçları: ilk yarıda gol yediği maç 5/8 (%62)",
+      "Napoli son maçları: ilk yarıda gol attığı maç 4/8 (%50)",
+      "Monza: 15. sıra (orta sıralarda) · form eğrisi ▃▁▅█▃▃█▁ dengeli",
+      "Napoli: 10. sıra (orta sıralarda) · form eğrisi ▅▁▃▄▂█▃▆ yükselişte"
+     ]
+    }
+   ],
+   "p": 0.6115
+  },
+  {
+   "id": "c202610286",
+   "d": "2026-10-28",
+   "t": "2026-10-28T06:10:09.061630+00:00",
+   "title": "Tek maç · Yüksek oran: Pisa–Palermo 3.5 Üst",
+   "why": "Serie B'nin en golcü eşleşmelerinden; 3.5 Üst Güçlü (%40, ligde ortalama %34). Tutma ihtimali düşük ama oranı yüksek olur; küçük tutarla oynanacak tipte.",
+   "legs": [
+    {
+     "m": "401899571",
+     "ad": "Pisa - Palermo",
+     "lg": "İtalya Serie B",
+     "k": "2026-10-28T18:00:00+00:00",
+     "b": "o35",
+     "bl": "3.5 Üst",
+     "p": 0.403,
+     "tier": 2,
+     "mk": null,
+     "why": [
+      "Model: %40 (lig ortalaması %24)",
+      "Pisa son maçları: 3/8 (%38)",
+      "Palermo son maçları: 3/8 (%38)",
+      "Pisa: 6. sıra (orta sıralarda) · form eğrisi ▃▁▆▁▃█▃▂ dengeli",
+      "Palermo: 1. sıra (zirve yarışında) · form eğrisi ▄▃▄▁▃█▅▅ yükselişte"
+     ]
+    }
+   ],
+   "p": 0.403
+  }
+ ]
+}
