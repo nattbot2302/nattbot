@@ -361,6 +361,8 @@ function legText(l, a){
   if(a.p!=null) t += l.bl+' için tutma ihtimali '+pc(a.p)+'. ';
   if(a.rp) t += 'Kontrol listesinde '+a.rp.ok+'/'+a.rp.n+' kriter tutuyor ('+TIER[a.rp.t]+'). ';
   if(a.hist) t += 'Bu seviyedeki '+l.bl+' önerileri geçmişte '+pc(a.hist[0])+' tuttu ('+a.hist[1]+' maç; tüm maçlarda '+pc(a.hist[2])+'). ';
+  const mk = s.mk && RAPOR_OF[l.b] ? s.mk[RAPOR_OF[l.b]] : null;
+  if(mk!=null) t += 'Piyasa (ESPN oranı) bu bahse '+pc(mk)+' veriyor'+(a.p!=null?(Math.abs(a.p-mk)>=0.10?'; model ile arasında '+Math.round((a.p-mk)*100)+' puan fark var, dikkat.':'.'):'.')+' ';
   if(a.imp!=null) t += 'Girdiğin '+(+l.o).toFixed(2)+' oranı bu bahse '+pc(a.imp)+' ihtimal biçiyor'+(a.p!=null?(a.p<a.imp-0.05?'; model daha az emin.':(a.p>a.imp+0.05?'; model daha emin.':'; model de aynı yerde.')):'.')+' ';
   if(s.low) t += 'Takımlardan birinin geçmiş verisi az, tahmin daha belirsiz. ';
   return t;
