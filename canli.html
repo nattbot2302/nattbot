@@ -453,6 +453,13 @@ function livePicks(m, L, o){
     if(ok3(tr)) c.push(ck(nm[tr]+' tepkisi', TM[tr].win+TM[tr].draw<=0.3, TM[tr].lab+' '+(iy?'devreyi geride kapatmama':'puan alma')+' oranı '+P(TM[tr].win+TM[tr].draw)));
     out.push({t:(iy?'İY ':'MS ')+(d>0?'1':'2'), sub:nm[ld]+(iy?' devreyi önde kapatır':' kazanır'), p, c});
   }
+  if(!iy && tr!=null && Math.abs(d)===1 && t>=45 && t<=70 && m.pre){ // geri dönüş (2/1, 1/2) — 7.905 maçlık geçmiş
+    const pw = tr===0 ? m.pre.p1 : m.pre.p2;
+    const B = [[0.3,0.064,0.26],[0.4,0.122,0.36],[0.5,0.144,0.40],[9,0.178,0.48]];
+    const b = B.find(x=>pw<x[0]);
+    const c = [ck('Geçmiş veri', b[1]>=0.14, 'maç önü kazanma ihtimali '+P(pw)+' olan ve 1 farkla geride kalan takımlar geçmişte %'+(b[1]*100).toFixed(0)+' maçı çevirdi, %'+(b[2]*100).toFixed(0)+' puan aldı · adil oran '+(1/b[1]).toFixed(1)+'; canlı oran bunun üstündeyse değer var')];
+    out.push({t:'MS '+(tr===0?'1':'2')+' (geri dönüş)', sub:nm[tr]+' maçı çevirir (bilgi: '+(tr===0?'2/1':'1/2')+')', p:b[1], c, info:true});
+  }
   if(d===0 && iy && t>=25){ // ilk yarı berabere biter
     const c = [ck('Model', o.px>=0.65, 'devrenin berabere bitme ihtimali '+P(o.px))];
     if(S && S.keepDraw!=null) c.push(ck('Ligde benzer maçlar', S.keepDraw>=0.65, S.n+' maçta devrenin berabere bitme oranı '+P(S.keepDraw)));

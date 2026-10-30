@@ -1,0 +1,94 @@
+{
+ "g": {
+  "2026-10-30": [
+   {
+    "m": "401850680",
+    "ad": "Coquimbo - Unión La Calera",
+    "lg": "Şili 1. Lig",
+    "k": "2026-10-30T22:00:00+00:00",
+    "b": "im21",
+    "bl": "İY/MS 2/1",
+    "p": 0.032,
+    "exp": 0.032,
+    "why": "Coquimbo maç önü %53 favori; geçmişte bu aralıkta İY/MS 2/1 oranı %3.2 (adil oran ~31). Sadece iddaa oranı 31+ ise mantıklı."
+   },
+   {
+    "m": "401878044",
+    "ad": "Bucaramanga - Pasto",
+    "lg": "Kolombiya 1. Lig",
+    "k": "2026-10-31T01:05:00+00:00",
+    "b": "im21",
+    "bl": "İY/MS 2/1",
+    "p": 0.032,
+    "exp": 0.032,
+    "why": "Bucaramanga maç önü %53 favori; geçmişte bu aralıkta İY/MS 2/1 oranı %3.2 (adil oran ~31). Sadece iddaa oranı 31+ ise mantıklı."
+   },
+   {
+    "m": "401841647",
+    "ad": "Sarmiento (J) - Rosario Central",
+    "lg": "Arjantin 1. Lig",
+    "k": "2026-10-31T00:15:00+00:00",
+    "b": "im12",
+    "bl": "İY/MS 1/2",
+    "p": 0.0363,
+    "exp": 0.036,
+    "why": "Rosario Central maç önü %46 favori; geçmişte bu aralıkta İY/MS 1/2 oranı %3.6 (adil oran ~28). Sadece iddaa oranı 28+ ise mantıklı."
+   },
+   {
+    "m": "401876918",
+    "ad": "Juárez - Queretaro",
+    "lg": "Meksika Liga MX",
+    "k": "2026-10-31T01:00:00+00:00",
+    "b": "im12",
+    "bl": "İY/MS 1/2",
+    "p": 0.036,
+    "exp": 0.036,
+    "why": "Queretaro maç önü %44 favori; geçmişte bu aralıkta İY/MS 1/2 oranı %3.6 (adil oran ~28). Sadece iddaa oranı 28+ ise mantıklı."
+   },
+   {
+    "m": "401841655",
+    "ad": "Estudiantes RC - Gimnasia LP",
+    "lg": "Arjantin 1. Lig",
+    "k": "2026-10-30T22:00:00+00:00",
+    "b": "im12",
+    "bl": "İY/MS 1/2",
+    "p": 0.036,
+    "exp": 0.036,
+    "why": "Gimnasia LP maç önü %44 favori; geçmişte bu aralıkta İY/MS 1/2 oranı %3.6 (adil oran ~28). Sadece iddaa oranı 28+ ise mantıklı."
+   },
+   {
+    "m": "401860414",
+    "ad": "Criciúma - Ponte Preta",
+    "lg": "Brezilya Serie B",
+    "k": "2026-10-30T22:30:00+00:00",
+    "b": "sk1-0",
+    "bl": "Skor 1-0",
+    "p": 0.1698,
+    "exp": 0.1698,
+    "why": "Modelin bu maç için en olası skoru (%17, adil oran 5.9)."
+   },
+   {
+    "m": "401888573",
+    "ad": "Guaraní - 2 de Mayo",
+    "lg": "Paraguay 1. Lig",
+    "k": "2026-10-30T22:30:00+00:00",
+    "b": "sk1-0",
+    "bl": "Skor 1-0",
+    "p": 0.1545,
+    "exp": 0.1545,
+    "why": "Modelin bu maç için en olası skoru (%15, adil oran 6.5)."
+   },
+   {
+    "m": "401888572",
+    "ad": "Trinidense - Rubio Ñú",
+    "lg": "Paraguay 1. Lig",
+    "k": "2026-10-30T22:30:00+00:00",
+    "b": "iys1-0",
+    "bl": "İY skoru 1-0",
+    "p": 0.2453,
+    "exp": 0.2453,
+    "why": "0-0 dışında en olası ilk yarı skoru (%25, adil oran 4.1)."
+   }
+  ]
+ }
+}
