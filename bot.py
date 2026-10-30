@@ -5999,6 +5999,13 @@ def write_claude_page(results, now):
             body += (f"<div class='ck2'><div class='ckh'><b>{E(k['title'])}{sp}</b><span>{st}</span></div>"
                      f"<div class='note'>Model: birlikte tutma ihtimali <b>%{k['p'] * 100:.0f}</b> (yaklaşık "
                      f"{max(1, round(1 / k['p']))} kuponda 1)</div><p class='tx'>{E(k.get('why', ''))}</p>")
+            if k.get("analiz"):
+                an_ = k["analiz"]
+                body += ("<details class='rp' open><summary><b>Analizim</b></summary><ul class='ck'>"
+                         + "".join(f"<li class='y'>{E(x)}</li>" for x in an_.get("arti", []))
+                         + "".join(f"<li class='n'>{E(x)}</li>" for x in an_.get("risk", []))
+                         + "</ul>" + (f"<p class='tx'><b>Karar:</b> {E(an_['karar'])}</p>" if an_.get("karar") else "")
+                         + "</details>")
             for l in k["legs"]:
                 s_ = l.get("_s")
                 res = ""
