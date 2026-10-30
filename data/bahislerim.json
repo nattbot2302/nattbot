@@ -801,6 +801,61 @@
      "mp": 0.5681
     }
    ]
+  },
+  {
+   "id": "k1793380903000",
+   "t": "2026-10-30T16:21:43.000Z",
+   "tutar": 280,
+   "legs": [
+    {
+     "m": "401876416",
+     "ad": "Nice - Rennes",
+     "lg": "Fransa Ligue 1",
+     "k": "2026-10-30T18:00:00+00:00",
+     "b": "iyo15",
+     "bl": "İY 1.5 Üst",
+     "o": 2.09,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.4665
+    },
+    {
+     "m": "401875869",
+     "ad": "Roda JC - Jong AZ",
+     "lg": "Hollanda 2. Lig",
+     "k": "2026-10-30T19:00:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.25,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.7365
+    },
+    {
+     "m": "401875872",
+     "ad": "Helmond Spor - FC Eindhoven",
+     "lg": "Hollanda 2. Lig",
+     "k": "2026-10-30T19:00:00+00:00",
+     "b": "o25",
+     "bl": "2.5 Üst",
+     "o": 1.38,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.7104
+    },
+    {
+     "m": "401884746",
+     "ad": "Elversberg - Mainz",
+     "lg": "Almanya Bundesliga",
+     "k": "2026-10-30T19:30:00+00:00",
+     "b": "iyo15",
+     "bl": "İY 1.5 Üst",
+     "o": 2.04,
+     "canli": false,
+     "sonuc": null,
+     "mp": 0.5159
+    }
+   ]
   }
  ]
 }
