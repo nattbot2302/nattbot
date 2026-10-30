@@ -5997,8 +5997,8 @@ def write_claude_page(results, now):
             st = {"tuttu": "<b class='pos'>Tuttu</b>", "yatti": "<b class='neg'>Yattı</b>"}.get(k["_st"], "Bekliyor")
             sp = " <span class='tier t0' style='background:#7c3aed'>SÜRPRİZ</span>" if k.get("tip") == "surpriz" else ""
             body += (f"<div class='ck2'><div class='ckh'><b>{E(k['title'])}{sp}</b><span>{st}</span></div>"
-                     f"<div class='note'>Model: birlikte tutma ihtimali <b>%{k['p'] * 100:.0f}</b> (yaklaşık "
-                     f"{max(1, round(1 / k['p']))} kuponda 1)</div><p class='tx'>{E(k.get('why', ''))}</p>")
+                     f"<div class='note'>Model: birlikte tutma ihtimali <b>%{k['p'] * 100:.0f}</b> · adil toplam oran <b>{1 / k['p']:.2f}</b> "
+                     f"(yaklaşık {max(1, round(1 / k['p']))} kuponda 1)</div><p class='tx'>{E(k.get('why', ''))}</p>")
             if k.get("analiz"):
                 an_ = k["analiz"]
                 body += ("<details class='rp' open><summary><b>Analizim</b></summary><ul class='ck'>"
@@ -6020,8 +6020,8 @@ def write_claude_page(results, now):
                             f"{TIER_NAME.get(l.get('t_now', 0), '')}</b>")
                 role = f"<div class='note'>{E(l['rol'])}</div>" if l.get("rol") else ""
                 body += (f"<div class='lg2'><div><b>{E(l['ad'])}</b> · {E(l['bl'])}{res}</div>"
-                         f"<div class='note'>{when:%d.%m %H:%M} · {E(l['lg'])} · kurulduğunda model %{l['p'] * 100:.0f} · "
-                         f"{TIER_NAME.get(l.get('tier', 0), '')}{mk}{now_}</div>{role}"
+                         f"<div class='note'>{when:%d.%m %H:%M} · {E(l['lg'])} · kurulduğunda model %{l['p'] * 100:.0f}"
+                         f"{' · ' + TIER_NAME.get(l['tier'], '') if l.get('tier') is not None else ''} · adil oran {1 / l['p']:.2f}{mk}{now_}</div>{role}"
                          + ("<ul class='ck'>" + "".join(f"<li class='{'i' if 'form eğrisi' in x else 'y'}'>{E(x)}</li>" for x in l.get("why", [])) + "</ul>" if l.get("why") else "")
                          + "</div>")
             body += "</div>"

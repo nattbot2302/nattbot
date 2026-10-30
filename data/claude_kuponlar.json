@@ -323,23 +323,23 @@
   {
    "id": "c202610310",
    "d": "2026-10-31",
-   "t": "2026-10-30T16:33:49.387054+00:00",
-   "title": "Kupon 1 · Ev sahibinin golleri",
+   "t": "2026-10-30T16:45:07.066076+00:00",
+   "title": "Kupon 1 · Al Hilal İY/MS + PSV farkı",
    "tip": "normal",
-   "p": 0.6306,
-   "why": "Al Hilal ve PSV, ligin dibindeki rakiplerini evinde ağırlıyor. İki maçta da model ev sahibinin en az 2 gol atmasını %79-80 görüyor, 8 kriterin 8'i sağlanıyor.",
+   "p": 0.327,
+   "why": "Düşük oranlı 'Ev 1.5 Üst' yerine aynı senaryonun daha değerli hâlleri: Al Hilal'in iki yarıyı da önde bitirmesi (İY/MS 1/1) ve PSV'nin 3+ gollü maçta kazanması.",
    "analiz": {
     "arti": [
-     "İki maçta da 8 kriterin 8'i sağlanıyor; piyasa da ev sahiplerini %86-88 favori görüyor, model ile piyasa aynı yerde.",
-     "Willem II son 5 maçını kaybetti, son 10 maçta maç başı 3.2 gol yedi; deplasmanda son 5 maçın 4'ünde 2+ gol yedi.",
-     "Al Fateh düşme hattında, son 10 maçta maç başı 2 gol yiyor; Al Hilal son 10 maçta maç başı 3 gol attı."
+     "İki maçta da Ev 1.5 Üst için 8 kriterin 8'i sağlanıyor; aynı güç farkını daha yüksek oranlı bahse çevirdim.",
+     "İY/MS 1/1, geçmiş testte modelin en iyi bildiği sürpriz pazar: en güvendiği %3'lük dilimde tahmin %51, gerçekleşen %52.",
+     "MS 1 ve 2.5 Üst de geçmişte isabetli çıktı: modelin en yüksek gördüğü maçlarda tahmin %56, gerçek %56."
     ],
     "risk": [
-     "PSV'nin form eğrisi düşüşte (son 5: B-M-G-M-G); sakatlıklar yüzünden rotasyon olabilir.",
-     "Al Hilal şutlarına göre 'şanslı' gidiyor: attığı gol, yarattığı pozisyondan biraz fazla.",
-     "Ev 1.5 Üst'ün bu seviyedeki geçmiş isabeti %60 (81 maç); model ihtimali bunun üstünde, yani model biraz iyimser olabilir."
+     "Al Hilal ilk yarıda gol bulamazsa 1/1 yanar; ilk yarı golü olmayan galibiyet sık görülür.",
+     "PSV'nin formu düşüşte, sakatlıklarla rotasyon yapabilir; 2-0 biterse MS 1 ve 2.5 Üst tutmaz.",
+     "Oranlar 'adil oran' (1/olasılık); iddaa oranları kâr payı yüzünden biraz daha düşük olur."
     ],
-    "karar": "Günün en sağlam kuponu. İki maç da aynı senaryoya dayanıyor: güçlü ev sahibi, savunması çöken deplasman."
+    "karar": "Adil oran yaklaşık 3. Normal tutar."
    },
    "legs": [
     {
@@ -347,66 +347,57 @@
      "ad": "Al Hilal - Al Fateh",
      "lg": "Suudi Arabistan Pro Lig",
      "k": "2026-10-31T18:00:00+00:00",
-     "b": "tev15",
-     "bl": "Ev 1.5 Üst",
-     "p": 0.8018,
-     "tier": 2,
+     "b": "im11",
+     "bl": "İY/MS 1/1",
+     "p": 0.5543,
+     "tier": null,
+     "rol": "Gol Raporu'nda bu bahis türü yok; maçın gol beklentilerinden hesaplandı",
      "why": [
-      "Model: %80 · Gol Raporu'nda günün önerisi (Güçlü, 8/8 kriter)",
-      "Bu bahis bu seviyede geçmişte 81 maçta %60 tuttu (tüm maçlarda %46)",
-      "Al Hilal son maçları: 2+ gol attığı maç 8/10 (%80)",
-      "Al Fateh son maçları: 2+ gol yediği maç 6/10 (%60)",
-      "Al Hilal evdeki son maçları: 2+ gol attığı maç 3/5 (%60)",
+      "Model: %55 (ham Poisson %54; geçmiş 2.509 maçta bu bahiste modelin ne kadar iyimser olduğu ölçülüp düzeltildi) · adil oran 1.80",
+      "Al Hilal son 10 maçta maç başı 3 gol attı; piyasa Al Hilal'i %86 favori görüyor",
       "Al Hilal: 3. sıra (zirve yarışında) · son 5: GGGGM · son 10 maçta maç başı 3.0 attı, 0.9 yedi · şutlarına göre şanslı gidiyor · form eğrisi ▆█▅▁█▄▂▅ dengeli",
       "Al Fateh: 16. sıra (düşme hattında) · son 5: MMGMM · son 10 maçta maç başı 1.0 attı, 2.0 yedi · şutlarına göre şanssız gidiyor · form eğrisi █▆▄▅▁█▅▂ düşüşte"
-     ],
-     "rol": "Gol Raporu'nda günün önerisi",
-     "p_now": 0.8018,
-     "t_now": 2
+     ]
     },
     {
      "m": "401875564",
      "ad": "PSV - Willem II",
      "lg": "Hollanda Eredivisie",
      "k": "2026-10-31T17:45:00+00:00",
-     "b": "tev15",
-     "bl": "Ev 1.5 Üst",
-     "p": 0.7865,
-     "tier": 2,
+     "b": "ms1+o25",
+     "bl": "MS 1 ve 2.5 Üst",
+     "p": 0.5899,
+     "tier": null,
+     "rol": "Gol Raporu'nda bu bahis türü yok; maçın gol beklentilerinden hesaplandı",
      "why": [
-      "Model: %79 · Gol Raporu'nda 2. öneri (Güçlü, 8/8 kriter)",
-      "Bu bahis bu seviyede geçmişte 81 maçta %60 tuttu (tüm maçlarda %46)",
-      "PSV son maçları: 2+ gol attığı maç 8/10 (%80)",
-      "Willem II son maçları: 2+ gol yediği maç 8/10 (%80)",
-      "PSV evdeki son maçları: 2+ gol attığı maç 4/5 (%80)",
+      "Model: %59 (ham Poisson %59; geçmiş 2.509 maçta bu bahiste modelin ne kadar iyimser olduğu ölçülüp düzeltildi) · adil oran 1.70",
+      "PSV evinde maç başı 2.8 gol atıyor, Willem II son 10 maçta maç başı 3.2 gol yedi; piyasa PSV'yi %88 favori görüyor",
       "PSV: 3. sıra (zirve yarışında) · son 5: BMGMG · son 10 maçta maç başı 2.8 attı, 1.3 yedi · form eğrisi ▇█▃▅▂▃▁▃ düşüşte",
       "Willem II: 18. sıra (düşme hattında) · son 5: MMMMM · son 10 maçta maç başı 1.0 attı, 3.2 yedi · form eğrisi █▃▆▂▇▃▄▁ dengeli"
-     ],
-     "rol": "Gol Raporu'nda 2. öneri",
-     "p_now": 0.7865,
-     "t_now": 2
+     ]
     }
    ]
   },
   {
    "id": "c202610311",
    "d": "2026-10-31",
-   "t": "2026-10-30T16:33:49.387054+00:00",
-   "title": "Kupon 2 · Bremen golü + Barcelona",
+   "t": "2026-10-30T16:45:07.066076+00:00",
+   "title": "Kupon 2 · İki gollü maç: KG Var ve 2.5 Üst",
    "tip": "normal",
-   "p": 0.6053,
-   "why": "Bremen-Hoffenheim günün en yüksek 2.5 Üst ihtimali (%82). Barcelona son 10 maçta maç başı 4 gol attı; evinde Alavés karşısında en az 2 gol atması %74.",
+   "p": 0.3407,
+   "why": "Bremen-Hoffenheim ve St. Louis-San Diego'da hem karşılıklı gol hem 3+ gol: iki maçta da iki takım bol atıp bol yiyor.",
    "analiz": {
     "arti": [
-     "Bremen son 7 maçının 6'sında, Hoffenheim 7'sinin 7'sinde 2.5 Üst oldu; iki takım da son 10 maçta maç başı 2 gol atıp 2 gol yiyor.",
-     "Bundesliga'da 2.5 Üst zaten %71 tutuyor; model bu maçı ligin de üstünde görüyor.",
-     "Barcelona ligde zirvede, evdeki son 5 maçın 4'ünde 2+ gol attı; piyasa Barcelona'yı %86 favori görüyor."
+     "İki maçta da beklenen toplam gol 4'ün üstünde (ligler 3.3-3.6).",
+     "Tek başına 2.5 Üst (adil oran 1.2-1.3) yerine KG Var ile birleştirince oran 1.65-1.80'e çıkıyor; iki takım da düzenli gol atıyor.",
+     "KG ve 2.5 Üst'te model iyimser çıktı (en üst dilimde %70 dedi, %61 oldu); bu düzeltme ihtimallere işlendi."
     ],
     "risk": [
-     "Bremen-Hoffenheim'da 'benzer 60 maç' (%73) ve şut verisi lig ortalamasını geçmiyor; yüksek ihtimalin büyük kısmı ligin gollü yapısından geliyor.",
-     "Alavés son 10 maçta sadece 1.1 gol yedi; kapanırsa Barcelona'nın 2. golü geç gelebilir. Barcelona da şutlarına göre şanslı gidiyor."
+     "Bremen-Hoffenheim'da 'benzer maçlar' ve şut verisi lig ortalamasını geçmiyor.",
+     "St. Louis ve San Diego 2 gün önce oynadı; MLS'de sezonun son haftası, rotasyon olabilir.",
+     "Bir takım gol atamazsa 4-0 bile kuponu yakar."
     ],
-    "karar": "Sağlam. İlk kurduğum hâlde Charlotte-Orlando vardı; o maçı daha yüksek oranlı 3.5 Üst olarak sürpriz kupona taşıdım."
+    "karar": "Adil oran yaklaşık 3. Normal tutar."
    },
    "legs": [
     {
@@ -414,92 +405,57 @@
      "ad": "Bremen - Hoffenheim",
      "lg": "Almanya Bundesliga",
      "k": "2026-10-31T14:30:00+00:00",
-     "b": "o25",
-     "bl": "2.5 Üst",
-     "p": 0.8166,
-     "tier": 2,
+     "b": "kgv+o25",
+     "bl": "KG Var ve 2.5 Üst",
+     "p": 0.6043,
+     "tier": null,
+     "rol": "Gol Raporu'nda bu bahis türü yok; maçın gol beklentilerinden hesaplandı",
      "why": [
-      "Model: %82 · Gol Raporu'nda 2. öneri (Güçlü, 4/6 kriter)",
-      "Bu bahis bu seviyede geçmişte 306 maçta %70 tuttu (tüm maçlarda %54)",
-      "Bremen son maçları: 6/7 (%86)",
-      "Hoffenheim son maçları: 7/7 (%100)",
-      "Son maçlara göre beklenen toplam gol 4.1 (lig 3.6)",
+      "Model: %60 (ham Poisson %69; geçmiş 2.509 maçta bu bahiste modelin ne kadar iyimser olduğu ölçülüp düzeltildi) · adil oran 1.65",
+      "Bremen son 7 maçın 6'sında, Hoffenheim 7'sinin 7'sinde 2.5 Üst oldu",
       "Bremen: 6. sıra (orta sıralarda) · son 5: GBBGB · son 10 maçta maç başı 2.1 attı, 2.0 yedi · form eğrisi ▁▆▄▅▅▃█ dengeli",
       "Hoffenheim: 10. sıra (orta sıralarda) · son 5: GGMMG · son 10 maçta maç başı 2.0 attı, 2.0 yedi · form eğrisi ▃▃▅▂▁▇█ dengeli"
-     ],
-     "rol": "Gol Raporu'nda 2. öneri",
-     "p_now": 0.8166,
-     "t_now": 2
+     ]
     },
     {
-     "m": "401882822",
-     "ad": "Barcelona - Alavés",
-     "lg": "İspanya La Liga",
-     "k": "2026-10-31T20:00:00+00:00",
-     "b": "tev15",
-     "bl": "Ev 1.5 Üst",
-     "p": 0.7413,
-     "tier": 1,
+     "m": "761926",
+     "ad": "St. Louis - San Diego",
+     "lg": "ABD MLS",
+     "k": "2026-10-31T19:00:00+00:00",
+     "b": "kgv+o25",
+     "bl": "KG Var ve 2.5 Üst",
+     "p": 0.5638,
+     "tier": null,
+     "rol": "Gol Raporu'nda bu bahis türü yok; maçın gol beklentilerinden hesaplandı",
      "why": [
-      "Model: %74 · Gol Raporu'nda 2. öneri (Orta, 6/8 kriter)",
-      "Bu bahis bu seviyede geçmişte 244 maçta %63 tuttu (tüm maçlarda %46)",
-      "Barcelona son maçları: 2+ gol attığı maç 9/10 (%90)",
-      "Barcelona evdeki son maçları: 2+ gol attığı maç 4/5 (%80)",
-      "Benzer 60 maç: 35/60 (%58)",
-      "Barcelona: 1. sıra (zirve yarışında) · son 5: MGGGG · son 10 maçta maç başı 4.0 attı, 1.1 yedi · şutlarına göre şanslı gidiyor · form eğrisi ▂█▁▄▅▄▆▁ dengeli",
-      "Alavés: 7. sıra (orta sıralarda) · son 5: BMMBM · son 10 maçta maç başı 1.4 attı, 1.1 yedi · form eğrisi ▂▆▇▁▁▁█▂ dengeli"
-     ],
-     "rol": "Gol Raporu'nda 2. öneri",
-     "p_now": 0.7413,
-     "t_now": 1
+      "Model: %56 (ham Poisson %64; geçmiş 2.509 maçta bu bahiste modelin ne kadar iyimser olduğu ölçülüp düzeltildi) · adil oran 1.77",
+      "San Diego deplasmanda son 5 maçın 5'inde, St. Louis evinde son 5 maçın 4'ünde 3.5 Üst oldu",
+      "St. Louis: 7. sıra (üst sıralarda) · son 5: MMMBG · son 10 maçta maç başı 2.5 attı, 1.7 yedi · şutlarına göre şanslı gidiyor · form eğrisi ▆▇█▇▅▃▁▂ düşüşte · son maçından beri 2 gün: rotasyon riski",
+      "San Diego: 25. sıra (orta sıralarda) · son 5: MBBBM · son 10 maçta maç başı 1.6 attı, 2.9 yedi · form eğrisi ▁█▇▁▇▇▇▄ dengeli · son maçından beri 2 gün: rotasyon riski"
+     ]
     }
    ]
   },
   {
    "id": "c202610312",
    "d": "2026-10-31",
-   "t": "2026-10-30T16:33:49.387054+00:00",
-   "title": "Kupon 3 · Boro ve Kadıköy",
+   "t": "2026-10-30T16:45:07.066076+00:00",
+   "title": "Kupon 3 · Kadıköy golü + Porto",
    "tip": "normal",
-   "p": 0.527,
-   "why": "Boro ligin lideri, Charlton 9 maçtır kazanamıyor. Fenerbahçe-Göztepe'de model 2.5 Üst'ü %72 görüyor; iki takımın da son maçları gollü.",
+   "p": 0.4484,
+   "why": "Fenerbahçe-Göztepe 2.5 Üst (iki takımın da son maçları gollü) ve Porto'nun evinde Estoril'i yenmesi (8 kriterin 8'i, piyasa %77).",
    "analiz": {
     "arti": [
-     "Boro Championship lideri, son maçında Bolton'u 5-1 yendi; Charlton 9 lig maçıdır kazanamıyor ve deplasmanda son 5 maçta galibiyeti yok.",
-     "Model (%74) ve piyasa (%76) Boro'da aynı fikirde; puan ortalaması son 10 maçta 2.2'ye 0.8.",
-     "Fenerbahçe evdeki son 4 maçının 4'ünde, Göztepe deplasmandaki son 5 maçının 5'inde 2.5 Üst oldu."
+     "Fenerbahçe evdeki son 4 maçın 4'ünde, Göztepe deplasmandaki son 5 maçın 5'inde 2.5 Üst oldu.",
+     "Porto'da piyasa (%77) modelden (%63) daha iyimser: model temkinli tarafta."
     ],
     "risk": [
-     "Boro'da A. Jones, Pukstas ve Strelec sakat; Charlton geçen sezon Riverside'da 1-0 kazanmıştı.",
-     "Fenerbahçe-Göztepe için piyasa oranı yok, kontrol edemedim; 'benzer 60 maç' %60 ile kriteri geçemedi.",
-     "Fenerbahçe son 10 maçta sadece 0.9 gol yedi: Fenerbahçe tek taraflı kazanırsa 2-0 / 1-0 riski var."
+     "Fenerbahçe son 10 maçta 0.9 gol yedi; tek taraflı 2-0 riski var. Bu maç için piyasa oranı yok, güncel kadro haberi bulamadım.",
+     "Porto'nun MS 1 ihtimali eşiğe yakın (%63)."
     ],
-    "karar": "Orta-sağlam. En zayıf halka Fenerbahçe maçının skorunun tek tarafa kalması."
+    "karar": "Adil oran yaklaşık 2.2. Normal tutar."
    },
    "legs": [
-    {
-     "m": "401880193",
-     "ad": "Boro - Charlton",
-     "lg": "İngiltere Championship",
-     "k": "2026-10-31T15:00:00+00:00",
-     "b": "ms1",
-     "bl": "MS 1",
-     "p": 0.7362,
-     "tier": 2,
-     "why": [
-      "Model: %74 · Gol Raporu'nda günün önerisi (Güçlü, 7/8 kriter)",
-      "Bu bahis bu seviyede geçmişte 189 maçta %68 tuttu (tüm maçlarda %44)",
-      "Boro son maçları: 10 maçta 6 kazandı (%60)",
-      "Boro evdeki son maçları: 5 maçta 3 kazandı (%60)",
-      "Charlton dışarıdaki son maçları: 5 maçta 3 kaybetti (%60)",
-      "Boro: 1. sıra (zirve yarışında) · son 5: GBGGB · son 10 maçta maç başı 2.4 attı, 1.4 yedi · form eğrisi ▃▁▂▁▃▇▆█ yükselişte",
-      "Charlton: 19. sıra (orta sıralarda) · son 5: MMBBM · son 10 maçta maç başı 0.7 attı, 1.6 yedi · form eğrisi ▂▆▇▄██▁▄ dengeli"
-     ],
-     "mk": 0.7562,
-     "rol": "Gol Raporu'nda günün önerisi",
-     "p_now": 0.7362,
-     "t_now": 2
-    },
     {
      "m": "401888258",
      "ad": "Fenerbahce - Goztepe",
@@ -510,7 +466,7 @@
      "p": 0.7158,
      "tier": 2,
      "why": [
-      "Model: %72 · Gol Raporu'nda günün önerisi (Güçlü, 7/8 kriter)",
+      "Model: %72 · Gol Raporu'nda günün önerisi (Güçlü, 7/8 kriter) · adil oran 1.40",
       "Bu bahis bu seviyede geçmişte 306 maçta %70 tuttu (tüm maçlarda %54)",
       "Fenerbahce son maçları: 7/9 (%78)",
       "Goztepe son maçları: 7/9 (%78)",
@@ -521,29 +477,52 @@
      "rol": "Gol Raporu'nda günün önerisi",
      "p_now": 0.7158,
      "t_now": 2
+    },
+    {
+     "m": "401885404",
+     "ad": "FC Porto - Estoril",
+     "lg": "Portekiz 1. Lig",
+     "k": "2026-10-31T20:30:00+00:00",
+     "b": "ms1",
+     "bl": "MS 1",
+     "p": 0.6265,
+     "tier": 2,
+     "mk": 0.7676,
+     "why": [
+      "Model: %63 · Gol Raporu'nda günün önerisi (Güçlü, 8/8 kriter) · adil oran 1.60",
+      "Bu bahis bu seviyede geçmişte 189 maçta %68 tuttu (tüm maçlarda %44)",
+      "FC Porto son maçları: 9 maçta 9 kazandı (%100)",
+      "Estoril son maçları: 9 maçta 7 kaybetti (%78)",
+      "FC Porto evdeki son maçları: 4 maçta 4 kazandı (%100)",
+      "FC Porto: 1. sıra (zirve yarışında) · son 5: GGGGG · son 10 maçta maç başı 2.3 attı, 0.4 yedi · form eğrisi ▂█▆▄▃█▁▃ dengeli",
+      "Estoril: 18. sıra (düşme hattında) · son 5: MMMMB · son 10 maçta maç başı 0.6 attı, 1.7 yedi · şutlarına göre şanssız gidiyor · form eğrisi ▁▂▄█▁▄▄▃ dengeli"
+     ],
+     "rol": "Gol Raporu'nda günün önerisi",
+     "p_now": 0.6265,
+     "t_now": 2
     }
    ]
   },
   {
    "id": "c202610313",
    "d": "2026-10-31",
-   "t": "2026-10-30T16:33:49.387054+00:00",
-   "title": "Kupon 4 · Arjantin 2. Lig altları",
+   "t": "2026-10-30T16:45:07.066076+00:00",
+   "title": "Kupon 4 · Düşük gollü üç maç",
    "tip": "normal",
-   "p": 0.5423,
-   "why": "Arjantin 2. Lig'in düşük gollü yapısı: iki maçta da 2.5 Alt Güçlü seviyede (%75 ve %72). Bu bahis türü bu seviyede geçmişte 785 maçta %63 tuttu.",
+   "p": 0.3657,
+   "why": "Arjantin 2. Lig'den iki ve Rusya'dan bir maçta 2.5 Alt: üç maçta da iki takım az atıyor, az yiyor.",
    "analiz": {
     "arti": [
-     "T. Suárez son 10 maçta maç başı 0.6 gol attı, 0.3 yedi; evdeki son 5 maçın 5'i 2.5 Alt.",
-     "Benzer maçların %82-83'ü 2.5 Alt bitmiş; ilk golden sonra 2 gol daha gelme oranı ligin çok altında.",
-     "Acassuso düşme hattında, Ferro zirve yarışında: ikisi için de kaybetmemek önemli, temkinli bir maç beklenir. Piyasa da altı %61 görüyor."
+     "Üç maçta da 2.5 Alt Güçlü seviyede; bu seviyede geçmişte 785 maçta %63 tuttu.",
+     "Arjantin maçlarında benzer maçların %82-83'ü altta bitmiş; piyasa Acassuso-Ferro'da da altı %61 görüyor.",
+     "İki tane düşük oranlı alt yerine üçüncü maçı ekleyerek toplam oranı 1.85'ten 2.8'e çıkardım."
     ],
     "risk": [
-     "İki deplasman takımı da dışarıda son 5 maçın 2'sinde 2.5 Üst gördü.",
-     "Sezon sonuna yaklaşılıyor; bir takım erken gol yerse maç açılabilir.",
-     "Bu ligden haber/kadro bilgisi bulamadım; sadece istatistiğe dayanıyor."
+     "Rubin-Voronezh'de benzer maçların sadece %50'si altta; Rusya maçı için piyasa oranı yok.",
+     "Deplasman takımları dışarıda son 5 maçın 2'sinde 2.5 Üst gördü; erken gol maçı açabilir.",
+     "Bu liglerden kadro haberi bulamadım."
     ],
-    "karar": "İstatistik olarak sağlam ama haberle doğrulanamadı; düşük tutarla."
+    "karar": "Adil oran yaklaşık 2.8. Normal tutar."
    },
    "legs": [
     {
@@ -556,7 +535,7 @@
      "p": 0.7547,
      "tier": 2,
      "why": [
-      "Model: %75 · Gol Raporu'nda günün önerisi (Güçlü, 6/7 kriter)",
+      "Model: %75 · Gol Raporu'nda günün önerisi (Güçlü, 6/7 kriter) · adil oran 1.33",
       "Bu bahis bu seviyede geçmişte 785 maçta %63 tuttu (tüm maçlarda %46)",
       "T. Suárez son maçları: 9/10 (%90)",
       "Maipú son maçları: 8/10 (%80)",
@@ -577,18 +556,42 @@
      "bl": "2.5 Alt",
      "p": 0.7186,
      "tier": 2,
+     "mk": 0.6083,
      "why": [
-      "Model: %72 · Gol Raporu'nda günün önerisi (Güçlü, 5/7 kriter)",
+      "Model: %72 · Gol Raporu'nda günün önerisi (Güçlü, 5/7 kriter) · adil oran 1.39",
       "Bu bahis bu seviyede geçmişte 785 maçta %63 tuttu (tüm maçlarda %46)",
       "Acassuso son maçları: 8/10 (%80)",
       "Ferro son maçları: 8/10 (%80)",
       "Acassuso evdeki son maçları: 4/5 (%80)",
+      "Acassuso düşme hattında, Ferro zirve yarışında: iki taraf için de kaybetmemek önemli",
       "Acassuso: 35. sıra (düşme hattında) · son 5: BBGMG · son 10 maçta maç başı 0.7 attı, 0.5 yedi · form eğrisi ▁▂▆▅▁█▃▃ yükselişte",
       "Ferro: 2. sıra (zirve yarışında) · son 5: MGBMG · son 10 maçta maç başı 0.7 attı, 0.8 yedi · form eğrisi ▅▇▇█▃▇▇▁ düşüşte"
      ],
-     "mk": 0.6083,
      "rol": "Gol Raporu'nda günün önerisi",
      "p_now": 0.7186,
+     "t_now": 2
+    },
+    {
+     "m": "401879816",
+     "ad": " Rubin Kazan - Voronezh",
+     "lg": "Rusya Premier Lig",
+     "k": "2026-10-31T12:15:00+00:00",
+     "b": "u25",
+     "bl": "2.5 Alt",
+     "p": 0.6743,
+     "tier": 2,
+     "why": [
+      "Model: %67 · Gol Raporu'nda günün önerisi (Güçlü, 6/8 kriter) · adil oran 1.48",
+      "Bu bahis bu seviyede geçmişte 785 maçta %63 tuttu (tüm maçlarda %46)",
+      " Rubin Kazan son maçları: 8/10 (%80)",
+      "Voronezh son maçları: 6/10 (%60)",
+      " Rubin Kazan evdeki son maçları: 4/5 (%80)",
+      "Rubin Kazan son 10 maçta maç başı 0.9, Voronezh 0.5 gol attı",
+      " Rubin Kazan: 12. sıra (orta sıralarda) · son 5: MMMBB · son 10 maçta maç başı 0.9 attı, 1.4 yedi · form eğrisi ▇█▄█▆█▁▇ dengeli",
+      "Voronezh: 16. sıra (düşme hattında) · son 5: MGMMB · son 10 maçta maç başı 0.5 attı, 1.5 yedi · şutlarına göre şanssız gidiyor · form eğrisi █▆▆▇▆▁█▅ düşüşte"
+     ],
+     "rol": "Gol Raporu'nda günün önerisi",
+     "p_now": 0.6743,
      "t_now": 2
     }
    ]
@@ -596,22 +599,21 @@
   {
    "id": "c202610314",
    "d": "2026-10-31",
-   "t": "2026-10-30T16:33:49.387054+00:00",
-   "title": "Kupon 5 · Norwich ilk yarı + Porto",
+   "t": "2026-10-30T16:45:07.066076+00:00",
+   "title": "Kupon 5 · Norwich ilk yarı + Barcelona farkı",
    "tip": "normal",
-   "p": 0.464,
-   "why": "Watford deplasmanda son 5 maçın 5'inde ilk yarıda gol yedi; Norwich evinde İY 0.5 Üst %74. Porto evinde Estoril karşısında MS 1 (8 kriterin 8'i).",
+   "p": 0.4266,
+   "why": "Watford deplasmanda son 5 maçın 5'inde ilk yarıda gol yedi. Barcelona maç başı 4 gol atıyor: düşük oranlı 'Ev 1.5 Üst' yerine MS 1 ve 2.5 Üst.",
    "analiz": {
     "arti": [
-     "Watford son 10 maçın 9'unda ilk yarıda gol yedi; Norwich son 10 maçın 7'sinde ilk yarıda gol attı.",
-     "Porto'da 8 kriterin 8'i sağlanıyor ve piyasa (%77) modelden (%63) daha da iyimser."
+     "Watford son 10 maçın 9'unda ilk yarıda gol yedi.",
+     "Barcelona evdeki son 5 maçın 4'ünde 2+ gol attı, ligde lider."
     ],
     "risk": [
-     "Norwich son 5 maçın 4'ünü kaybetti, ligde 20. sırada; evdeki son 5 maçta ilk yarı golü 3/5.",
-     "Porto'nun MS 1 ihtimali model tarafında %63 ile eşiğe yakın.",
-     "İlk kurduğum hâlde Wolfsburg-Osnabrück 2.5 Üst vardı; kriterlerin sadece 4/8'i sağlandığı için çıkardım."
+     "Norwich son 5 maçın 4'ünü kaybetti; evinde ilk yarı golü son 5 maçta 3.",
+     "Alavés son 10 maçta sadece 1.1 gol yedi; 2-0 biterse ikinci ayak yanar."
     ],
-    "karar": "Kuponların en riskli normal olanı; birlikte tutma ihtimali %47."
+    "karar": "Adil oran yaklaşık 2.4. Normal tutar."
    },
    "legs": [
     {
@@ -624,7 +626,7 @@
      "p": 0.7407,
      "tier": 1,
      "why": [
-      "Model: %74 · Gol Raporu'nda günün önerisi (Orta, 5/7 kriter)",
+      "Model: %74 · Gol Raporu'nda günün önerisi (Orta, 5/7 kriter) · adil oran 1.35",
       "Bu bahis bu seviyede geçmişte 197 maçta %56 tuttu (tüm maçlarda %50)",
       "Norwich City son maçları: ilk yarıda gol attığı maç 7/10 (%70)",
       "Watford son maçları: ilk yarıda gol yediği maç 9/10 (%90)",
@@ -637,142 +639,79 @@
      "t_now": 1
     },
     {
-     "m": "401885404",
-     "ad": "FC Porto - Estoril",
-     "lg": "Portekiz 1. Lig",
-     "k": "2026-10-31T20:30:00+00:00",
-     "b": "ms1",
-     "bl": "MS 1",
-     "p": 0.6265,
-     "tier": 2,
+     "m": "401882822",
+     "ad": "Barcelona - Alavés",
+     "lg": "İspanya La Liga",
+     "k": "2026-10-31T20:00:00+00:00",
+     "b": "ms1+o25",
+     "bl": "MS 1 ve 2.5 Üst",
+     "p": 0.5759,
+     "tier": null,
+     "rol": "Gol Raporu'nda bu bahis türü yok; maçın gol beklentilerinden hesaplandı",
      "why": [
-      "Model: %63 · Gol Raporu'nda günün önerisi (Güçlü, 8/8 kriter)",
-      "Bu bahis bu seviyede geçmişte 189 maçta %68 tuttu (tüm maçlarda %44)",
-      "FC Porto son maçları: 9 maçta 9 kazandı (%100)",
-      "Estoril son maçları: 9 maçta 7 kaybetti (%78)",
-      "FC Porto evdeki son maçları: 4 maçta 4 kazandı (%100)",
-      "FC Porto: 1. sıra (zirve yarışında) · son 5: GGGGG · son 10 maçta maç başı 2.3 attı, 0.4 yedi · form eğrisi ▂█▆▄▃█▁▃ dengeli",
-      "Estoril: 18. sıra (düşme hattında) · son 5: MMMMB · son 10 maçta maç başı 0.6 attı, 1.7 yedi · şutlarına göre şanssız gidiyor · form eğrisi ▁▂▄█▁▄▄▃ dengeli"
-     ],
-     "mk": 0.7676,
-     "rol": "Gol Raporu'nda günün önerisi",
-     "p_now": 0.6265,
-     "t_now": 2
+      "Model: %58 (ham Poisson %56; geçmiş 2.509 maçta bu bahiste modelin ne kadar iyimser olduğu ölçülüp düzeltildi) · adil oran 1.74",
+      "Barcelona son 10 maçta maç başı 4.0 gol attı; piyasa Barcelona'yı %86 favori görüyor",
+      "Barcelona: 1. sıra (zirve yarışında) · son 5: MGGGG · son 10 maçta maç başı 4.0 attı, 1.1 yedi · şutlarına göre şanslı gidiyor · form eğrisi ▂█▁▄▅▄▆▁ dengeli",
+      "Alavés: 7. sıra (orta sıralarda) · son 5: BMMBM · son 10 maçta maç başı 1.4 attı, 1.1 yedi · form eğrisi ▂▆▇▁▁▁█▂ dengeli"
+     ]
     }
    ]
   },
   {
    "id": "c202610315",
    "d": "2026-10-31",
-   "t": "2026-10-30T16:33:49.387054+00:00",
-   "title": "Sürpriz 1 · MLS gol şöleni",
+   "t": "2026-10-30T16:45:07.066076+00:00",
+   "title": "Sürpriz 1 · İY/MS ve derbi",
    "tip": "surpriz",
-   "p": 0.2637,
-   "why": "Yüksek oranlı gol kombinesi: iki MLS maçında 3.5 Üst (ikisi de günün önerisi, 8 kriterin 8'i) ve Cambuur-Go Ahead KG Var (günün önerisi).",
+   "p": 0.0866,
+   "why": "Boro'nun iki yarıyı da önde bitirmesi (İY/MS 1/1), Roma'nın Udine'de iki yarıyı da önde bitirmesi (İY/MS 2/2) ve derbide Inter.",
    "analiz": {
     "arti": [
-     "St. Louis-San Diego ve Charlotte-Orlando'da 8 kriterin 8'i sağlanıyor; iki maçta da beklenen toplam gol 4.0+ (lig 3.3).",
-     "MLS'de bu takımların maçlarında ilk golden sonra 2+ gol daha gelme oranı %80-87 (lig %68).",
-     "Go Ahead Eagles son 10 maçın 10'unda gol attı ve deplasmanda son 5 maçın 5'inde KG Var oldu."
+     "İY/MS 1/1 ve 2/2, geçmiş testte modelin gerçekten bildiği sürpriz pazarlar (en üst dilimde 1/1: tahmin %51, gerçek %52; 2/2: tahmin %42, gerçek %39).",
+     "Inter son 9 maçın 8'ini kazandı; Milan'da 8 oyuncu sakat ya da şüpheli."
     ],
     "risk": [
-     "3.5 Üst'ün bu seviyedeki geçmiş isabeti %39; model %56-60 diyor ama bahis türü zor.",
-     "MLS'de sezon sonu (Decision Day 7 Kasım): takımlar 2 gün önce oynadı, rotasyon riski var.",
-     "İlk hâlde Anderlecht-Westerlo 3.5 Üst vardı; Anderlecht'in son 9 maçının sadece 1'inde 4+ gol olduğu için çıkardım."
+     "2/1 ve 1/2'yi (geri dönüşler) bilerek koymadım: geçmiş 2.509 maçta model bu sonuçları hiç önceden göremedi (en yüksek gördüğü 75 maçta 0 kez oldu). Bunlar şans oyunu.",
+     "Milan son 9 maçta sadece 1 kez kaybetti; derbide beraberlik ihtimali yüksek.",
+     "Roma'nın formu düşüşte, şutlarına göre şanslı gidiyor."
     ],
-    "karar": "Sürpriz: tutma ihtimali yaklaşık %26. Küçük tutarla."
+    "karar": "Adil oran yaklaşık 11-12. Küçük tutar."
    },
    "legs": [
     {
-     "m": "761926",
-     "ad": "St. Louis - San Diego",
-     "lg": "ABD MLS",
-     "k": "2026-10-31T19:00:00+00:00",
-     "b": "o35",
-     "bl": "3.5 Üst",
-     "p": 0.5648,
-     "tier": 2,
+     "m": "401880193",
+     "ad": "Boro - Charlton",
+     "lg": "İngiltere Championship",
+     "k": "2026-10-31T15:00:00+00:00",
+     "b": "im11",
+     "bl": "İY/MS 1/1",
+     "p": 0.5426,
+     "tier": null,
+     "rol": "Gol Raporu'nda bu bahis türü yok; maçın gol beklentilerinden hesaplandı",
      "why": [
-      "Model: %56 · Gol Raporu'nda günün önerisi (Güçlü, 8/8 kriter)",
-      "Bu bahis bu seviyede geçmişte 103 maçta %39 tuttu (tüm maçlarda %31)",
-      "St. Louis son maçları: 7/10 (%70)",
-      "San Diego son maçları: 9/10 (%90)",
-      "St. Louis evdeki son maçları: 4/5 (%80)",
-      "St. Louis: 7. sıra (üst sıralarda) · son 5: MMMBG · son 10 maçta maç başı 2.5 attı, 1.7 yedi · şutlarına göre şanslı gidiyor · form eğrisi ▆▇█▇▅▃▁▂ düşüşte · son maçından beri 2 gün: rotasyon riski",
-      "San Diego: 25. sıra (orta sıralarda) · son 5: MBBBM · son 10 maçta maç başı 1.6 attı, 2.9 yedi · form eğrisi ▁█▇▁▇▇▇▄ dengeli · son maçından beri 2 gün: rotasyon riski"
-     ],
-     "rol": "Gol Raporu'nda günün önerisi",
-     "p_now": 0.5648,
-     "t_now": 2
+      "Model: %54 (ham Poisson %51; geçmiş 2.509 maçta bu bahiste modelin ne kadar iyimser olduğu ölçülüp düzeltildi) · adil oran 1.84",
+      "Boro lider, Charlton 9 maçtır kazanamıyor; model ve piyasa Boro'yu %74-76 favori görüyor",
+      "Boro: 1. sıra (zirve yarışında) · son 5: GBGGB · son 10 maçta maç başı 2.4 attı, 1.4 yedi · form eğrisi ▃▁▂▁▃▇▆█ yükselişte",
+      "Charlton: 19. sıra (orta sıralarda) · son 5: MMBBM · son 10 maçta maç başı 0.7 attı, 1.6 yedi · form eğrisi ▂▆▇▄██▁▄ dengeli"
+     ]
     },
     {
-     "m": "761922",
-     "ad": "Charlotte - Orlando",
-     "lg": "ABD MLS",
+     "m": "401874990",
+     "ad": "Udinese - AS Roma",
+     "lg": "İtalya Serie A",
      "k": "2026-10-31T17:00:00+00:00",
-     "b": "o35",
-     "bl": "3.5 Üst",
-     "p": 0.6002,
-     "tier": 2,
+     "b": "im22",
+     "bl": "İY/MS 2/2",
+     "p": 0.3219,
+     "tier": null,
+     "rol": "Gol Raporu'nda bu bahis türü yok; maçın gol beklentilerinden hesaplandı",
      "why": [
-      "Model: %60 · Gol Raporu'nda günün önerisi (Güçlü, 8/8 kriter)",
-      "Bu bahis bu seviyede geçmişte 103 maçta %39 tuttu (tüm maçlarda %31)",
-      "Charlotte son maçları: 6/10 (%60)",
-      "Orlando son maçları: 8/10 (%80)",
-      "Charlotte evdeki son maçları: 3/5 (%60)",
-      "Charlotte: 9. sıra (orta sıralarda) · son 5: GMBMG · son 10 maçta maç başı 1.9 attı, 1.6 yedi · şutlarına göre şanslı gidiyor · form eğrisi ▄▄▁▆▁▆▁█ dengeli · son maçından beri 2 gün: rotasyon riski",
-      "Orlando: 16. sıra (orta sıralarda) · son 5: BBGBG · son 10 maçta maç başı 2.5 attı, 2.0 yedi · şutlarına göre şanslı gidiyor · form eğrisi █▁▁▃▃▇▂▅ yükselişte · son maçından beri 2 gün: rotasyon riski"
-     ],
-     "rol": "Gol Raporu'nda günün önerisi",
-     "p_now": 0.6002,
-     "t_now": 2
+      "Model: %32 (ham Poisson %37; geçmiş 2.509 maçta bu bahiste modelin ne kadar iyimser olduğu ölçülüp düzeltildi) · adil oran 3.11",
+      "Udinese geriye düştüğü son 4 maçın hiçbirinde puan alamadı; Roma öne geçtiği 5 maçın 4'ünü kazandı",
+      "Udinese: 17. sıra (orta sıralarda) · son 5: BMMMM · son 10 maçta maç başı 1.0 attı, 2.0 yedi · şutlarına göre şanssız gidiyor · form eğrisi ██▅▇▆▁▆█ düşüşte · son maçından beri 2 gün: rotasyon riski",
+      "AS Roma: 3. sıra (zirve yarışında) · son 5: GBGBB · son 10 maçta maç başı 2.6 attı, 0.9 yedi · şutlarına göre şanslı gidiyor · form eğrisi █▇▅▃▃▆▁▃ düşüşte · son maçından beri 3 gün: rotasyon riski"
+     ]
     },
-    {
-     "m": "401875561",
-     "ad": "Cambuur - Go Ahead Eagles",
-     "lg": "Hollanda Eredivisie",
-     "k": "2026-10-31T20:00:00+00:00",
-     "b": "kgv",
-     "bl": "KG Var",
-     "p": 0.778,
-     "tier": 2,
-     "why": [
-      "Model: %78 · Gol Raporu'nda günün önerisi (Güçlü, 4/8 kriter)",
-      "Bu bahis bu seviyede geçmişte 57 maçta %75 tuttu (tüm maçlarda %56)",
-      "Go Ahead Eagles son maçları: 10/10 (%100)",
-      "Go Ahead Eagles dışarıdaki son maçları: 5/5 (%100)",
-      "Benzer 60 maç: 47/60 (%78)",
-      "Cambuur: 10. sıra (orta sıralarda) · son 5: GBGBG · son 10 maçta maç başı 1.9 attı, 2.2 yedi · form eğrisi ▄▁▃█▁▂▆█ yükselişte",
-      "Go Ahead Eagles: 9. sıra (orta sıralarda) · son 5: GMBBB · son 10 maçta maç başı 2.3 attı, 2.3 yedi · form eğrisi ▇▂▄█▆▄▁█ düşüşte"
-     ],
-     "rol": "Gol Raporu'nda günün önerisi",
-     "p_now": 0.778,
-     "t_now": 2
-    }
-   ]
-  },
-  {
-   "id": "c202610316",
-   "d": "2026-10-31",
-   "t": "2026-10-30T16:33:49.387054+00:00",
-   "title": "Sürpriz 2 · Deplasman takımları",
-   "tip": "surpriz",
-   "p": 0.1765,
-   "why": "Milan-Inter derbisinde Inter, Udinese deplasmanında Roma, Kansas City deplasmanında Dallas'ın en az 2 golü.",
-   "analiz": {
-    "arti": [
-     "Milan'da derbi öncesi uzun sakat listesi var (Loftus-Cheek, Rabiot, Gabbia, Gila, Saelemaekers ve diğerleri). Inter son 9 maçın 8'ini kazandı ve ligde lider.",
-     "Udinese son 5 maçın 4'ünü kaybetti, geriye düştüğü 4 maçın hiçbirinde puan alamadı; Roma'da 8 kriterin 8'i sağlanıyor ve piyasa %60.",
-     "Kansas City ligin sonuncusu, son 10 maçta maç başı 2.6 gol yedi; Dallas deplasmanda son 5 maçın 4'ünde 2+ gol attı."
-    ],
-    "risk": [
-     "Milan son 9 maçta sadece 1 kez kaybetti; derbide beraberlik ihtimali yüksek. Inter MS 2 %50 ile öneri eşiğinin altında (2. öneri), bu yüzden sürprizde.",
-     "Roma'nın form eğrisi düşüşte ve şutlarına göre şanslı gidiyor.",
-     "Üç maçta da takımlar 2-3 gün önce oynadı."
-    ],
-    "karar": "Sürpriz: tutma ihtimali yaklaşık %18. Küçük tutarla."
-   },
-   "legs": [
     {
      "m": "401874795",
      "ad": "Milan - Inter Milan",
@@ -782,64 +721,80 @@
      "bl": "MS 2",
      "p": 0.4959,
      "tier": 1,
+     "mk": 0.4727,
      "why": [
-      "Model: %50 · Gol Raporu'nda 2. öneri (Orta, 6/8 kriter)",
+      "Model: %50 · Gol Raporu'nda 2. öneri (Orta, 6/8 kriter) · adil oran 2.02",
       "Bu bahis bu seviyede geçmişte 349 maçta %47 tuttu (tüm maçlarda %30)",
       "Inter Milan son maçları: 9 maçta 8 kazandı (%89)",
       "Inter Milan dışarıdaki son maçları: 4 maçta 3 kazandı (%75)",
       "Benzer 60 maç: 32/60 (%53)",
+      "Milan derbiye uzun bir sakat listesiyle çıkıyor (Loftus-Cheek, Rabiot, Gabbia, Gila, Saelemaekers...)",
       "Milan: 5. sıra (üst sıralarda) · son 5: MGGBG · son 10 maçta maç başı 2.0 attı, 1.2 yedi · form eğrisi █▃██▅▇█▁ dengeli · son maçından beri 3 gün: rotasyon riski",
       "Inter Milan: 1. sıra (zirve yarışında) · son 5: GGGGB · son 10 maçta maç başı 2.8 attı, 1.1 yedi · form eğrisi ▇▅▇▄▇██▁ dengeli · son maçından beri 3 gün: rotasyon riski"
      ],
-     "mk": 0.4727,
      "rol": "Gol Raporu'nda 2. öneri",
      "p_now": 0.4959,
      "t_now": 1
-    },
+    }
+   ]
+  },
+  {
+   "id": "c202610316",
+   "d": "2026-10-31",
+   "t": "2026-10-30T16:45:07.066076+00:00",
+   "title": "Sürpriz 2 · 5+ gol ve Sanfreece",
+   "tip": "surpriz",
+   "p": 0.1263,
+   "why": "Charlotte-Orlando'da 4.5 Üst (en az 5 gol) ve Japonya'da Sanfreece'nin 3+ gollü maçta kazanması.",
+   "analiz": {
+    "arti": [
+     "Charlotte-Orlando'da beklenen toplam gol 4.0 (lig 3.3); Orlando deplasmandaki son 5 maçın 5'inde 3.5 Üst gördü.",
+     "4.5 Üst'te model en yüksek gördüğü maçlarda iyimser çıktı (%44 dedi, %35 oldu); ihtimal buna göre düzeltildi (%34)."
+    ],
+    "risk": [
+     "5+ gol her zaman zor: tüm maçlarda sadece %19 oluyor.",
+     "Mito-Sanfreece sabah 08:00'de; Sanfreece 1-0 kazanırsa ikinci ayak yanar.",
+     "Skor tahmini (ör. 2-1) koymadım: geçmiş testte model doğru skoru tutturmada rastgeleden pek iyi değil."
+    ],
+    "karar": "Adil oran yaklaşık 8. Küçük tutar."
+   },
+   "legs": [
     {
-     "m": "401874990",
-     "ad": "Udinese - AS Roma",
-     "lg": "İtalya Serie A",
-     "k": "2026-10-31T17:00:00+00:00",
-     "b": "ms2",
-     "bl": "MS 2",
-     "p": 0.6158,
-     "tier": 2,
-     "why": [
-      "Model: %62 · Gol Raporu'nda günün önerisi (Güçlü, 8/8 kriter)",
-      "Bu bahis bu seviyede geçmişte 304 maçta %51 tuttu (tüm maçlarda %30)",
-      "Udinese son maçları: 9 maçta 6 kaybetti (%67)",
-      "AS Roma son maçları: 9 maçta 6 kazandı (%67)",
-      "Udinese evdeki son maçları: 5 maçta 4 kaybetti (%80)",
-      "Udinese: 17. sıra (orta sıralarda) · son 5: BMMMM · son 10 maçta maç başı 1.0 attı, 2.0 yedi · şutlarına göre şanssız gidiyor · form eğrisi ██▅▇▆▁▆█ düşüşte · son maçından beri 2 gün: rotasyon riski",
-      "AS Roma: 3. sıra (zirve yarışında) · son 5: GBGBB · son 10 maçta maç başı 2.6 attı, 0.9 yedi · şutlarına göre şanslı gidiyor · form eğrisi █▇▅▃▃▆▁▃ düşüşte · son maçından beri 3 gün: rotasyon riski"
-     ],
-     "mk": 0.597,
-     "rol": "Gol Raporu'nda günün önerisi",
-     "p_now": 0.6158,
-     "t_now": 2
-    },
-    {
-     "m": "761928",
-     "ad": "Kansas City - Dallas",
+     "m": "761922",
+     "ad": "Charlotte - Orlando",
      "lg": "ABD MLS",
-     "k": "2026-10-31T19:00:00+00:00",
-     "b": "tdp15",
-     "bl": "Dep 1.5 Üst",
-     "p": 0.5779,
-     "tier": 2,
+     "k": "2026-10-31T17:00:00+00:00",
+     "b": "o45",
+     "bl": "4.5 Üst",
+     "p": 0.3368,
+     "tier": null,
+     "rol": "Gol Raporu'nda öneri değil, aday (Orta seviye)",
      "why": [
-      "Model: %58 · Gol Raporu'nda günün önerisi (Güçlü, 8/8 kriter)",
-      "Bu bahis bu seviyede geçmişte 139 maçta %54 tuttu (tüm maçlarda %35)",
-      "Kansas City son maçları: 2+ gol yediği maç 8/10 (%80)",
-      "Dallas son maçları: 2+ gol attığı maç 6/10 (%60)",
-      "Kansas City evdeki son maçları: 2+ gol yediği maç 4/5 (%80)",
-      "Kansas City: 30. sıra (düşme hattında) · son 5: MMMMB · son 10 maçta maç başı 1.8 attı, 2.6 yedi · form eğrisi ▅█▆▅▁▁▂▂ düşüşte · son maçından beri 2 gün: rotasyon riski",
-      "Dallas: 5. sıra (üst sıralarda) · son 5: MGBGM · son 10 maçta maç başı 1.7 attı, 1.2 yedi · form eğrisi ▄▂▅▂▃▅█▁ dengeli · son maçından beri 2 gün: rotasyon riski"
+      "Model: %34 (ham Poisson %41; geçmiş 2.509 maçta bu bahiste modelin ne kadar iyimser olduğu ölçülüp düzeltildi) · adil oran 2.97",
+      "Charlotte-Orlando'da ilk golden sonra 2+ gol daha gelen maç: Charlotte 12/14, Orlando 13/15 (lig %68)",
+      "Bu maçta 3.5 Üst günün önerisi, 8 kriterin 8'i sağlanıyor",
+      "Charlotte: 9. sıra (orta sıralarda) · son 5: GMBMG · son 10 maçta maç başı 1.9 attı, 1.6 yedi · şutlarına göre şanslı gidiyor · form eğrisi ▄▄▁▆▁▆▁█ dengeli · son maçından beri 2 gün: rotasyon riski",
+      "Orlando: 16. sıra (orta sıralarda) · son 5: BBGBG · son 10 maçta maç başı 2.5 attı, 2.0 yedi · şutlarına göre şanslı gidiyor · form eğrisi █▁▁▃▃▇▂▅ yükselişte · son maçından beri 2 gün: rotasyon riski"
      ],
-     "rol": "Gol Raporu'nda günün önerisi",
-     "p_now": 0.5779,
-     "t_now": 2
+     "p_now": 0.4056,
+     "t_now": 1
+    },
+    {
+     "m": "401877564",
+     "ad": "Mito Hollyhock - Sanfreece",
+     "lg": "Japonya J1 Lig",
+     "k": "2026-10-31T05:00:00+00:00",
+     "b": "ms2+o25",
+     "bl": "MS 2 ve 2.5 Üst",
+     "p": 0.375,
+     "tier": null,
+     "rol": "Gol Raporu'nda bu bahis türü yok; maçın gol beklentilerinden hesaplandı",
+     "why": [
+      "Model: %38 (ham Poisson %47; geçmiş 2.509 maçta bu bahiste modelin ne kadar iyimser olduğu ölçülüp düzeltildi) · adil oran 2.67",
+      "Sanfreece MS 2 günün önerisi (8 kriterin 7'si); piyasa Sanfreece'yi %66 favori görüyor",
+      "Mito Hollyhock: 17. sıra (orta sıralarda) · son 5: MMMMM · son 10 maçta maç başı 1.0 attı, 1.9 yedi · form eğrisi █▇▂▄▄▃▅▁ düşüşte",
+      "Sanfreece: 3. sıra (zirve yarışında) · son 5: GMGGG · son 10 maçta maç başı 2.2 attı, 0.9 yedi · form eğrisi ▇▄██▄▅▁▅ düşüşte"
+     ]
     }
    ]
   }
