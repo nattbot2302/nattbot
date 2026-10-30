@@ -2731,6 +2731,10 @@ def main():
     res_all = {}
     for L in leagues:
         res_all.update(L.get("results", {}))
+    try:
+        update_sans(leagues, now)
+    except Exception as e:  # noqa
+        print("şans bahisleri yazılamadı:", e, flush=True)
     write_claude_page(res_all, now)
     send_mail(st, leagues, now)
     save_store(st)
@@ -4027,6 +4031,11 @@ def bet_settle(code, res):
         else:
             g = hg if tm_.group(2) == "ev" else ag
         return g > ln
+    if code.startswith("iys"):                      # ilk yarı skoru
+        if h1 is None or a1 is None:
+            return None
+        h, a = code[3:].split("-")
+        return h1 == int(h) and a1 == int(a)
     if code.startswith("sk"):
         h, a = code[2:].split("-")
         return hg == int(h) and ag == int(a)
@@ -5048,6 +5057,13 @@ function livePicks(m, L, o){
     if(ok3(ld)) c.push(ck(nm[ld]+' tepkisi', TM[ld].win>=0.7, TM[ld].lab+' '+w+' oranı '+P(TM[ld].win)));
     if(ok3(tr)) c.push(ck(nm[tr]+' tepkisi', TM[tr].win+TM[tr].draw<=0.3, TM[tr].lab+' '+(iy?'devreyi geride kapatmama':'puan alma')+' oranı '+P(TM[tr].win+TM[tr].draw)));
     out.push({t:(iy?'İY ':'MS ')+(d>0?'1':'2'), sub:nm[ld]+(iy?' devreyi önde kapatır':' kazanır'), p, c});
+  }
+  if(!iy && tr!=null && Math.abs(d)===1 && t>=45 && t<=70 && m.pre){ // geri dönüş (2/1, 1/2) — 7.905 maçlık geçmiş
+    const pw = tr===0 ? m.pre.p1 : m.pre.p2;
+    const B = [[0.3,0.064,0.26],[0.4,0.122,0.36],[0.5,0.144,0.40],[9,0.178,0.48]];
+    const b = B.find(x=>pw<x[0]);
+    const c = [ck('Geçmiş veri', b[1]>=0.14, 'maç önü kazanma ihtimali '+P(pw)+' olan ve 1 farkla geride kalan takımlar geçmişte %'+(b[1]*100).toFixed(0)+' maçı çevirdi, %'+(b[2]*100).toFixed(0)+' puan aldı · adil oran '+(1/b[1]).toFixed(1)+'; canlı oran bunun üstündeyse değer var')];
+    out.push({t:'MS '+(tr===0?'1':'2')+' (geri dönüş)', sub:nm[tr]+' maçı çevirir (bilgi: '+(tr===0?'2/1':'1/2')+')', p:b[1], c, info:true});
   }
   if(d===0 && iy && t>=25){ // ilk yarı berabere biter
     const c = [ck('Model', o.px>=0.65, 'devrenin berabere bitme ihtimali '+P(o.px))];
@@ -6091,6 +6107,114 @@ def ck_role(l, cur):
     return {"rol": role, "p": v["p"], "t": v["t"]}
 
 
+# ------------------------------------------------------------ ŞANS BAHİSLERİ
+# Modelin önceden bilemediği bahisler (İY/MS 2/1-1/2, maç skoru, ilk yarı skoru). Her gün kaydedilir ve
+# sonuçlanır; amaç gerçekte nasıl gittiklerini sayıyla görmek. Seçim kuralları 7.905 maçlık geçmiş incelemesinden:
+# 2/1 en sık, ev sahibinin maç önü kazanma ihtimali %50-60 olan maçlarda (%3.2); 1/2 en sık deplasmanın %40-50
+# olduğu maçlarda (%3.6). Daha güçlü favorilerde 2/1 artmıyor, çünkü favori ilk yarıyı nadiren geride kapatıyor.
+SANS_FILE = "data/sans.json"
+SANS_RULES = (("im21", "İY/MS 2/1", "p1", 0.50, 0.62, "p21", 0.032),
+              ("im12", "İY/MS 1/2", "p2", 0.40, 0.52, "p12", 0.036))
+
+
+def update_sans(leagues, now):
+    try:
+        with open(SANS_FILE, encoding="utf-8") as f:
+            d = json.load(f)
+    except Exception:  # noqa
+        d = {"g": {}}
+    day = f"{day_window(now)[0]:%Y-%m-%d}"
+    if day in d["g"]:
+        return
+    cs = [(c, L["name"]) for L in leagues for c in L.get("cards", []) if c["state"] == "pre" and c["kick"] > now]
+    picks = []
+
+    used = set()
+
+    def add(c, lg, code, lab, p, exp, why):
+        if c["id"] in used:
+            return
+        used.add(c["id"])
+        picks.append({"m": c["id"], "ad": f"{c['home']} - {c['away']}", "lg": lg, "k": c["kick"].isoformat(),
+                      "b": code, "bl": lab, "p": round(p, 4), "exp": round(exp, 4), "why": why})
+    for code, lab, key, lo, hi, pk, exp in SANS_RULES:
+        sel = sorted([(c["r"].get(pk) or 0, c, lg) for c, lg in cs if lo <= (c["r"].get(key) or 0) < hi],
+                     key=lambda x: -x[0])[:3]
+        for p, c, lg in sel:
+            fav = c["home"] if key == "p1" else c["away"]
+            add(c, lg, code, lab, max(p, exp), exp,
+                f"{fav} maç önü %{c['r'][key] * 100:.0f} favori; geçmişte bu aralıkta {lab} oranı %{exp * 100:.1f} "
+                f"(adil oran ~{1 / exp:.0f}). Sadece iddaa oranı {1 / exp:.0f}+ ise mantıklı.")
+    sc = []
+    for c, lg in cs:
+        top = max(((k, v) for k, v in (c["r"].get("scores") or {}).items()), key=lambda x: x[1], default=None)
+        if top:
+            sc.append((top[1], c, lg, top[0]))
+    for p, c, lg, k in sorted(sc, key=lambda x: -x[0])[:3]:
+        add(c, lg, "sk" + k, f"Skor {k}", p, p, f"Modelin bu maç için en olası skoru (%{p * 100:.0f}, adil oran {1 / p:.1f}).")
+    hs = []
+    for c, lg in cs:
+        l1 = c["r"].get("lam1")
+        if not l1:
+            continue
+        best = max(((i, j, math.exp(-l1[0]) * l1[0] ** i / math.factorial(i) * math.exp(-l1[1]) * l1[1] ** j / math.factorial(j))
+                    for i in range(4) for j in range(4) if (i, j) != (0, 0)), key=lambda x: x[2])
+        hs.append((best[2], c, lg, best[0], best[1]))
+    for p, c, lg, i, j in sorted(hs, key=lambda x: -x[0])[:3]:
+        add(c, lg, f"iys{i}-{j}", f"İY skoru {i}-{j}", p, p,
+            f"0-0 dışında en olası ilk yarı skoru (%{p * 100:.0f}, adil oran {1 / p:.1f}).")
+    if picks:
+        d["g"][day] = picks
+        with open(SANS_FILE, "w", encoding="utf-8") as f:
+            json.dump(d, f, ensure_ascii=False, indent=1)
+
+
+def sans_html(results):
+    try:
+        with open(SANS_FILE, encoding="utf-8") as f:
+            d = json.load(f)
+    except Exception:  # noqa
+        return ""
+    if not d.get("g"):
+        return ""
+    changed, tot = False, defaultdict(lambda: [0, 0, 0.0])
+    body = ""
+    for i, day in enumerate(sorted(d["g"], reverse=True)):
+        rows = ""
+        for l in d["g"][day]:
+            r = results.get(str(l["m"])) or l.get("s")
+            if r and r[0] is not None and l.get("s") != list(r):
+                l["s"] = list(r)
+                changed = True
+            ok = bet_settle(l["b"], r) if r and r[0] is not None else None
+            grp = l["b"][:4] if l["b"].startswith("im") else ("iys" if l["b"].startswith("iys") else "sk")
+            if ok is not None:
+                tot[grp][0] += ok
+                tot[grp][1] += 1
+                tot[grp][2] += l["exp"]
+            res = "" if ok is None else (f" <b class='{'pos' if ok else 'neg'}'>{r[0]}-{r[1]}"
+                                          f"{f' (İY {r[2]}-{r[3]})' if r[2] is not None else ''} {'✓' if ok else '✗'}</b>")
+            when = dt.datetime.fromisoformat(l["k"]).astimezone(TR)
+            rows += (f"<div class='lg2'><div><b>{E(l['ad'])}</b> · {E(l['bl'])}{res}</div>"
+                     f"<div class='note'>{when:%d.%m %H:%M} · {E(l['lg'])} · {E(l['why'])}</div></div>")
+        body += (f"<details class='cd'{' open' if i == 0 else ''}><summary><b>{dt.date.fromisoformat(day):%d.%m.%Y}</b> · "
+                 f"{len(d['g'][day])} seçenek</summary>{rows}</details>")
+    if changed:
+        with open(SANS_FILE, "w", encoding="utf-8") as f:
+            json.dump(d, f, ensure_ascii=False, indent=1)
+    names = {"im21": "İY/MS 2/1", "im12": "İY/MS 1/2", "sk": "Maç skoru", "iys": "İY skoru"}
+    st = " · ".join(f"{names[k]}: {v[0]}/{v[1]} tuttu (beklenen {v[2]:.1f})" for k, v in tot.items() if v[1])
+    return ("<details class='rp'><summary><b>Şans bahisleri</b> <span class='note'>(model bunları bilemiyor · dokun)</span></summary>"
+            "<div class='tc'>İY/MS 2/1-1/2, maç skoru ve ilk yarı skoru geçmiş testte önceden tahmin edilemedi. Burada her gün "
+            "kuralla seçilip kaydediliyor ve sonuçlanıyor, böylece gerçekte nasıl gittiğini görüyoruz. 7.905 maçlık "
+            "inceleme: 2/1 maçların %2.9'unda, 1/2 %2.4'ünde oluyor. Maçı çeviren takım çoğunlukla favori (2/1'lerin "
+            "%77'sinde ev sahibi favoriydi) ama favori ilk yarıyı nadiren geride kapattığı için maç öncesi 2/1 ihtimali "
+            "favorilikle artmıyor (her oran aralığında %2-3). Asıl fark devre arasında: favori devreyi 1 farkla geride "
+            "kapatırsa %18'inde maçı çeviriyor, %48'inde puan alıyor (zayıf takımda %6). Bu yüzden 2/1-1/2'nin değerli "
+            "anı maç öncesi değil, devre arası: Canlı sayfası bunu gösterir. Çok küçük tutar."
+            f"{('<br><b>Şimdiye kadar:</b> ' + st) if st else ''}</div>{body}</details>")
+
+
 def write_claude_page(results, now):
     d = load_ck()
     ks = d["kuponlar"]
@@ -6193,7 +6317,7 @@ def write_claude_page(results, now):
             "2. öneri ya da aday) yazar; sonradan veri güncellenip ihtimal değiştiyse o da gösterilir. Sonuçlar botun her "
             "çalışmasında kendiliğinden işlenir. Model ihtimali tahmindir, kâr garantisi vermez. "
             f"Güncelleme: {now.astimezone(TR):%d.%m.%Y %H:%M}</p></header>"
-            f"<div style='padding:0 12px 24px'>{head}{body or '<p class=empty>Henüz kupon yok.</p>'}</div></body></html>")
+            f"<div style='padding:0 12px 24px'>{head}{sans_html(results)}{body or '<p class=empty>Henüz kupon yok.</p>'}</div></body></html>")
     with open("claude.html", "w", encoding="utf-8") as f:
         f.write(page)
 
