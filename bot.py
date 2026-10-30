@@ -2468,9 +2468,16 @@ def send_mail(st, leagues, now):
         print("E-posta gönderilemedi:", type(e).__name__, str(e)[:120])
 
 
+PLAN_FILE = "data/plan.json"
+
+
 def main():
     global PREV_SNAPSHOT
     now = dt.datetime.now(UTC)
+    plan = os.environ.get("PLAN_DATE", "").strip()
+    if plan:      # ileri tarih modu: o günün maçlarını değerlendirir, sadece data/plan.json yazar
+        now = dt.datetime.fromisoformat(plan).replace(hour=DAY_START, minute=1, tzinfo=TR).astimezone(UTC)
+        print("PLAN modu:", plan, now, flush=True)
     PREV_SNAPSHOT = snapshot_from_html()       # sayfa yeniden yazılmadan önce önceki durumu oku
     load_odds()
     load_cache()
@@ -2535,6 +2542,20 @@ def main():
                     TEAM_TREND[t] = tr_
     for L in leagues:
         finish_league(L, now, pool_eval, pool_all)
+    if plan:
+        ms = {}
+        for L in leagues:
+            for c in L.get("cards", []):
+                try:
+                    ms[c["id"]] = analiz_entry(c)
+                except Exception as e:  # noqa
+                    print("plan verisi yazılamadı:", c.get("id"), e, flush=True)
+        trust = {f"{k}|{t}": [round(v["hit"], 3), v["n"], round(v["base"], 3)] for (k, t), v in (TRUST or {}).items()}
+        with open(PLAN_FILE, "w", encoding="utf-8") as f:
+            json.dump({"d": plan, "t": dt.datetime.now(UTC).isoformat(), "trust": trust, "m": ms},
+                      f, ensure_ascii=False, separators=(",", ":"))
+        print("plan yazıldı:", len(ms), "maç", flush=True)
+        return
     update_odds_archive(leagues, now)
     MACS_BY_ID.update(write_maclar(leagues, now))
     st = load_store()
@@ -5915,12 +5936,20 @@ def ck_role(l, cur):
 def write_claude_page(results, now):
     d = load_ck()
     ks = d["kuponlar"]
-    try:
-        with open(AN_FILE, encoding="utf-8") as f:
-            cur = json.load(f).get("m", {})
-    except Exception:  # noqa
-        cur = {}
+    cur = {}
+    for fn in (PLAN_FILE, AN_FILE):          # güncel analiz, ileri tarih planının üstüne yazar
+        try:
+            with open(fn, encoding="utf-8") as f:
+                cur.update(json.load(f).get("m", {}))
+        except Exception:  # noqa
+            pass
     changed = False
+    for k in ks:
+        for l in k["legs"]:
+            r = results.get(str(l["m"]))
+            if r and r[0] is not None and l.get("s") != list(r):
+                l["s"] = list(r)
+                changed = True
     for k in ks:
         for l in k["legs"]:
             r_ = ck_role(l, cur)
@@ -5940,7 +5969,7 @@ def write_claude_page(results, now):
     for k in ks:
         rs = []
         for l in k["legs"]:
-            r = results.get(str(l["m"]))
+            r = results.get(str(l["m"])) or l.get("s")
             l["_s"] = r
             l["_ok"] = bet_settle(l["b"], r) if r and r[0] is not None else None
             rs.append(l["_ok"])
@@ -5966,7 +5995,8 @@ def write_claude_page(results, now):
                  f"{len(lst)} kupon{f' · {w}/{dn} tuttu' if dn else ''}</summary>")
         for k in lst:
             st = {"tuttu": "<b class='pos'>Tuttu</b>", "yatti": "<b class='neg'>Yattı</b>"}.get(k["_st"], "Bekliyor")
-            body += (f"<div class='ck2'><div class='ckh'><b>{E(k['title'])}</b><span>{st}</span></div>"
+            sp = " <span class='tier t0' style='background:#7c3aed'>SÜRPRİZ</span>" if k.get("tip") == "surpriz" else ""
+            body += (f"<div class='ck2'><div class='ckh'><b>{E(k['title'])}{sp}</b><span>{st}</span></div>"
                      f"<div class='note'>Model: birlikte tutma ihtimali <b>%{k['p'] * 100:.0f}</b> (yaklaşık "
                      f"{max(1, round(1 / k['p']))} kuponda 1)</div><p class='tx'>{E(k.get('why', ''))}</p>")
             for l in k["legs"]:
@@ -6257,5 +6287,7 @@ if __name__ == "__main__":
     import sys
     if len(sys.argv) > 1 and sys.argv[1] == "canli":
         live_loop()
+    elif len(sys.argv) > 1 and sys.argv[1] == "claude":     # ağsız: sadece Claude kupon sayfasını yeniden yaz
+        write_claude_page({}, dt.datetime.now(UTC))
     else:
         main()

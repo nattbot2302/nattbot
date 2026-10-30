@@ -1,0 +1,46 @@
+name: plan
+
+# Belirli bir gün için model değerlendirmesini önceden üretir (data/plan.json); sayfalara dokunmaz.
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Gün (YYYY-AA-GG)"
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: ESPN önbelleği
+        uses: actions/cache@v4
+        with:
+          path: .espn_cache
+          key: espn-${{ github.run_id }}
+          restore-keys: espn-
+      - run: python bot.py
+        env:
+          PLAN_DATE: ${{ inputs.date }}
+      - name: Planı kaydet
+        run: |
+          git config user.name "bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add data/plan.json
+          git diff --cached --quiet || git commit -m "plan ${{ inputs.date }}"
+          for i in 1 2 3; do
+            git pull --rebase -X theirs origin main && git push && break
+            git rebase --abort 2>/dev/null || true
+            sleep 10
+          done
