@@ -49,7 +49,7 @@ def actual(hg, ag, ht):
     return a
 
 
-# ---- Düzeltilmiş ihtimal: geçmiş 2.509 maçta (bot.py geriye dönük testi) modelin her pazarda ne kadar
+# ---- Düzeltilmiş ihtimal (İY modeli v2 ile yenilendi): geçmiş 2.509 maçta (bot.py geriye dönük testi) modelin her pazarda ne kadar
 # iyimser/kötümser olduğu ondalık dilimlerle ölçüldü (data/surp_cal.json). Kupon kurarken ham değil bunu kullan.
 import json as _json, os as _os
 _CAL = _json.load(open(_os.path.join(_os.path.dirname(__file__), "..", "data", "surp_cal.json")))

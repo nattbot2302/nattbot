@@ -844,6 +844,156 @@ def half_lams(model, h, a, lam_h, lam_a):
     return lam_h * sh, lam_a * sa
 
 
+# ------------------------------------------------------------ İLK YARI MODELİ (v2)
+# Eski yöntem: maç sonu gol beklentisi x takımın ilk yarı payı. Deney (7.905 maç, 3 farklı dönem): takımların
+# "ilk yarı alışkanlığı" tahmine bir şey katmıyor, ama son 10 maçtaki şut ve isabetli şut verisi katıyor
+# (İY 1.5 Üst'te en güvenilen %10: %45-48 yerine %50-53 tuttu, tahminle gerçek örtüştü).
+# Her takım tarafı için ilk yarı golü = exp(b · özellikler) (Poisson regresyonu); kullanılan değer eski yöntemle
+# bunun geometrik ortalaması (iy_half). Katsayılar her çalışmada tüm
+# liglerin geçmişinden yeniden öğrenilir (data/iy_model.json); doğruluk testi sadece test dönemi öncesiyle
+# öğrenilmiş katsayıları kullanır.
+IY_FILE = "data/iy_model.json"
+IY_MODEL = {}
+IY_FEATS = {}       # maç id -> (ev özellikleri, dep özellikleri, şut var mı)
+
+
+def _lg(x):
+    return math.log(max(x, 0) + 0.2)
+
+
+def iy_feature_map(allm):
+    """Lig maçları (tarih sıralı) -> her maç için o maçtan ÖNCEKİ verilerle ilk yarı özellikleri."""
+    TH, LG, out = defaultdict(list), [], {}
+    for m in sorted(allm, key=lambda x: x["date"]):
+        H, A = TH[m["hid"]][-10:], TH[m["aid"]][-10:]
+        Hv = [x for x in TH[m["hid"]] if x[0]][-5:]
+        Av = [x for x in TH[m["aid"]] if not x[0]][-5:]
+        L = LG[-300:]
+        if len(H) >= 6 and len(A) >= 6 and len(Hv) >= 3 and len(Av) >= 3 and len(L) >= 50:
+            def av(P, k):
+                q = [x[k] for x in P if x[k] is not None]
+                return sum(q) / len(q) if len(q) >= (1 if k <= 2 else 4) else None
+            lht = sum(x[0] for x in L) / len(L)
+            lft = sum(x[1] for x in L) / len(L)
+            base = lambda T, O, Tv, Ov: [_lg(av(T, 1)), _lg(av(O, 2)), _lg(av(Tv, 1)), _lg(av(Ov, 2)), _lg(lht), lht / max(lft, 0.5)]  # noqa
+            fh, fa = base(H, A, Hv, Av), base(A, H, Av, Hv)
+            sh = [av(H, 3), av(A, 4), av(H, 5), av(A, 6)], [av(A, 3), av(H, 4), av(A, 5), av(H, 6)]
+            ok = all(v is not None for v in sh[0] + sh[1])
+            if ok:
+                fh, fa = fh + [_lg(v) for v in sh[0]], fa + [_lg(v) for v in sh[1]]
+            out[m["id"]] = (fh, fa, ok)
+        if m["done"] and m["hg"] is not None and m["ag"] is not None:
+            st = m.get("st") or {}
+            TH[m["hid"]].append((1, m["hg"], m["ag"], st.get("hsot"), st.get("asot"), st.get("hs"), st.get("as")))
+            TH[m["aid"]].append((0, m["ag"], m["hg"], st.get("asot"), st.get("hsot"), st.get("as"), st.get("hs")))
+            if m.get("ht"):
+                LG.append((m["ht"][0] + m["ht"][1], m["hg"] + m["ag"]))
+    return out
+
+
+def iy_lams(mid, which):
+    f = IY_FEATS.get(mid)
+    M = IY_MODEL.get(which) if f else None
+    if not M:
+        return None
+    k = "s" if f[2] else "n"
+    if k not in M:
+        return None
+    res = []
+    for side in (0, 1):
+        b = M[k][side]
+        x = f[side] if f[2] else f[side][:6]
+        z = b[0] + sum(bi * xi for bi, xi in zip(b[1:], x))
+        res.append(min(max(math.exp(z), 0.05), 3.0))
+    return tuple(res)
+
+
+def iy_half(mid, which, old):
+    """Eski (pay) ve yeni (şut) ilk yarı tahmininin geometrik ortalaması. Deney: 2.043 maçta beş ilk yarı
+    pazarının beşinde de ikisinden tek tek daha iyi (log-kayıp), en güvenilen %10'da tahmin ile gerçek daha yakın."""
+    new = iy_lams(mid, which)
+    if not new or not old:
+        return old or new
+    return tuple(math.sqrt(a * b) for a, b in zip(old, new))
+
+
+def poisson_glm(X, y, ridge=1e-3, it=30):
+    """Saf Python Poisson regresyonu (IRLS). X: satır listesi, y: sayılar. Dönüş: [kesişim, katsayılar...]."""
+    n, p = len(X), len(X[0]) + 1
+    Z = [[1.0] + list(r) for r in X]
+    ym = max(sum(y) / n, 0.05)
+    b = [math.log(ym)] + [0.0] * (p - 1)
+    for _ in range(it):
+        A = [[0.0] * p for _ in range(p)]
+        g = [0.0] * p
+        for zi, yi in zip(Z, y):
+            eta = sum(bj * zj for bj, zj in zip(b, zi))
+            mu = math.exp(min(eta, 5))
+            for a_ in range(p):
+                g[a_] += (yi - mu) * zi[a_]
+                wa = mu * zi[a_]
+                row = A[a_]
+                for c_ in range(a_, p):
+                    row[c_] += wa * zi[c_]
+        for a_ in range(p):
+            for c_ in range(a_):
+                A[a_][c_] = A[c_][a_]
+            A[a_][a_] += ridge * n * (a_ > 0)
+            g[a_] -= ridge * n * b[a_] * (a_ > 0)
+        # A d = g  (Gauss eleme)
+        M = [A[i][:] + [g[i]] for i in range(p)]
+        for i in range(p):
+            piv = max(range(i, p), key=lambda r: abs(M[r][i]))
+            M[i], M[piv] = M[piv], M[i]
+            if abs(M[i][i]) < 1e-12:
+                return b
+            for r in range(i + 1, p):
+                f_ = M[r][i] / M[i][i]
+                for c_ in range(i, p + 1):
+                    M[r][c_] -= f_ * M[i][c_]
+        d = [0.0] * p
+        for i in range(p - 1, -1, -1):
+            d[i] = (M[i][p] - sum(M[i][c_] * d[c_] for c_ in range(i + 1, p))) / M[i][i]
+        b = [bj + dj for bj, dj in zip(b, d)]
+        if max(abs(x) for x in d) < 1e-6:
+            break
+    return b
+
+
+def fit_iy_model(leagues, now):
+    rows = []
+    for L in leagues:
+        if L["slug"].startswith("uefa."):
+            continue
+        for m in L.get("allm", []):
+            f = IY_FEATS.get(m["id"])
+            if f and m["done"] and m.get("ht") and m["hg"] is not None:
+                rows.append((m["date"], f, m["ht"]))
+    cut = now - dt.timedelta(days=BACKTEST_DAYS + CALIB_DAYS)
+    out = {"t": now.isoformat()}
+    for which, sel in (("eval", [r for r in rows if r[0] < cut]), ("full", rows)):
+        M = {}
+        for k in ("n", "s"):
+            R = [r for r in sel if k == "n" or r[1][2]]
+            if len(R) < 800:
+                continue
+            M[k] = [[round(v, 5) for v in poisson_glm([r[1][side] if k == "s" else r[1][side][:6] for r in R],
+                                                      [r[2][side] for r in R])] for side in (0, 1)]
+            M[k + "_n"] = len(R)
+        out[which] = M
+    with open(IY_FILE, "w", encoding="utf-8") as f:
+        json.dump(out, f)
+    print("İY modeli:", {w: {k: v for k, v in out[w].items() if k.endswith("_n")} for w in ("eval", "full")}, flush=True)
+
+
+def load_iy_model():
+    try:
+        with open(IY_FILE, encoding="utf-8") as f:
+            IY_MODEL.update(json.load(f))
+    except Exception:  # noqa
+        pass
+
+
 K_GRID = [x / 20 for x in range(6, 21)]          # 0.30 .. 1.00
 C_GRID = [x / 100 for x in range(80, 131, 2)]     # 0.80 .. 1.30
 
@@ -1762,11 +1912,12 @@ def backtest_raw(matches, now):
             if m["date"].date() != d:
                 continue
             lam = lambdas(model, m["hid"], m["aid"])
-            hl = half_lams(model, m["hid"], m["aid"], *lam)
+            hl = iy_half(m["id"], "eval", half_lams(model, m["hid"], m["aid"], *lam))
             r0 = analyze(*lam, rho=model["rho"], half=hl, joint=False)
             ev = rapor_eval(rctx, m, r0, neighbors(plams, *lam), m["home"], m["away"])
             out.append({"date": ref, "lam": lam, "mu": mus(model), "rho": model["rho"],
-                        "sh": (hl[0] / lam[0], hl[1] / lam[1]) if hl else None,
+                        "sh": (hl[0] / lam[0], hl[1] / lam[1]) if hl else None, "iy2": bool(hl) and m["id"] in IY_FEATS and bool(IY_MODEL.get("eval")),
+                        "hl": hl, "hl_old": half_lams(model, m["hid"], m["aid"], *lam),
                         "hg": m["hg"], "ag": m["ag"], "m": m,
                         "rp": {k: (v["tier"], m_ev(k, m), v["p"], v["score"]) for k, v in ev["m"].items()},
                         "rpmain": ev["main"], "f25": (ev["m"].get("o25") or {}).get("f")})
@@ -1778,7 +1929,7 @@ def bt_eval(raw, kc):
     for x in raw:
         m = x["m"]
         lam = calibrate(x["lam"], x["mu"], kc)
-        hl = (lam[0] * x["sh"][0], lam[1] * x["sh"][1]) if x["sh"] else None
+        hl = x["hl"] if x.get("iy2") else ((lam[0] * x["sh"][0], lam[1] * x["sh"][1]) if x["sh"] else None)
         r = analyze(*lam, rho=x["rho"], half=hl, joint=False)
         vb = [(v["code"], v["o"], settle(v["code"], m["hg"], m["ag"]))
               for v in value_bets(r, m.get("odds"))]
@@ -1865,6 +2016,8 @@ def process_league(slug, name, calendar, now):
                        for m in finished}
     bf = dt.datetime.fromisoformat(BET_FROM).replace(tzinfo=TR)
     info["allm_bet"] = [m for m in allm if m["date"] >= bf]
+    if not slug.startswith("uefa."):
+        IY_FEATS.update(iy_feature_map(allm))
     info["allm"] = allm
     info["nall"] = len(allm)
     d0, d1 = day_window(now)
@@ -1956,7 +2109,7 @@ def finish_league(info, now, pool_eval, pool_all):
     for m in todays:
         lam_raw = lambdas(model, m["hid"], m["aid"])
         lam = calibrate(lam_raw, mu, kc)
-        hl = half_lams(model, m["hid"], m["aid"], *lam)
+        hl = iy_half(m["id"], "full", half_lams(model, m["hid"], m["aid"], *lam))
         r = analyze(*lam, rho=model["rho"], half=hl)
         low = [n for t, n in ((m["hid"], m["home"]), (m["aid"], m["away"]))
                if model["games"].get(t, 0) < LOW_DATA]
@@ -2481,6 +2634,7 @@ def main():
     PREV_SNAPSHOT = snapshot_from_html()       # sayfa yeniden yazılmadan önce önceki durumu oku
     load_odds()
     load_cache()
+    load_iy_model()
     leagues = {}
     # önce yerel ligler: kupa maçlarındaki lig gücü düzeltmesi bunlara dayanır
     for slug, name, cal in sorted(LEAGUES, key=lambda x: x[0].startswith("uefa.")):
@@ -2542,6 +2696,10 @@ def main():
                     TEAM_TREND[t] = tr_
     for L in leagues:
         finish_league(L, now, pool_eval, pool_all)
+    try:
+        fit_iy_model(leagues, now)
+    except Exception as e:  # noqa
+        print("İY modeli öğrenilemedi:", e, flush=True)
     if plan:
         ms = {}
         for L in leagues:
