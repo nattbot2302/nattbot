@@ -1,0 +1,110 @@
+<!doctype html><html lang='tr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>İlk Yarı</title><style>
+:root{--bg:#f4f5f7;--card:#fff;--tx:#1a1a1a;--mu:#666;--hi:#c8f0d2;--mid:#fdf0c4;--lo:#eee;--ac:#0a7d3b;--bd:#ddd;--neg:#c0392b;--warn:#b26a00}
+@media (prefers-color-scheme:dark){:root{--bg:#111;--card:#1c1c1e;--tx:#eee;--mu:#999;--hi:#1f5130;--mid:#5a4a14;--lo:#2a2a2c;--ac:#3ecf72;--bd:#333;--neg:#ff6b5e;--warn:#f0a940}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif}
+header{padding:12px 12px 0}h1{font-size:20px;margin:0}
+.upd{color:var(--mu);font-size:12px;margin:6px 0}
+nav{position:sticky;top:0;background:var(--bg);padding:8px 12px;z-index:5}
+nav select{width:100%;font-size:16px;font-weight:600;padding:10px 12px;border-radius:10px;background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+nav button{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:16px;padding:7px 12px;font-size:13px;flex:none}
+nav button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+nav small{opacity:.7}
+.tab{display:none;padding:4px 12px 24px}.tab.on{display:block}
+h2{font-size:17px;margin:4px 0 8px}h3{font-size:15px;margin:16px 0 6px}
+.card{background:var(--card);border-radius:12px;padding:14px;margin-bottom:12px}
+.meta,.row{color:var(--mu);font-size:13px;margin-top:6px}
+.row b{color:var(--tx);font-weight:600}
+.sec{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mu);margin:12px 0 6px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.b{text-align:center;border-radius:8px;padding:7px 4px;font-size:12px}
+.b b{font-size:17px}.hi{background:var(--hi)}.mid{background:var(--mid)}.lo{background:var(--lo)}
+.sc{float:right;font-weight:600;color:var(--tx)}
+.warn{color:var(--warn);font-size:12px;margin-top:6px}
+.wrap{overflow-x:auto;margin-top:6px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{padding:6px 5px;text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}
+th{color:var(--mu);font-weight:600}
+td.n,th.n{text-align:right}
+.pos{color:var(--ac);font-weight:600}.neg{color:var(--neg);font-weight:600}
+summary{margin-top:10px;font-size:13px;cursor:pointer}li{font-size:13px;color:var(--mu)}
+.fire{color:var(--ac);font-weight:700}
+.empty,.err{color:var(--mu);font-size:14px;padding:12px 0}
+.note{color:var(--mu);font-size:12.5px;line-height:1.45}
+.b small{display:block;font-size:10.5px;color:var(--mu);margin-top:1px}
+.b.val{outline:2px solid var(--ac);outline-offset:-2px}
+.radar{border:2px solid var(--warn);border-radius:12px;padding:12px;margin:10px 0 14px;background:var(--card)}
+.radar h3{margin:0 0 6px;color:var(--warn)}
+.valbox{border:2px solid var(--ac);border-radius:12px;padding:12px;margin:10px 0 14px;background:var(--card)}
+.valbox h3{margin:0 0 6px;color:var(--ac)}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;margin-right:4px}
+.tag.s{background:var(--warn);color:#fff}.tag.v{background:var(--ac);color:#fff}
+tr.hl td{font-weight:700;color:var(--tx)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.chip{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:14px;padding:5px 10px;font-size:12.5px;text-decoration:none}
+.chip small{color:var(--mu)}
+.cpf{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--mu);margin-top:8px;padding-top:8px;border-top:1px dashed var(--bd)}
+.cpf b{color:var(--tx)}
+.sub{margin-top:14px;padding:10px;border-radius:10px;background:var(--lo)}
+.sub h3{margin:0 0 4px}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+.alarm{border:2px solid #d93025;border-radius:12px;padding:10px 12px;margin:8px 0 2px;background:var(--card)}
+.ah{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px}
+.live{display:inline-block;background:#d93025;color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;animation:bl 1.6s infinite}
+@keyframes bl{50%{opacity:.55}}
+.arow{display:block;text-decoration:none;color:var(--tx);border-top:1px solid var(--bd);padding:8px 0 6px;margin-top:6px}
+.at{font-size:13.5px}.ab{font-size:14px;margin-top:3px}.ar{font-size:12px;color:var(--warn);margin-top:3px}
+.lv{font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:5px;color:#fff;background:var(--warn)}
+.arow.kritik .lv{background:#d93025}
+
+.topnav{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0 6px}
+.topnav a.lvb{grid-column:span 1}
+.topnav a{display:block;text-align:center;white-space:nowrap;background:var(--card);color:var(--tx);border:1px solid var(--bd);text-decoration:none;font-weight:700;font-size:13px;padding:8px 4px;border-radius:16px}
+.topnav a.lvb{background:#d93025;color:#fff;border-color:#d93025}
+.bars{font-family:monospace;letter-spacing:1px;color:var(--ac)}
+.rpchips{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 10px}
+.rpchips button{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:14px;padding:6px 11px;font-size:12.5px;flex:none}
+.rpchips button.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.rps{display:none}.rps.on{display:block}
+details.rp{background:var(--card);border-radius:12px;margin-bottom:8px;padding:10px 12px}
+details.rp summary{list-style:none;cursor:pointer;margin:0}
+details.rp summary::-webkit-details-marker{display:none}
+.rt{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--mu)}
+.rm{font-size:15px;margin-top:3px}.rb{font-size:14px;margin-top:3px}
+.tier{font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:5px;color:#fff}
+.tier.t2{background:#0a7d3b}.tier.t1{background:#b26a00}.tier.t0{background:#777}
+ul.ck{list-style:none;padding:0;margin:10px 0 6px}
+ul.ck li{font-size:13px;padding:4px 0;border-bottom:1px solid var(--bd)}
+ul.ck li.y::before{content:'✓ ';color:var(--ac);font-weight:800}
+ul.ck li.n::before{content:'✗ ';color:var(--neg);font-weight:800}
+ul.ck li.n{color:var(--mu)}
+ul.ck li.i::before{content:'ℹ ';color:var(--mu)}
+.tc{font-size:12.5px;margin:6px 0;line-height:1.5}
+.fm b{display:inline-block;width:15px;text-align:center;border-radius:3px;color:#fff;font-size:10.5px;margin-right:1px}
+.fm .G{background:#0a7d3b}.fm .B{background:#888}.fm .M{background:#c0392b}
+.yorum{font-size:13px;line-height:1.5;background:var(--lo);border-radius:8px;padding:8px 10px;margin:8px 0}
+.res{font-size:12px;font-weight:700;margin-left:6px}
+.no{display:inline-block;width:17px;height:17px;line-height:17px;text-align:center;border-radius:50%;background:var(--tx);color:var(--bg);font-size:11px;font-weight:800;margin-right:6px}
+.r2{color:var(--mu);font-size:13px}.r2 .no{background:var(--mu)}
+.hist{font-size:12.5px;margin:4px 0 2px;color:var(--mu)}
+.bt td.up{color:var(--ac);font-weight:700}.bt td.dn{color:var(--neg);font-weight:700}
+.tf{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;margin:10px 0 2px}
+.tf select{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:6px 4px;font-size:13px}
+.tf button{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:14px;padding:6px 10px;font-size:12.5px}
+
+.uc{border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin:6px 0;background:var(--card)}
+.uc summary{list-style:none;cursor:pointer}.uc summary::-webkit-details-marker{display:none}
+.uh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.uh small{display:block;color:var(--mu);font-size:12px;font-weight:400;margin-top:2px}
+.up{font-size:20px;font-weight:800;color:var(--ac);white-space:nowrap}
+
+.lg{border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin:8px 0;background:var(--card)}
+.lg>summary{cursor:pointer}
+.kp{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.kp span{background:var(--lo);border-radius:6px;padding:3px 7px;font-size:12px}
+.pls{display:flex;gap:6px;margin-top:6px}.pl{background:var(--lo);border-radius:8px;padding:3px 8px;font-size:12px}
+.pl b{font-size:15px;color:var(--ac);margin:0 3px}.pl small{color:var(--mu)}
+table.tt td,table.tt th,table.mt td,table.mt th,table.tp td,table.tp th{font-size:12px;padding:4px 5px}
+tr.hl td{background:var(--lo)}tr.lgr td{color:var(--mu);font-style:italic}
+td.pos,span.pos{color:#1e8e3e;font-weight:700}td.neg,span.neg{color:#d93025}
+.lg .wrap{overflow-x:auto}
+</style></head><body><header><div style='display:flex;justify-content:space-between;align-items:center'><h1>İlk Yarı: 1.5 Üst ve KG</h1><a href='index.html' style='color:var(--ac);text-decoration:none;font-weight:600'>← Günün maçları</a></div><p class='note'>Bugünün maçlarında İY 1.5 Üst (ilk yarıda en az 2 gol) ve İY KG Var (ilk yarıda iki takım da gol atar). Büyük yazan ihtimal, modelin ham değerinin son 60 günde gerçekte ne kadar tuttuğuna göre <b>düzeltilmiş</b> halidir; model bu iki bahiste yüksek ihtimallerde iyimser kalıyor. Yeşil: lig ortalamasından 8 puan+ yüksek, kırmızı: düşük. Güncelleme: 31.10.2026 12:34</p></header><div style='padding:0 12px 24px'><div class='sec'>İY 1.5 Üst · en yüksek 0 maç</div><p class='note'>Başlamamış maç yok.</p><div class='sec'>İY KG Var · en yüksek 0 maç</div><p class='note'>Başlamamış maç yok.</p><div class='sec'>Lig lig bugünün maçları</div><p class='note'>Lige dokun: lig istatistikleri, maçlar (dokununca iki takımın ilk yarı sayıları ve kriterler) ve bütün takımların ilk yarı tablosu.</p><div class='sec'>Bütün ligler · ilk yarı karnesi</div><div class='wrap'><table class='tt'><tr><th>Lig</th><th class='n'>Maç</th><th class='n'>İY gol</th><th class='n'>İY<br>0.5Ü</th><th class='n'>İY<br>1.5Ü</th><th class='n'>İY<br>KG</th><th class='n'>Bugün</th></tr></table></div><div class='sec'>Model geçmişte ne kadar tuttu?</div><div class='wrap'><table><tr><th>Model dilimi</th><th class='n'>Maç</th><th class='n'>Model ort.</th><th class='n'>Gerçekleşen</th></tr><tr><td colspan='4'><b>İY 1.5 Üst</b> · tüm maçlar %36 (2960)</td></tr><tr><td>Alt yarı</td><td class='n'>1480</td><td class='n'>%30</td><td class='n'><b>%32</b></td></tr><tr><td>Üst çeyrek altı</td><td class='n'>740</td><td class='n'>%38</td><td class='n'><b>%38</b></td></tr><tr><td>İlk %25</td><td class='n'>444</td><td class='n'>%44</td><td class='n'><b>%40</b></td></tr><tr><td>İlk %10</td><td class='n'>296</td><td class='n'>%51</td><td class='n'><b>%49</b></td></tr><tr><td colspan='4'><b>İY KG Var</b> · tüm maçlar %21 (2960)</td></tr><tr><td>Alt yarı</td><td class='n'>1480</td><td class='n'>%17</td><td class='n'><b>%18</b></td></tr><tr><td>Üst çeyrek altı</td><td class='n'>740</td><td class='n'>%23</td><td class='n'><b>%20</b></td></tr><tr><td>İlk %25</td><td class='n'>444</td><td class='n'>%26</td><td class='n'><b>%25</b></td></tr><tr><td>İlk %10</td><td class='n'>296</td><td class='n'>%32</td><td class='n'><b>%27</b></td></tr></table></div><p class='note'>Geri test: son 60 gün, her maç o güne kadarki veriyle; dilimler model ihtimaline göre sıralı. Gerçek kayıt (maç öncesi kaydedilen): İY 1.5 Üst: tüm maçlar %40 (557), model ≥%40 iken %46 (237) · İY KG Var: tüm maçlar %23 (557), model ≥%25 iken %28 (190).</p><p class='note'>Model tahmindir, kâr garantisi vermez.</p></div></body></html>
