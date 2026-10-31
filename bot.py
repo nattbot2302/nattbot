@@ -2063,6 +2063,7 @@ def finish_league(info, now, pool_eval, pool_all):
     if info["err"] or "_ctx" not in info:
         return info
     model, past, th, ss, todays = info.pop("_ctx")
+    info["_iy"] = (past, th, ss)         # İlk Yarı sayfası için
     raw = info.pop("raw")
     info["rp_bt"] = [(x["rp"], x["rpmain"], x["date"]) for x in raw if "rp" in x]
     name = info["name"]
@@ -6253,9 +6254,10 @@ def write_ilkyari(st, leagues, now, allraw):
     # lig ve maç verisi
     lsum, sections, cand = [], [], {k: [] for k, _ in IY_KEYS}
     for L in leagues:
-        if "_ctx" not in L:
+        ctx_ = L.get("_iy") or ((L["_ctx"][1], L["_ctx"][2], L["_ctx"][3]) if "_ctx" in L else None)
+        if not ctx_:
             continue
-        past, th, ss = L["_ctx"][1], L["_ctx"][2], L["_ctx"][3]
+        past, th, ss = ctx_
         sez = [m for m in past if m["date"] >= ss and m.get("ht")]
         scope = "bu sezon"
         if len(sez) < 30:
