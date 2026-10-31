@@ -2728,6 +2728,10 @@ def main():
     write_analiz_html()
     write_karne(st, leagues, now)
     write_ust25(st, leagues, now, LAST_RAW)
+    try:
+        write_ilkyari(st, leagues, now, LAST_RAW)
+    except Exception as e:  # noqa
+        print("ilk yarı sayfası yazılamadı:", e, flush=True)
     res_all = {}
     for L in leagues:
         res_all.update(L.get("results", {}))
@@ -4592,6 +4596,7 @@ def write_html(leagues, now, st=None):
             f"<a href='karne.html?v={int(now.timestamp())}'>Karne</a>"
             f"<a href='ust25.html?v={int(now.timestamp())}'>2.5 Üst</a>"
             f"<a href='ust35.html?v={int(now.timestamp())}'>3.5 Üst</a>"
+            f"<a href='ilkyari.html?v={int(now.timestamp())}'>İlk Yarı</a>"
             f"<a href='claude.html?v={int(now.timestamp())}'>Kuponlar</a>"
             f"<a class='lvb' href='canli.html?v={int(now.timestamp())}'>● Canlı</a></div>"
             f"<div class='upd'>Güncelleme: {local:%d.%m.%Y %H:%M} · "
@@ -6128,6 +6133,280 @@ UST_CSS = """
 .uh{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .uh small{display:block;color:var(--mu);font-size:12px;font-weight:400;margin-top:2px}
 .up{font-size:20px;font-weight:800;color:var(--ac);white-space:nowrap}
+"""
+
+
+# ------------------------------------------------------------ İLK YARI SAYFASI (ilkyari.html)
+# İY 1.5 Üst ve İY KG Var: lig bazlı ilk yarı istatistikleri, takım tabloları, bugünün maçları ve model ihtimali.
+IY_KEYS = (("iy15", "İY 1.5 Üst"), ("iykg", "İY KG Var"))
+
+
+def iy_ok(key, h1, a1):
+    return h1 + a1 >= 2 if key == "iy15" else (h1 > 0 and a1 > 0)
+
+
+def iy_cal(allraw, key, now):
+    """Son 60 günün geri testinden (maç günü öncesi veriyle) model ihtimali -> gerçekleşen oran tablosu."""
+    cut = now - dt.timedelta(days=BACKTEST_DAYS)
+    pts = sorted((x["rp"][key][2], bool(x["rp"][key][1])) for x in allraw or []
+                 if x["date"] >= cut and "rp" in x and key in x["rp"] and x["rp"][key][1] is not None)
+    if len(pts) < 200:
+        return None, pts
+    nb = 8
+    sz = len(pts) // nb
+    cal = []
+    for i in range(nb):
+        ch = pts[i * sz:(i + 1) * sz] if i < nb - 1 else pts[i * sz:]
+        cal.append((sum(p for p, _ in ch) / len(ch), sum(y for _, y in ch) / len(ch)))
+    for i in range(1, len(cal)):          # tek yönlü olsun (yüksek ihtimal daha düşük çıkmasın)
+        if cal[i][1] < cal[i - 1][1]:
+            m = (cal[i][1] + cal[i - 1][1]) / 2
+            cal[i - 1], cal[i] = (cal[i - 1][0], m), (cal[i][0], m)
+    return cal, pts
+
+
+def iy_adj(cal, p):
+    if not cal:
+        return p
+    if p <= cal[0][0]:
+        return cal[0][1]
+    if p >= cal[-1][0]:
+        return cal[-1][1]
+    for (x0, y0), (x1, y1) in zip(cal, cal[1:]):
+        if x0 <= p <= x1:
+            return y0 + (y1 - y0) * (p - x0) / (x1 - x0) if x1 > x0 else y0
+    return p
+
+
+def iy_rows_stat(rows):
+    """Takım satırlarından (team_history) ilk yarı özeti."""
+    rs = [r for r in rows if r[3] is not None and r[4] is not None]
+    n = len(rs)
+    if not n:
+        return None
+    return {"n": n, "f": sum(r[3] for r in rs) / n, "a": sum(r[4] for r in rs) / n,
+            "o05": sum(1 for r in rs if r[3] + r[4] >= 1) / n,
+            "o15": sum(1 for r in rs if r[3] + r[4] >= 2) / n,
+            "kg": sum(1 for r in rs if r[3] > 0 and r[4] > 0) / n,
+            "sc": sum(1 for r in rs if r[3] > 0) / n,
+            "cc": sum(1 for r in rs if r[4] > 0) / n,
+            "ft": sum(r[1] + r[2] for r in rs) / n}
+
+
+def iy_league_stat(ms):
+    ms = [m for m in ms if m.get("ht")]
+    n = len(ms)
+    if not n:
+        return None
+    return {"n": n, "g1": sum(m["ht"][0] + m["ht"][1] for m in ms) / n, "g": sum(m["hg"] + m["ag"] for m in ms) / n,
+            "o05": sum(1 for m in ms if m["ht"][0] + m["ht"][1] >= 1) / n,
+            "o15": sum(1 for m in ms if m["ht"][0] + m["ht"][1] >= 2) / n,
+            "kg": sum(1 for m in ms if m["ht"][0] > 0 and m["ht"][1] > 0) / n,
+            "h1": sum(1 for m in ms if m["ht"][0] > m["ht"][1]) / n,
+            "x1": sum(1 for m in ms if m["ht"][0] == m["ht"][1]) / n}
+
+
+def write_ilkyari(st, leagues, now, allraw):
+    def pc(x):
+        return "-" if x is None else f"%{x * 100:.0f}"
+
+    def hc(x, base, hi=0.08):
+        """Lig ortalamasına göre renk sınıfı."""
+        if x is None or base is None:
+            return ""
+        return " pos" if x >= base + hi else (" neg" if x <= base - hi else "")
+    cals = {k: iy_cal(allraw, k, now) for k, _ in IY_KEYS}
+    # geçmiş tablosu: model diliminde gerçekleşen
+    bt = "<div class='wrap'><table><tr><th>Model dilimi</th><th class='n'>Maç</th><th class='n'>Model ort.</th><th class='n'>Gerçekleşen</th></tr>"
+    for k, lab in IY_KEYS:
+        cal, pts = cals[k]
+        if not pts:
+            continue
+        base = sum(y for _, y in pts) / len(pts)
+        bt += f"<tr><td colspan='4'><b>{lab}</b> · tüm maçlar %{base * 100:.0f} ({len(pts)})</td></tr>"
+        n = len(pts)
+        for lo_q, hi_q, nm in ((0.0, 0.5, "Alt yarı"), (0.5, 0.75, "Üst çeyrek altı"), (0.75, 0.9, "İlk %25"), (0.9, 1.0, "İlk %10")):
+            ch = pts[int(lo_q * n):int(hi_q * n)]
+            if ch:
+                bt += (f"<tr><td>{nm}</td><td class='n'>{len(ch)}</td><td class='n'>%{sum(p for p, _ in ch) / len(ch) * 100:.0f}</td>"
+                       f"<td class='n'><b>%{sum(y for _, y in ch) / len(ch) * 100:.0f}</b></td></tr>")
+    bt += "</table></div>"
+    # gerçek kayıt
+    rk = {}
+    for k, _ in IY_KEYS:
+        g = [0, 0, 0, 0]
+        for e in st.get("preds", {}).values():
+            q = (e.get("p") or {}).get(k)
+            res = e.get("res")
+            if q is None or not res or len(res) < 4 or res[2] is None:
+                continue
+            y = iy_ok(k, res[2], res[3])
+            g[0] += y
+            g[1] += 1
+            if q >= (0.40 if k == "iy15" else 0.25):
+                g[2] += y
+                g[3] += 1
+        rk[k] = g
+    rec = " · ".join(f"{lab}: tüm maçlar {pc(rk[k][0] / rk[k][1]) if rk[k][1] else '-'} ({rk[k][1]}), model ≥%{40 if k == 'iy15' else 25} iken "
+                     f"{pc(rk[k][2] / rk[k][3]) if rk[k][3] else '-'} ({rk[k][3]})" for k, lab in IY_KEYS)
+
+    # lig ve maç verisi
+    lsum, sections, cand = [], [], {k: [] for k, _ in IY_KEYS}
+    for L in leagues:
+        if "_ctx" not in L:
+            continue
+        past, th, ss = L["_ctx"][1], L["_ctx"][2], L["_ctx"][3]
+        sez = [m for m in past if m["date"] >= ss and m.get("ht")]
+        scope = "bu sezon"
+        if len(sez) < 30:
+            sez = [m for m in past if m["date"] >= now - dt.timedelta(days=365) and m.get("ht")]
+            scope = "son 12 ay"
+        ls = iy_league_stat(sez)
+        if not ls or ls["n"] < 15:
+            continue
+        cards = [c for c in L.get("cards", []) if (c.get("rapor") or {}).get("m", {}).get("iy15")]
+        lsum.append((L["name"], ls, len(cards)))
+        if not cards:
+            continue
+        # takım tablosu (bu sezon / son 12 ay)
+        tids = {}
+        for m in sez:
+            tids[m["hid"]] = m["home"]
+            tids[m["aid"]] = m["away"]
+        start = sez[0]["date"]
+        playing = {c["hid"] for c in cards} | {c["aid"] for c in cards}
+        trs = []
+        for tid, nm in tids.items():
+            s = iy_rows_stat([r for r in th.get(tid, []) if r[0] >= start])
+            if s and s["n"] >= 3:
+                trs.append((nm, s, tid in playing))
+        trs.sort(key=lambda x: -(x[1]["o15"] + x[1]["kg"]))
+        ttab = ("<div class='wrap'><table class='tt'><tr><th>Takım</th><th class='n'>M</th><th class='n'>İY<br>gol</th>"
+                "<th class='n'>İY<br>1.5Ü</th><th class='n'>İY<br>KG</th><th class='n'>İY<br>attı%</th><th class='n'>İY<br>yedi%</th></tr>")
+        for nm, s, pl in trs:
+            ttab += (f"<tr{' class=hl' if pl else ''}><td>{'● ' if pl else ''}{E(nm)}</td><td class='n'>{s['n']}</td>"
+                     f"<td class='n'>{s['f']:.1f}-{s['a']:.1f}</td>"
+                     f"<td class='n{hc(s['o15'], ls['o15'])}'>{pc(s['o15'])}</td><td class='n{hc(s['kg'], ls['kg'])}'>{pc(s['kg'])}</td>"
+                     f"<td class='n'>{pc(s['sc'])}</td><td class='n'>{pc(s['cc'])}</td></tr>")
+        ttab += "</table></div>"
+        # maç kartları
+        mc = ""
+        for c in sorted(cards, key=lambda c: c["kick"]):
+            rm = c["rapor"]["m"]
+            done = bool(c["score"]) or c["state"] != "pre"
+            ps = {}
+            for k, lab in IY_KEYS:
+                ev = rm.get(k)
+                if ev:
+                    ps[k] = (ev["p"], iy_adj(cals[k][0], ev["p"]), ev)
+            hr = sorted(th.get(c["hid"], []), key=lambda r: r[0])
+            ar = sorted(th.get(c["aid"], []), key=lambda r: r[0])
+            h10, a10 = iy_rows_stat(hr[-10:]), iy_rows_stat(ar[-10:])
+            hv, av = iy_rows_stat([r for r in hr if r[5]][-5:]), iy_rows_stat([r for r in ar if not r[5]][-5:])
+
+            def trow(nm, s, base_):
+                if not s:
+                    return f"<tr><td>{nm}</td><td colspan='4' class='note'>veri yok</td></tr>"
+                return (f"<tr><td>{nm} <small>({s['n']})</small></td><td class='n'>{s['f']:.1f}-{s['a']:.1f}</td>"
+                        f"<td class='n{hc(s['o05'], base_['o05'])}'>{pc(s['o05'])}</td><td class='n{hc(s['o15'], base_['o15'])}'>{pc(s['o15'])}</td>"
+                        f"<td class='n{hc(s['kg'], base_['kg'])}'>{pc(s['kg'])}</td></tr>")
+            st_tab = ("<div class='wrap'><table class='mt'><tr><th></th><th class='n'>İY gol<br>attı-yedi</th><th class='n'>İY<br>0.5Ü</th>"
+                      "<th class='n'>İY<br>1.5Ü</th><th class='n'>İY<br>KG</th></tr>"
+                      + trow("Ev · son 10", h10, ls) + trow("Ev · evde 5", hv, ls)
+                      + trow("Dep · son 10", a10, ls) + trow("Dep · dışarıda 5", av, ls)
+                      + f"<tr class='lgr'><td>Lig ort.</td><td class='n'>{ls['g1']:.2f}</td><td class='n'>{pc(ls['o05'])}</td>"
+                        f"<td class='n'>{pc(ls['o15'])}</td><td class='n'>{pc(ls['kg'])}</td></tr></table></div>")
+            ck = ""
+            for k, lab in IY_KEYS:
+                if k in ps:
+                    ev = ps[k][2]
+                    ck += (f"<div class='sec'>{lab} · {ev['ok']}/{ev['tot']} kriter · {TIER_NAME[ev['tier']]}</div><ul class='ck'>"
+                           + "".join(f"<li class='{'y' if ok else 'n'}'>{E(t)}</li>" for ok, t in ev["checks"]) + "</ul>")
+            res = ""
+            if c.get("ht") and c["score"]:
+                h1, a1 = c["ht"]
+                res = (f" <b>İY {h1}-{a1}</b> " + " ".join(f"<b class='{'pos' if iy_ok(k, h1, a1) else 'neg'}'>{s_}{'✓' if iy_ok(k, h1, a1) else '✗'}</b>"
+                                                         for k, s_ in (("iy15", "1.5Ü"), ("iykg", "KG"))))
+            elif done:
+                res = " <b style='color:#d93025'>CANLI</b>"
+            pills = "".join(f"<span class='pl'>{'İY1.5Ü' if k == 'iy15' else 'İY KG'} <b>%{ps[k][1] * 100:.0f}</b>"
+                            f"<small>adil {1 / max(ps[k][1], 0.01):.2f}</small></span>" for k, _ in IY_KEYS if k in ps)
+            mc += (f"<details class='uc'><summary><div class='uh'><span><b>{E(c['home'])} - {E(c['away'])}</b>{res}"
+                   f"<small>{c['day']} {c['time']} · beklenen gol {c['lam'][0] + c['lam'][1]:.1f}</small></span></div>"
+                   f"<div class='pls'>{pills}</div></summary>"
+                   f"<p class='note'>Model ham: İY 1.5Ü %{ps['iy15'][0] * 100:.0f} · İY KG %{ps['iykg'][0] * 100:.0f} → büyük sayı geçmişe göre düzeltilmiş ihtimal.</p>"
+                   f"{st_tab}{ck}</details>") if "iy15" in ps and "iykg" in ps else ""
+            if not done:
+                for k, _ in IY_KEYS:
+                    if k in ps:
+                        cand[k].append((ps[k][1], ps[k][2], c, L["name"], h10, a10, hv, av, ls))
+        sections.append((L["name"], ls, scope, len(cards),
+                         f"<details class='lg'><summary><b>{E(L['name'])}</b> <span class='note'>· bugün {len(cards)} maç · "
+                         f"İY 1.5Ü {pc(ls['o15'])} · İY KG {pc(ls['kg'])}</span></summary>"
+                         f"<div class='kp'><span>{ls['n']} maç ({scope})</span><span>İY gol ort. <b>{ls['g1']:.2f}</b></span>"
+                         f"<span>Maç gol ort. <b>{ls['g']:.2f}</b></span><span>İY 0.5Ü <b>{pc(ls['o05'])}</b></span>"
+                         f"<span>İY 1.5Ü <b>{pc(ls['o15'])}</b></span><span>İY KG <b>{pc(ls['kg'])}</b></span>"
+                         f"<span>İY ev önde <b>{pc(ls['h1'])}</b></span><span>İY berabere <b>{pc(ls['x1'])}</b></span></div>"
+                         f"{mc}<details class='rp'><summary><b>Takımların ilk yarı tablosu</b> <span class='note'>(● bugün oynayanlar · dokun)</span></summary>{ttab}</details>"
+                         "</details>"))
+    # en iyi adaylar
+    top = ""
+    for k, lab in IY_KEYS:
+        lst = sorted(cand[k], key=lambda x: -x[0])[:12]
+        top += f"<div class='sec'>{lab} · en yüksek {len(lst)} maç</div>"
+        if not lst:
+            top += "<p class='note'>Başlamamış maç yok.</p>"
+            continue
+        top += ("<div class='wrap'><table class='tp'><tr><th>Maç</th><th class='n'>İhtimal</th><th class='n'>Adil</th>"
+                "<th class='n'>Kriter</th></tr>")
+        f = "o15" if k == "iy15" else "kg"
+        for p, ev, c, ln, h10, a10, hv, av, ls in lst:
+            def sp(x):
+                return f"<span class='{hc(x, ls[f]).strip()}'>{pc(x)}</span>"
+            top += (f"<tr><td><b>{E(c['home'])} - {E(c['away'])}</b><br><small class='note'>{c['day']} {c['time']} · {E(ln)}</small>"
+                    f"<br><small>Ev evde {sp(hv and hv[f])} · Dep dışarıda {sp(av and av[f])} · Lig {pc(ls[f])}</small></td>"
+                    f"<td class='n'><b>%{p * 100:.0f}</b></td><td class='n'>{1 / max(p, 0.01):.2f}</td>"
+                    f"<td class='n'>{ev['ok']}/{ev['tot']}</td></tr>")
+        top += "</table></div>"
+    # lig özet tablosu
+    lsum.sort(key=lambda x: -x[1]["o15"])
+    ltab = ("<div class='wrap'><table class='tt'><tr><th>Lig</th><th class='n'>Maç</th><th class='n'>İY gol</th><th class='n'>İY<br>0.5Ü</th>"
+            "<th class='n'>İY<br>1.5Ü</th><th class='n'>İY<br>KG</th><th class='n'>Bugün</th></tr>")
+    for nm, ls, nc in lsum:
+        ltab += (f"<tr{' class=hl' if nc else ''}><td>{E(nm)}</td><td class='n'>{ls['n']}</td><td class='n'>{ls['g1']:.2f}</td>"
+                 f"<td class='n'>{pc(ls['o05'])}</td><td class='n'><b>{pc(ls['o15'])}</b></td><td class='n'><b>{pc(ls['kg'])}</b></td>"
+                 f"<td class='n'>{nc or ''}</td></tr>")
+    ltab += "</table></div>"
+    sections.sort(key=lambda x: -x[3])
+    page = (f"<!doctype html><html lang='tr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>"
+            f"<title>İlk Yarı</title><style>{CSS}{RP_CSS}{UST_CSS}{IY_CSS}</style></head><body>"
+            "<header><div style='display:flex;justify-content:space-between;align-items:center'><h1>İlk Yarı: 1.5 Üst ve KG</h1>"
+            "<a href='index.html' style='color:var(--ac);text-decoration:none;font-weight:600'>← Günün maçları</a></div>"
+            "<p class='note'>Bugünün maçlarında İY 1.5 Üst (ilk yarıda en az 2 gol) ve İY KG Var (ilk yarıda iki takım da gol atar). "
+            "Büyük yazan ihtimal, modelin ham değerinin son 60 günde gerçekte ne kadar tuttuğuna göre <b>düzeltilmiş</b> halidir; "
+            "model bu iki bahiste yüksek ihtimallerde iyimser kalıyor. Yeşil: lig ortalamasından 8 puan+ yüksek, kırmızı: düşük. "
+            f"Güncelleme: {now.astimezone(TR):%d.%m.%Y %H:%M}</p></header><div style='padding:0 12px 24px'>"
+            f"{top}<div class='sec'>Lig lig bugünün maçları</div><p class='note'>Lige dokun: lig istatistikleri, maçlar (dokununca iki takımın "
+            "ilk yarı sayıları ve kriterler) ve bütün takımların ilk yarı tablosu.</p>"
+            + "".join(s[4] for s in sections) +
+            f"<div class='sec'>Bütün ligler · ilk yarı karnesi</div>{ltab}"
+            f"<div class='sec'>Model geçmişte ne kadar tuttu?</div>{bt}"
+            f"<p class='note'>Geri test: son 60 gün, her maç o güne kadarki veriyle; dilimler model ihtimaline göre sıralı. Gerçek kayıt (maç öncesi kaydedilen): {rec}.</p>"
+            "<p class='note'>Model tahmindir, kâr garantisi vermez.</p></div></body></html>")
+    with open("ilkyari.html", "w", encoding="utf-8") as f:
+        f.write(page)
+
+
+IY_CSS = """
+.lg{border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin:8px 0;background:var(--card)}
+.lg>summary{cursor:pointer}
+.kp{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.kp span{background:var(--lo);border-radius:6px;padding:3px 7px;font-size:12px}
+.pls{display:flex;gap:6px;margin-top:6px}.pl{background:var(--lo);border-radius:8px;padding:3px 8px;font-size:12px}
+.pl b{font-size:15px;color:var(--ac);margin:0 3px}.pl small{color:var(--mu)}
+table.tt td,table.tt th,table.mt td,table.mt th,table.tp td,table.tp th{font-size:12px;padding:4px 5px}
+tr.hl td{background:var(--lo)}tr.lgr td{color:var(--mu);font-style:italic}
+td.pos,span.pos{color:#1e8e3e;font-weight:700}td.neg,span.neg{color:#d93025}
+.lg .wrap{overflow-x:auto}
 """
 
 
