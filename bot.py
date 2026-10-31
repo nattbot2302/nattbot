@@ -4591,6 +4591,7 @@ def write_html(leagues, now, st=None):
             f"<a href='analiz.html?v={int(now.timestamp())}'>Analiz</a>"
             f"<a href='karne.html?v={int(now.timestamp())}'>Karne</a>"
             f"<a href='ust25.html?v={int(now.timestamp())}'>2.5 Üst</a>"
+            f"<a href='ust35.html?v={int(now.timestamp())}'>3.5 Üst</a>"
             f"<a href='claude.html?v={int(now.timestamp())}'>Kuponlar</a>"
             f"<a class='lvb' href='canli.html?v={int(now.timestamp())}'>● Canlı</a></div>"
             f"<div class='upd'>Güncelleme: {local:%d.%m.%Y %H:%M} · "
@@ -5976,18 +5977,67 @@ def o25_bucket(p):
 O25_BLAB = {"g": f"Güçlü (model ≥%{O25_STRONG * 100:.0f})", "o": f"Orta (%{O25_MID * 100:.0f}–{O25_STRONG * 100:.0f})",
             "n": f"Geniş ağ (%{O25_NET * 100:.0f}–{O25_MID * 100:.0f})"}
 
+# 3.5 Üst: gerçek kayıtta (553 maç, ortalama %40) model ≥%45 iken %56, %40–45 arası %43 tuttu.
+O35_STRONG = 0.50
+O35_MID = 0.45
+O35_NET = 0.40
+
+
+def o35_bucket(p):
+    return "g" if p >= O35_STRONG else ("o" if p >= O35_MID else ("n" if p >= O35_NET else None))
+
+
+O35_BLAB = {"g": f"Güçlü (model ≥%{O35_STRONG * 100:.0f})", "o": f"Orta (%{O35_MID * 100:.0f}–{O35_STRONG * 100:.0f})",
+            "n": f"Geniş ağ (%{O35_NET * 100:.0f}–{O35_MID * 100:.0f})"}
+
+
+def o35_reasons(ev, c):
+    """3.5 Üst için Gol Raporu kontrol listesi + gol beklentisi + 4.5 Üst bilgisi."""
+    out = [(ok, t) for ok, t in ev.get("checks", [])]
+    lam = c["lam"][0] + c["lam"][1]
+    out.append((lam >= 3.2, f"Beklenen toplam gol {lam:.1f} (3.5 Üst için genelde 3.2+ gerekir)"))
+    o45 = ((c.get("rapor") or {}).get("m") or {}).get("o45")
+    if o45:
+        out.append((o45["p"] >= 0.30, f"4.5 Üst ihtimali %{o45['p'] * 100:.0f} (ligde %{o45['base'] * 100:.0f})"))
+    return out
+
+
+UST_CFG = {
+    "o25": {"file": "ust25.html", "title": "2.5 Üst Ağı", "need": 3, "bucket": o25_bucket, "blab": O25_BLAB,
+            "other": ("ust35.html", "3.5 Üst →"),
+            "intro": "Bugünün bütün maçlarında 2.5 Üst ihtimali. Geri testte bu bahiste en iyi seçimi modelin kendi ihtimali "
+                     "yaptığı için gruplar doğrudan ona göre: Güçlü, Orta ve daha geniş bir ağ."},
+    "o35": {"file": "ust35.html", "title": "3.5 Üst Ağı", "need": 4, "bucket": o35_bucket, "blab": O35_BLAB,
+            "other": ("ust25.html", "2.5 Üst →"),
+            "intro": "Bugünün bütün maçlarında 3.5 Üst (en az 4 gol) ihtimali. Ortalama bir maçta 3.5 Üst ~%40 tutar; "
+                     "model ≥%45 dediğinde gerçek kayıtta ~%56 tuttu. Oranı genelde 1.45–2.20 arası olduğundan tek başına "
+                     "ya da 2'li kuponda değerlidir; düşük oranlı başka bir bahisle (ör. Ev İY 0.5 Üst) birleştirmek kuponu "
+                     "ucuzlatmaz, sadece riski artırır."},
+}
+
 
 def write_ust25(st, leagues, now, allraw):
+    for key in ("o25", "o35"):
+        try:
+            write_ust(key, st, leagues, now, allraw)
+        except Exception as e:  # noqa
+            print("üst sayfası yazılamadı:", key, e, flush=True)
+
+
+def write_ust(key, st, leagues, now, allraw):
+    cfg = UST_CFG[key]
+    bucket, blab, need = cfg["bucket"], cfg["blab"], cfg["need"]
+
     def pct(a, b):
         return f"%{a / b * 100:.0f}" if b else "-"
     # geri test: son 60 gün, her maç o güne kadarki veriyle
     cut = now - dt.timedelta(days=BACKTEST_DAYS)
     bt = defaultdict(lambda: [0, 0])
     for x in allraw or []:
-        if x["date"] < cut or "rp" not in x or "o25" not in x["rp"]:
+        if x["date"] < cut or "rp" not in x or key not in x["rp"]:
             continue
-        b_ = o25_bucket(x["rp"]["o25"][2])
-        y = x["hg"] + x["ag"] >= 3
+        b_ = bucket(x["rp"][key][2])
+        y = x["hg"] + x["ag"] >= need
         bt["all"][0] += y
         bt["all"][1] += 1
         if b_:
@@ -5997,30 +6047,33 @@ def write_ust25(st, leagues, now, allraw):
     rk = defaultdict(lambda: [0, 0])
     first = None
     for e in st.get("preds", {}).values():
-        q = (e.get("p") or {}).get("o25")
+        q = (e.get("p") or {}).get(key)
         if q is None or not e.get("res"):
             continue
         first = min(first or e["d"], e["d"])
-        b_ = o25_bucket(q)
+        y = e["res"][0] + e["res"][1] >= need
+        rk["all"][0] += y
+        rk["all"][1] += 1
+        b_ = bucket(q)
         if b_:
-            y = e["res"][0] + e["res"][1] >= 3
             rk[b_][0] += y
             rk[b_][1] += 1
     tbl = ("<div class='wrap'><table><tr><th>Grup</th><th class='n'>Geri test<br><small>son 60 gün</small></th>"
            f"<th class='n'>Gerçek kayıt<br><small>{dt.date.fromisoformat(first):%d.%m.%Y} tarihinden beri</small></th></tr>" if first else
            "<div class='wrap'><table><tr><th>Grup</th><th class='n'>Geri test<br><small>son 60 gün</small></th><th class='n'>Gerçek kayıt</th></tr>")
     for k in ("g", "o", "n"):
-        tbl += (f"<tr><td>{O25_BLAB[k]}</td><td class='n'>{pct(*bt[k])} <small>({bt[k][1]})</small></td>"
+        tbl += (f"<tr><td>{blab[k]}</td><td class='n'>{pct(*bt[k])} <small>({bt[k][1]})</small></td>"
                 f"<td class='n'>{pct(*rk[k])} <small>({rk[k][1]})</small></td></tr>")
-    tbl += f"<tr><td>Tüm maçlar</td><td class='n'>{pct(*bt['all'])} <small>({bt['all'][1]})</small></td><td></td></tr></table></div>"
+    tbl += (f"<tr><td>Tüm maçlar</td><td class='n'>{pct(*bt['all'])} <small>({bt['all'][1]})</small></td>"
+            f"<td class='n'>{pct(*rk['all'])} <small>({rk['all'][1]})</small></td></tr></table></div>")
     # bugünün ağı
     items, started = defaultdict(list), []
     for L in leagues:
         for c in L.get("cards", []):
-            ev = ((c.get("rapor") or {}).get("m") or {}).get("o25")
+            ev = ((c.get("rapor") or {}).get("m") or {}).get(key)
             if not ev:
                 continue
-            b_ = o25_bucket(ev["p"])
+            b_ = bucket(ev["p"])
             if not b_:
                 continue
             if c["score"] or c["state"] != "pre":
@@ -6029,43 +6082,43 @@ def write_ust25(st, leagues, now, allraw):
                 items[b_].append((c, L["name"], ev))
 
     def card(c, ln, ev, res=""):
-        rs = o25_reasons(ev.get("f"), ev["p"])
+        rs = o25_reasons(ev.get("f"), ev["p"]) if key == "o25" else o35_reasons(ev, c)
         lam = c["lam"][0] + c["lam"][1]
         tr = "".join(f"<li class='{'y' if ok else 'n'}'>{E(t)}</li>" for ok, t in rs)
         tc = c.get("tctx") or {}
         fm = " · ".join(f"{E(n)} {t['trend']['bars']} {t['trend']['lab']}" for n, t in ((c["home"], tc.get("h") or {}), (c["away"], tc.get("a") or {}))
                         if t.get("trend"))
+        extra = (f"<p class='note'>{ev['ok']}/{ev['tot']} kriter · seviye {TIER_NAME[ev['tier']]}</p>" if key == "o35" else "")
         return (f"<details class='uc'><summary><div class='uh'><span><b>{E(c['home'])} - {E(c['away'])}</b>{res}"
-                f"<small>{c['day']} {c['time']} · {E(ln)} · beklenen {lam:.1f} gol</small></span>"
-                f"<span class='up'>%{ev['p'] * 100:.0f}</span></div></summary>{market_line(c, 'o25')}<ul class='ck'>{tr}</ul>"
+                f"<small>{c['day']} {c['time']} · {E(ln)} · beklenen {lam:.1f} gol · adil oran {1 / max(ev['p'], 0.01):.2f}</small></span>"
+                f"<span class='up'>%{ev['p'] * 100:.0f}</span></div></summary>{market_line(c, key)}{extra}<ul class='ck'>{tr}</ul>"
                 + (f"<p class='note'>Form: {fm}</p>" if fm else "") + "</details>")
     body = ""
     for k in ("g", "o", "n"):
         lst = sorted(items[k], key=lambda x: -x[2]["p"])
-        body += f"<div class='sec'>{O25_BLAB[k]} · {len(lst)} maç</div>"
+        body += f"<div class='sec'>{blab[k]} · {len(lst)} maç</div>"
         body += "".join(card(*x) for x in lst) or "<p class='note'>Bu grupta başlamamış maç yok.</p>"
     if started:
         body += f"<div class='sec'>Başlayan / biten · {len(started)} maç</div>"
         for c, ln, ev in sorted(started, key=lambda x: x[0]["kick"], reverse=True):
-            res = ""
             if c["score"]:
-                ok = c["score"][0] + c["score"][1] >= 3
+                ok = c["score"][0] + c["score"][1] >= need
                 res = f" <b class='{'pos' if ok else 'neg'}'>{c['score'][0]}-{c['score'][1]} {'✓' if ok else '✗'}</b>"
             else:
                 res = " <b style='color:#d93025'>CANLI</b>"
             body += card(c, ln, ev, res)
+    of, ol = cfg["other"]
     page = (f"<!doctype html><html lang='tr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>"
-            f"<title>2.5 Üst Ağı</title><style>{CSS}{RP_CSS}{UST_CSS}</style></head><body>"
-            "<header><div style='display:flex;justify-content:space-between;align-items:center'><h1>2.5 Üst Ağı</h1>"
+            f"<title>{cfg['title']}</title><style>{CSS}{RP_CSS}{UST_CSS}</style></head><body>"
+            f"<header><div style='display:flex;justify-content:space-between;align-items:center'><h1>{cfg['title']}</h1>"
             "<a href='index.html' style='color:var(--ac);text-decoration:none;font-weight:600'>← Günün maçları</a></div>"
-            "<p class='note'>Bugünün bütün maçlarında 2.5 Üst ihtimali. Geri testte bu bahiste en iyi seçimi modelin kendi ihtimali "
-            "yaptığı için gruplar doğrudan ona göre: Güçlü, Orta ve daha geniş bir ağ. Maça dokununca lehine (✓) ve aleyhine (✗) "
-            f"gerekçeler açılır. Güncelleme: {now.astimezone(TR):%d.%m.%Y %H:%M}</p></header>"
+            f"<p class='note'>{cfg['intro']} Maça dokununca lehine (✓) ve aleyhine (✗) "
+            f"gerekçeler açılır. <a href='{of}?v={int(now.timestamp())}'>{ol}</a> · Güncelleme: {now.astimezone(TR):%d.%m.%Y %H:%M}</p></header>"
             f"<div style='padding:0 12px 24px'><div class='sec'>Geçmişte ne kadar tuttu?</div>{tbl}"
             "<p class='note'>Geri test: son 60 günün maçları, her maç sadece o güne kadarki verilerle. Gerçek kayıt: maç başlamadan "
             "kaydedilen tahminler. Parantez içi maç sayısı.</p>"
             f"{body}</div></body></html>")
-    with open("ust25.html", "w", encoding="utf-8") as f:
+    with open(cfg["file"], "w", encoding="utf-8") as f:
         f.write(page)
 
 
