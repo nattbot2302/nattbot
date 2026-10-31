@@ -10,7 +10,13 @@
     "bl": "İY/MS 2/1",
     "p": 0.032,
     "exp": 0.032,
-    "why": "Coquimbo maç önü %53 favori; geçmişte bu aralıkta İY/MS 2/1 oranı %3.2 (adil oran ~31). Sadece iddaa oranı 31+ ise mantıklı."
+    "why": "Coquimbo maç önü %53 favori; geçmişte bu aralıkta İY/MS 2/1 oranı %3.2 (adil oran ~31). Sadece iddaa oranı 31+ ise mantıklı.",
+    "s": [
+     1,
+     0,
+     0,
+     0
+    ]
    },
    {
     "m": "401878044",
@@ -21,7 +27,13 @@
     "bl": "İY/MS 2/1",
     "p": 0.032,
     "exp": 0.032,
-    "why": "Bucaramanga maç önü %53 favori; geçmişte bu aralıkta İY/MS 2/1 oranı %3.2 (adil oran ~31). Sadece iddaa oranı 31+ ise mantıklı."
+    "why": "Bucaramanga maç önü %53 favori; geçmişte bu aralıkta İY/MS 2/1 oranı %3.2 (adil oran ~31). Sadece iddaa oranı 31+ ise mantıklı.",
+    "s": [
+     2,
+     1,
+     1,
+     1
+    ]
    },
    {
     "m": "401841647",
@@ -32,7 +44,13 @@
     "bl": "İY/MS 1/2",
     "p": 0.0363,
     "exp": 0.036,
-    "why": "Rosario Central maç önü %46 favori; geçmişte bu aralıkta İY/MS 1/2 oranı %3.6 (adil oran ~28). Sadece iddaa oranı 28+ ise mantıklı."
+    "why": "Rosario Central maç önü %46 favori; geçmişte bu aralıkta İY/MS 1/2 oranı %3.6 (adil oran ~28). Sadece iddaa oranı 28+ ise mantıklı.",
+    "s": [
+     1,
+     2,
+     1,
+     1
+    ]
    },
    {
     "m": "401876918",
@@ -43,7 +61,13 @@
     "bl": "İY/MS 1/2",
     "p": 0.036,
     "exp": 0.036,
-    "why": "Queretaro maç önü %44 favori; geçmişte bu aralıkta İY/MS 1/2 oranı %3.6 (adil oran ~28). Sadece iddaa oranı 28+ ise mantıklı."
+    "why": "Queretaro maç önü %44 favori; geçmişte bu aralıkta İY/MS 1/2 oranı %3.6 (adil oran ~28). Sadece iddaa oranı 28+ ise mantıklı.",
+    "s": [
+     3,
+     1,
+     2,
+     0
+    ]
    },
    {
     "m": "401841655",
@@ -54,7 +78,13 @@
     "bl": "İY/MS 1/2",
     "p": 0.036,
     "exp": 0.036,
-    "why": "Gimnasia LP maç önü %44 favori; geçmişte bu aralıkta İY/MS 1/2 oranı %3.6 (adil oran ~28). Sadece iddaa oranı 28+ ise mantıklı."
+    "why": "Gimnasia LP maç önü %44 favori; geçmişte bu aralıkta İY/MS 1/2 oranı %3.6 (adil oran ~28). Sadece iddaa oranı 28+ ise mantıklı.",
+    "s": [
+     1,
+     2,
+     0,
+     2
+    ]
    },
    {
     "m": "401860414",
@@ -65,7 +95,13 @@
     "bl": "Skor 1-0",
     "p": 0.1698,
     "exp": 0.1698,
-    "why": "Modelin bu maç için en olası skoru (%17, adil oran 5.9)."
+    "why": "Modelin bu maç için en olası skoru (%17, adil oran 5.9).",
+    "s": [
+     2,
+     0,
+     1,
+     0
+    ]
    },
    {
     "m": "401888573",
@@ -76,7 +112,13 @@
     "bl": "Skor 1-0",
     "p": 0.1545,
     "exp": 0.1545,
-    "why": "Modelin bu maç için en olası skoru (%15, adil oran 6.5)."
+    "why": "Modelin bu maç için en olası skoru (%15, adil oran 6.5).",
+    "s": [
+     1,
+     0,
+     0,
+     0
+    ]
    },
    {
     "m": "401888572",
@@ -87,7 +129,147 @@
     "bl": "İY skoru 1-0",
     "p": 0.2453,
     "exp": 0.2453,
-    "why": "0-0 dışında en olası ilk yarı skoru (%25, adil oran 4.1)."
+    "why": "0-0 dışında en olası ilk yarı skoru (%25, adil oran 4.1).",
+    "s": [
+     2,
+     4,
+     0,
+     3
+    ]
+   }
+  ],
+  "2026-10-31": [
+   {
+    "m": "401878960",
+    "ad": "Anderlecht - Westerlo",
+    "lg": "Belçika Pro Lig",
+    "k": "2026-10-31T19:45:00+00:00",
+    "b": "im21",
+    "bl": "İY/MS 2/1",
+    "p": 0.0527,
+    "exp": 0.032,
+    "why": "Anderlecht maç önü %57 favori; geçmişte bu aralıkta İY/MS 2/1 oranı %3.2 (adil oran ~31). Sadece iddaa oranı 31+ ise mantıklı."
+   },
+   {
+    "m": "401884751",
+    "ad": "Augsburg - Freiburg",
+    "lg": "Almanya Bundesliga",
+    "k": "2026-10-31T14:30:00+00:00",
+    "b": "im21",
+    "bl": "İY/MS 2/1",
+    "p": 0.0518,
+    "exp": 0.032,
+    "why": "Augsburg maç önü %54 favori; geçmişte bu aralıkta İY/MS 2/1 oranı %3.2 (adil oran ~31). Sadece iddaa oranı 31+ ise mantıklı."
+   },
+   {
+    "m": "401877563",
+    "ad": "Kashiwa - Urawa Reds",
+    "lg": "Japonya J1 Lig",
+    "k": "2026-10-31T07:00:00+00:00",
+    "b": "im21",
+    "bl": "İY/MS 2/1",
+    "p": 0.0461,
+    "exp": 0.032,
+    "why": "Kashiwa maç önü %52 favori; geçmişte bu aralıkta İY/MS 2/1 oranı %3.2 (adil oran ~31). Sadece iddaa oranı 31+ ise mantıklı."
+   },
+   {
+    "m": "401875562",
+    "ad": "Ajax - AZ Alkmaar",
+    "lg": "Hollanda Eredivisie",
+    "k": "2026-10-31T20:00:00+00:00",
+    "b": "im12",
+    "bl": "İY/MS 1/2",
+    "p": 0.0538,
+    "exp": 0.036,
+    "why": "AZ Alkmaar maç önü %43 favori; geçmişte bu aralıkta İY/MS 1/2 oranı %3.6 (adil oran ~28). Sadece iddaa oranı 28+ ise mantıklı."
+   },
+   {
+    "m": "401875561",
+    "ad": "Cambuur - Go Ahead Eagles",
+    "lg": "Hollanda Eredivisie",
+    "k": "2026-10-31T20:00:00+00:00",
+    "b": "im12",
+    "bl": "İY/MS 1/2",
+    "p": 0.0517,
+    "exp": 0.036,
+    "why": "Go Ahead Eagles maç önü %48 favori; geçmişte bu aralıkta İY/MS 1/2 oranı %3.6 (adil oran ~28). Sadece iddaa oranı 28+ ise mantıklı."
+   },
+   {
+    "m": "401885405",
+    "ad": "Moreirense - Estrela",
+    "lg": "Portekiz 1. Lig",
+    "k": "2026-10-31T15:30:00+00:00",
+    "b": "im12",
+    "bl": "İY/MS 1/2",
+    "p": 0.0508,
+    "exp": 0.036,
+    "why": "Estrela maç önü %48 favori; geçmişte bu aralıkta İY/MS 1/2 oranı %3.6 (adil oran ~28). Sadece iddaa oranı 28+ ise mantıklı."
+   },
+   {
+    "m": "401844247",
+    "ad": "T. Suárez - Maipú",
+    "lg": "Arjantin 2. Lig",
+    "k": "2026-10-31T18:00:00+00:00",
+    "b": "sk1-0",
+    "bl": "Skor 1-0",
+    "p": 0.1964,
+    "exp": 0.1964,
+    "why": "Modelin bu maç için en olası skoru (%20, adil oran 5.1)."
+   },
+   {
+    "m": "401931239",
+    "ad": "Racing (M) - Cerro Largo",
+    "lg": "Uruguay 1. Lig",
+    "k": "2026-10-31T13:00:00+00:00",
+    "b": "sk1-0",
+    "bl": "Skor 1-0",
+    "p": 0.178,
+    "exp": 0.178,
+    "why": "Modelin bu maç için en olası skoru (%18, adil oran 5.6)."
+   },
+   {
+    "m": "401844255",
+    "ad": "Colón SF - Defensores",
+    "lg": "Arjantin 2. Lig",
+    "k": "2026-10-31T21:00:00+00:00",
+    "b": "sk1-0",
+    "bl": "Skor 1-0",
+    "p": 0.1753,
+    "exp": 0.1753,
+    "why": "Modelin bu maç için en olası skoru (%18, adil oran 5.7)."
+   },
+   {
+    "m": "401885404",
+    "ad": "FC Porto - Estoril",
+    "lg": "Portekiz 1. Lig",
+    "k": "2026-10-31T20:30:00+00:00",
+    "b": "iys1-0",
+    "bl": "İY skoru 1-0",
+    "p": 0.2553,
+    "exp": 0.2553,
+    "why": "0-0 dışında en olası ilk yarı skoru (%26, adil oran 3.9)."
+   },
+   {
+    "m": "401844256",
+    "ad": "Chaco - Racing (Córdoba)",
+    "lg": "Arjantin 2. Lig",
+    "k": "2026-10-31T20:00:00+00:00",
+    "b": "iys1-0",
+    "bl": "İY skoru 1-0",
+    "p": 0.2553,
+    "exp": 0.2553,
+    "why": "0-0 dışında en olası ilk yarı skoru (%26, adil oran 3.9)."
+   },
+   {
+    "m": "401931238",
+    "ad": "Cerro - Central Español",
+    "lg": "Uruguay 1. Lig",
+    "k": "2026-10-31T16:00:00+00:00",
+    "b": "iys1-0",
+    "bl": "İY skoru 1-0",
+    "p": 0.2547,
+    "exp": 0.2547,
+    "why": "0-0 dışında en olası ilk yarı skoru (%25, adil oran 3.9)."
    }
   ]
  }
