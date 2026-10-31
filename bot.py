@@ -6354,7 +6354,7 @@ def write_ilkyari(st, leagues, now, allraw):
     # en iyi adaylar
     top = ""
     for k, lab in IY_KEYS:
-        lst = sorted(cand[k], key=lambda x: -x[0])[:12]
+        lst = sorted(cand[k], key=lambda x: (-round(x[0], 3), -x[1]['p']))[:12]
         top += f"<div class='sec'>{lab} · en yüksek {len(lst)} maç</div>"
         if not lst:
             top += "<p class='note'>Başlamamış maç yok.</p>"
@@ -6367,7 +6367,7 @@ def write_ilkyari(st, leagues, now, allraw):
                 return f"<span class='{hc(x, ls[f]).strip()}'>{pc(x)}</span>"
             top += (f"<tr><td><b>{E(c['home'])} - {E(c['away'])}</b><br><small class='note'>{c['day']} {c['time']} · {E(ln)}</small>"
                     f"<br><small>Ev evde {sp(hv and hv[f])} · Dep dışarıda {sp(av and av[f])} · Lig {pc(ls[f])}</small></td>"
-                    f"<td class='n'><b>%{p * 100:.0f}</b></td><td class='n'>{1 / max(p, 0.01):.2f}</td>"
+                    f"<td class='n'><b>%{p * 100:.0f}</b><br><small class='note'>ham %{ev['p'] * 100:.0f}</small></td><td class='n'>{1 / max(p, 0.01):.2f}</td>"
                     f"<td class='n'>{ev['ok']}/{ev['tot']}</td></tr>")
         top += "</table></div>"
     # lig özet tablosu
