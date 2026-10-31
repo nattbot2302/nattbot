@@ -707,7 +707,7 @@
       "Watford: 21. sıra (orta sıralarda) · son 5: MGMMM · son 10 maçta maç başı 0.7 attı, 1.8 yedi · şutlarına göre şanssız gidiyor · form eğrisi ▄▃▁▂▁▁█▄ dengeli"
      ],
      "rol": "Gol Raporu'nda 2. öneri",
-     "p_now": 0.6818,
+     "p_now": 0.6816,
      "t_now": 1
     },
     {
@@ -866,6 +866,12 @@
       "Sanfreece MS 2 günün önerisi (8 kriterin 7'si); piyasa Sanfreece'yi %66 favori görüyor",
       "Mito Hollyhock: 17. sıra (orta sıralarda) · son 5: MMMMM · son 10 maçta maç başı 1.0 attı, 1.9 yedi · form eğrisi █▇▂▄▄▃▅▁ düşüşte",
       "Sanfreece: 3. sıra (zirve yarışında) · son 5: GMGGG · son 10 maçta maç başı 2.2 attı, 0.9 yedi · form eğrisi ▇▄██▄▅▁▅ düşüşte"
+     ],
+     "s": [
+      0,
+      3,
+      0,
+      1
      ]
     }
    ]
